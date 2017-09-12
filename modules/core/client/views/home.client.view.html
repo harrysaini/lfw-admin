@@ -1,0 +1,363 @@
+<style>
+.section-1 {
+  background-image: url("https://s3.ap-south-1.amazonaws.com/flathood.com/assets/img/home-cover-new.jpg");
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+}
+
+.hero-home-title {
+  font-size: 2.4rem;
+  line-height: 1.1;
+  margin-bottom: 3rem;
+  word-spacing: 0.1rem;
+}
+
+.wrapper-details {
+  padding-top: 120px;
+}
+
+.location-input {
+  height: 2.5rem;
+  color: #3a3737;
+  border-radius: 2px;
+  padding-left: 15px;
+}
+
+.testi-single {
+  width: 25%;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  padding: 2rem;
+}
+
+.testimonials-screen {
+  padding: 4rem 0;
+}
+
+.testimonials-wrapper {
+  overflow: hidden;
+  /*padding-bottom: 2rem;*/
+  position: relative;
+}
+
+.testinomials-inner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+}
+
+.testimonial-sep {
+  border-bottom: 1px solid #fc633f;
+}
+
+.testi-icon-left.disable,
+.testi-icon-right.disable {
+  stroke: #f1f1f1;
+}
+
+.testi-icon-left,
+.testi-icon-right {
+  stroke: #fc633f;
+}
+
+.testi-icon-left svg,
+.testi-icon-right svg {
+  width: 1rem;
+}
+
+.testi-quick-nav {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.testi-circle {
+  background: #e2e2e2;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  margin: 0rem 0.3rem;
+  transition: all 0.3s ease;
+}
+
+.testi-circle.active {
+  background: #3be0c0;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  margin: 0rem 0.3rem;
+  transition: all 0.3s ease;
+}
+
+.arrow-left,
+.arrow-right {
+  margin-top: 7rem;
+}
+
+.testi-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  display: inline-block;
+  margin: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.testi-desc {
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.testi-single-inner {
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: white;
+}
+
+.image-outer {
+  position: relative;
+}
+
+.image-inner {
+  overflow: hidden;
+}
+
+.image-inner-wrapper {
+  height: 135px;
+}
+
+.profile-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background-position: center center;
+  background-size: cover;
+  transition: opacity ease 0.3s;
+}
+
+.testi-details {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-bottom: 7px
+}
+
+.recommendation-houses {
+  padding-top: 2rem;
+}
+
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  .testimonials-wrapper .testi-single {
+    width: 33%;
+    padding: 1.2rem;
+  }
+  .image-inner-wrapper {
+    height: 130px;
+  }
+  .section-1 {
+    min-height: 70vh;
+  }
+}
+
+.classification {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 40.063em) {
+  .testimonials-wrapper .testi-single {
+    width: 100%;
+    padding: 1.2rem;
+  }
+}
+
+</style>
+<section class="section-1" ng-controller="HomeController">
+  <div class="row">
+    <div class="columns medium-10 medium-centered">
+      <div class="wrapper-details">
+        <p class="hero-home-title text-center fh-white-c">Look for properties to rent or buy !</p>
+        <div class="row ">
+          <input ng-click="openSearchPopup()" placeholder="Search " class=" location-input fh-font-title medium-10 small-centered fh-t-c">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="recommendation-houses">
+    <div class="row full-stretch">
+      <div class="columns small-1 medium-1">
+        <div class="arrow-left float-right">
+          <a class="testi-icon-left" ng-click="testinomial_change('prev')" ng-class="{'disable':testimonial_left_disable}">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 9.1 16.7" style="enable-background:new 0 0 9.1 16.7;" xml:space="preserve">
+              <style type="text/css">
+              .st0 {
+                fill: none;
+                stroke-width: 1.01;
+                stroke-miterlimit: 10;
+              }
+
+              </style>
+              <title>icon-arrow-right</title>
+              <polyline class="st0" points="8.7,0.4 0.8,8.2 8.8,16.4 " />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="columns small-10 medium-10 text-center">
+        <div class="testimonials-wrapper">
+          <div style="transform: translateX(-{{testimonial_index*100}}%);" class="testinomials-inner fh-font-title">
+            <div class="testi-single" ng-repeat="t in testimons">
+              <div class="testi-single-inner">
+                <div class="row ">
+                  <div class="columns small-12">
+                    <div class="image-outer">
+                      <div class="image-inner">
+                        <div class="image-inner-wrapper">
+                          <div>
+                            <img class="profile-photo" src='https://s3.ap-south-1.amazonaws.com/flathood.com/grams/homes/58a183638e602e463c6fd5ed/7766190dae642d833452a005d7ce9d921486979816308.jpeg'>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="testi-details text-left">
+                  <div class="row small-up-1">
+                    <div class="columns fh-font-title  ">
+                      RS 40k/m
+                    </div>
+                    <div class="columns fh-font-subhead fh-s-c" style="margin-top:5px">
+                      3 BHK Bunglow
+                    </div>
+                    <div class="columns fh-font-subhead  fh-s-c">
+                      Malviya nagar
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns small-1 medium-1 ">
+        <div class="arrow-right float-left">
+          <a class="testi-icon-right" ng-click="testinomial_change('next')" ng-class="{'disable':testimonial_right_disable}">
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9.17 16.69">
+              <defs>
+                <style>
+                .cls-1 {
+                  fill: none;
+                  stroke-miterlimit: 10;
+                  stroke-width: 1.01px;
+                }
+
+                </style>
+              </defs>
+              <polyline class="cls-1" points="0.57 16.33 8.45 8.45 0.36 0.36" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+
+.section-2-inner {
+  padding-top: 3rem;
+}
+
+.section-2-sub {
+  font-weight: bold;
+  float: left;
+
+
+  border-bottom: 3px solid white;
+  padding-bottom: 5px;
+}
+
+.sec-2-sub-content {
+  float: left;
+  margin-top: 1.5rem
+}
+
+</style>
+<section class="section-2 fh-p-bg">
+  <div class="section-2-inner">
+    <div class="row">
+      <div class="columns medium-4 large-3">
+        <div class="section-2-sub fh-font-title fh-white-c ">
+          Value Propositions
+        </div>
+        <div class="fh-font-primary sec-2-sub-content fh-white-c">
+          esktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+        </div>
+      </div>
+      <div class="columns medium-8 large-9">
+        <div class="row collapse">
+          <div class="columns medium-6 medium-offset-1">
+            <div class="row medium-up-3 fh-font-subhead-2 fh-white-c text-center">
+              <div class="columns ">
+                <div class="classification">Landlord/Seller</div>
+              </div>
+              <div class="columns ">
+                <div class="classification">Brokers</div>
+              </div>
+              <div class="columns">
+                <div class="classification"> Customer/Buyer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+.section-3-inner {
+  padding-top: 1.5rem;
+}
+
+.trust-section {
+  float: left;
+  border-bottom: 2px solid black;
+  font-weight: bold;
+}
+
+.see-people-button {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  border-radius: 1px;
+  border-radius: 1px solid transparent;
+  background: rgb(255, 0, 59);
+  float: left;
+}
+
+</style>
+<section class="section-3">
+  <div class="section-3-inner">
+    <div class="row">
+      <div class=" columns medium-12">
+        <div class="fh-font-title trust-section">Trust</div>
+        <div class="fh-font-primary sec-2-sub-content">
+          esktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).eadable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like
+        </div>
+        <div class="see-people-button fh-font-primary fh-white-c font-bold">See people behind this company</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- include seacrch popup -->
+<div ng-include="'/modules/core/client/views/search.client.view.html'"></div>

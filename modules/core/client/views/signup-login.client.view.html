@@ -1,0 +1,423 @@
+<style type="text/css">
+
+	@keyframes zoomInDown {
+		from {
+			opacity: 0;
+			transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+			animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+		}
+
+		60% {
+			opacity: 1;
+			transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+			animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+		}
+	}
+
+	@keyframes top-right-corner-enter {
+		from {
+			visibility: hidden;
+			opacity: 0;
+			transform: translate(0% , -1000px);
+		}
+		to {
+			opacity: 1;
+			visibility: visible;
+			transform:  translate(0% , 0%);
+		}
+	}
+
+
+	@keyframes udjja {
+		from {
+			opacity: 1;
+			visibility: visible;
+			transform:  translate(0% , 0%);
+		}
+		to {
+			visibility: hidden;
+			opacity: 0;
+			transform:  translate(0% , -1000px);
+		}
+		
+	}
+
+	.display-desktop-popup{
+		animation-name: top-right-corner-enter;
+		animation-duration: 0.5s;
+	}
+
+	.hide-desktop-popup{
+		animation-name: udjja;
+		animation-duration: 0.5s;
+	}
+
+	.hidden{
+		visibility: hidden;
+	}
+
+	.visible{
+		visibility : visible;
+	}
+
+	.mobile-hidden{
+		display : none;
+	}
+
+
+	.sign-up-login-popup{
+		position: fixed;
+		width: 70%;
+		left: 15%;
+		margin: auto;
+		z-index: 10;
+		background: white;
+		padding: 2rem;
+		top: 6.2rem;
+		z-index: 101;
+		border-radius: 2px;
+		box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.3);
+
+	}
+
+	.border-left{
+		border-left: 3px solid #ccd9ff;
+		margin-left: 0px; 
+	}
+
+	.border-right{
+		border-right: 3px solid #ccd9ff;
+		margin-right: 0px;
+	}
+
+	.padding-inner{
+		padding : 10px;
+		padding-right: 15px;
+		padding-left: 15px;
+	}
+
+	.phone-wrapper{
+		display: table;
+
+	}
+
+	.phone-code-input{
+		width: 20%;
+		margin-right: 5%;
+		display: inline;
+	}
+
+	.phone-number-input{
+		width: 75%;
+		display: inline;
+	}
+
+	.fb-btn{
+		width: 100%;
+		margin-bottom: 15px;
+	}
+
+	.google-btn{
+		width: 100%;
+	}
+
+	.light-font{
+		color: #00cccc;
+	}
+
+	.mybtn{
+		border-radius: 2px;
+		width: 100%;
+
+	}
+
+
+	.popup-container input, .popup-container select{
+		color: #248f8f !important; 
+	}
+
+	.close-btn{
+		color: #006666;
+		padding : 10px;
+		position: absolute;
+		top : 0;
+		right: 0;
+		cursor: pointer;
+	}
+
+	.close-btn:hover{
+		color: #001a1a;
+	}
+
+
+	.sign-up-login-popup-mobile{
+		z-index: 101;
+		background: white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+	}
+
+	.text-link{
+		color: #8080ff;
+		cursor: pointer;
+	}
+	.text-link:hover{
+		color: #000033;
+	}
+
+
+	.password-wrapper{
+		position: relative;
+	}
+
+	.password-view{
+		position: absolute;
+		right: 10px;
+		top : 10px;
+		font-size: 127%;
+		cursor: pointer;
+		color:  #b3cccc;
+	}
+	.password-view:hover{
+		color: #293d3d;
+	}
+
+	.popup-wrapper{
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top :0;
+		left: 0 ;
+		z-index: 100;
+		background: rgba(0, 0, 0, 0.23);
+	}
+
+	@media only screen and (max-width: 40em){
+		.padding-inner{
+			padding-top: 20%;
+		}
+
+		.mybtn{
+			margin-top : 15px;
+			margin-bottom : 15px;
+		}
+
+		.close-btn{
+			padding:15px;
+		}
+
+		.light-font{
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.display-mobile-popup{
+			animation-name: top-right-corner-enter;
+			animation-duration: 0.5s;
+		}
+
+		.hide-mobile-popup{
+			animation-name: udjja;
+			animation-duration: 0.5s;
+		}
+	}
+
+
+	.error{
+		color: red;
+		font-size: 80%;
+	}
+
+
+
+</style>
+<div ng-controller="SignupLoginController">
+	<div class="hide-for-small-only">
+		<div class="popup-wrapper" ng-show='displayPopup' ng-click="closeSignupLoginPopup()"></div>
+		<div class="sign-up-login-popup hidden" id="signup-login-desktop" ng-class="{ 'display-desktop-popup' : displayPopup , 'visible' : displayPopup , 'hide-desktop-popup' : hidePopup }">
+			<div class="popup-container">
+				<div class="row">
+					<div class="columns medium-6 border-right">
+						<div class="text-center padding-inner">
+
+							<div class="fh-font-subhead text-left">New here ?</div>
+							<div class="fh-font-title text-left" style="margin-top: 4px;">Register</div>
+							<br>
+							<input type="email" placeholder="email address" ng-model="signUpData.email">
+							<div class="error" ng-show="!signUpValidations.isEmailvalid">Please provide correct email</div>
+
+							<div class="password-wrapper">
+
+								<input id="password-input-desktop" type="password" placeholder="password" ng-model="signUpData.password">
+								
+
+								<div class="password-view" ng-click="displayPasswordField()">
+									<div ng-if = "displayViewPassword">
+										<i class="fa fa-eye" aria-hidden="true"></i>
+									</div>
+									<div ng-if = "!displayViewPassword">
+										<i class="fa fa-eye-slash" aria-hidden="true"></i>
+									</div>
+								</div>
+							</div>
+							<div class="error" ng-show="!signUpValidations.isPasswordSet">
+								Please enter password
+							</div>
+
+							<div class="phone-wrapper">
+								<input type="text" class="phone-code-input" placeholder="+91" value="+91" ng-model="signUpData.phoneCode"> 
+								<input type="text" class="phone-number-input" placeholder="primary phone" ng-model="signUpData.phoneNumber">
+							</div>
+							<div class="error" ng-show="!signUpValidations.isMobileVaild">
+								Please provide correct phone number
+							</div>
+							<div class="error" ng-show="!signUpValidations.isCodeValid">
+								Please provide correct phone code 
+							</div>
+
+							<select ng-model="signUpData.userRole">
+								<option value="">Select User Type</option>
+								<option value="tenant">tenant (customer )</option>
+								<option value="landlord">landlord</option>
+								<option value="broker">broker</option>
+							</select>
+							<div class="error" ng-show="!signUpValidations.isUserRoleSet">
+								Please select role
+							</div>
+
+							<button class="button secondary mybtn" ng-click="signUpClick()" >Register</button>
+							<br><br>
+							<div class="light-font ">or register using</div>
+							<br>
+							<div class="row medium-up-1 large-up-2">
+								<div class="columns">
+									<button class="button fb-btn">facebook</button>
+								</div>
+								<div class="columns">
+									<button class="button google-btn">google</button>
+								</div>
+							</div>
+
+
+
+						</div>
+
+					</div>
+					<div class="columns medium-6 border-left">
+						<div class="text-center padding-inner">
+							<div class="fh-font-subhead text-left">Already Registered?</div>
+							<div class="fh-font-title text-left" style="margin-top: 4px;">Login</div>
+							<br>
+
+
+							<input type="email" placeholder="email address" ng-model="loginData.usernameOrEmail">
+							<input type="password" placeholder="password" ng-model="loginData.password">
+							<button class="button secondary mybtn" ng-click="loginClick()">Login</button>
+							<br><br>
+							<div class="light-font" > or login using</div>
+							<br>
+							<div class="row medium-up-1 large-up-2">
+								<div class="columns">
+									<button class="button fb-btn">facebook</button>
+								</div>
+								<div class="columns">
+									<button class="button google-btn">google</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+				<div class="close-btn" ng-click="closeSignupLoginPopup()">X</div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="hide-for-medium">
+		<div class="sign-up-login-popup-mobile hidden" ng-class="{ 'display-mobile-popup' : displayPopup , 'visible' : displayPopup  , 'hide-mobile-popup' : hidePopup }" >
+			<div class="sign-up-mobile popup-container" ng-class="{'mobile-hidden' : mobileComponentDisplayed==='login'}">
+				<div class="text-center padding-inner">
+
+					<div class="fh-font-subhead text-left">New here ?</div>
+					<div class="fh-font-title text-left" style="margin-top: 4px;">Register</div>
+					<br>
+
+					<input type="email" placeholder="email address ">
+					<div class="error" ng-show="!signUpValidations.isEmailvalid">Please provide correct email</div>
+					
+					<div class="password-wrapper">
+
+						<input id="password-input-mobile" type="password" placeholder="password" ng-model="signUpData.usernameOrEmail">
+
+
+						<div class="password-view" ng-click="displayPasswordField()">
+							<div ng-if = "displayViewPassword">
+								<i class="fa fa-eye" aria-hidden="true"></i>
+							</div>
+							<div ng-if = "!displayViewPassword">
+								<i class="fa fa-eye-slash" aria-hidden="true"></i>
+							</div>
+						</div>
+					</div>
+
+					<div class="phone-wrapper">
+						<input type="text" class="phone-code-input" placeholder="+91" value="+91"> 
+						<input type="text" class="phone-number-input" placeholder="primary phone">
+					</div>
+
+
+					<div class="error" ng-show="!signUpValidations.isMobileVaild">
+						Please provide correct phone number
+					</div>
+					<div class="error" ng-show="!signUpValidations.isCodeValid">
+						Please provide correct phone code 
+					</div>
+
+
+					<select>
+						<option value="">Select User Type</option>
+						<option value="hotdog">tenant (customer) </option>
+						<option value="husker">landlord</option>
+						<option value="starbuck">broker</option>
+					</select>
+					<button class="button secondary mybtn" ng-click="signUpClick()">Register</button>
+					<br>
+					<div> Already have a account login here <a class="text-link" ng-click="changeMobileDisplayed('login')">login</a></div>
+					<br>
+					<div class="light-font ">or register using</div>
+					<br>
+					<button class="button fb-btn">facebook</button>
+					<button class="button google-btn">google</button>
+
+				</div>
+			</div>
+
+			<div class="login-mobile popup-conatiner" ng-class="{'mobile-hidden' : mobileComponentDisplayed==='signup'}" >
+				<div class="text-center padding-inner">
+					<div class="fh-font-subhead text-left">Already Registered?</div>
+					<div class="fh-font-title text-left" style="margin-top: 4px;">Login</div>
+					<br>
+
+
+					<input type="email" placeholder="email address">
+					<input type="password" placeholder="password">
+					<button class="button secondary mybtn" ng-click="loginClick()">Login</button>
+					<br>
+					<div>  Don't have a account register here <a class="text-link" ng-click="changeMobileDisplayed('signup')">signup</a></div>
+					<br>
+					<div class="light-font" > or login using</div>
+					<br>
+					<button  class="button fb-btn">facebook</button>
+					<button class="button google-btn">google</button>
+				</div>
+			</div>
+			<div class="close-btn" ng-click="closeSignupLoginPopup()">X</div>
+		</div>
+	</div>
+</div>

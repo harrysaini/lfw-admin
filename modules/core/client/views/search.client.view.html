@@ -1,0 +1,465 @@
+<style type="text/css">
+    .search-popup-wrapper{
+        position: fixed;
+        background: white;
+        height: 100%;
+        width: 100%;
+        top : 0px;
+        left : 0px;
+        z-index: 15;
+    }
+
+    .hidden{
+        visibility: hidden;
+    }
+
+    .visible{
+        visibility : visible;
+    }
+
+    .search-input-wrapper{
+        position: relative;
+        background-color: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 5px;
+        padding: 11px 5px;
+        box-sizing: border-box;
+    }
+    .search-symbol{
+        position: absolute;
+        top : 12px;
+        left: 12px;
+    }
+    .search-input{
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        outline: 0;
+        line-height: 1.70em;
+    }
+    .search-input-container{
+        width: 100%;
+        padding: 5% 15%;
+        background-color: #f4f4f4;
+    }
+    .tag-input-wrapper{
+        padding-left: 45px;
+        padding-right: 80px;
+        display: inline-block;
+        min-height: 36px;
+    }
+    .search-btn{
+        position: absolute;
+        right: 8px;
+        top : 8px ;
+        float: right;
+        border-radius: 2px;
+    }
+    .tag{
+        display: inline-block;
+        background: #99c2ff;
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: white;
+        margin : 2px ;
+        padding-right : 6px;
+    }
+    .tag-close{
+        display: inline;
+        font-size: 75%;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    .tag-close:hover{
+        color: rgba(40, 49, 127, 0.67);
+    }
+    .tags-list{
+        display: inline-block;
+    }
+    .input-wrapper{
+        display: inline-block;
+        margin-left : 5px;
+        padding-top: 2px;
+    }
+
+    .search-filters-wrapper{
+        position: relative;
+        min-height: 600px;
+    }
+
+    .search-filters-wrapper-inner{
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top : 0;
+        padding: 4% 15%;
+        overflow:auto;
+        padding-bottom: 150px;
+    }
+
+
+    .filter-tag{
+        display: inline-block;
+        margin: 5px;
+        cursor: pointer;
+        padding: 2px 10px;
+        text-align: center;
+        font-size: 14px;
+        background-color: #fff;
+        color: #7f7f7f;
+        border: 1px solid #e6e6e6;
+        line-height: 30px;
+        border-radius: 34px;
+        min-width: 63px;
+        margin-left: 0px;
+    }
+
+    .filter-tag:hover{
+        border : 1px solid #99c2ff;
+    }
+
+
+    
+    .filter-tag.selected{
+        background: #968fe4;
+        color: #e8eaea;
+    }
+
+    .filter-heading{
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .two-filter-wrapper{
+        margin-bottom: 50px;
+    }
+
+    .search-popup{
+        position: relative;
+    }
+
+    .close-search-popup{
+        position: absolute;
+        top : 10px;
+        right: 10px;
+        cursor: pointer;
+        color : #6a6a77;;
+    }
+
+    .close-search-popup:hover{
+        color :#00001a;
+    }
+
+
+    @media only screen and (max-width: 55em){
+        .tag-input-wrapper{
+            padding-left: 10%;
+        }
+
+        .search-input-container{
+            padding: 3% 8%;
+        }
+
+
+        .search-filters-wrapper-inner{
+            padding : 4% 8% ;
+            padding-bottom: 100px;
+        }
+
+        .search-filters-wrapper{
+            min-height: 800px;
+        }
+    }
+
+    @media only screen and (max-width: 40em){
+        .search-input-container{
+            padding: 35px 2% 15px 2%;
+        }
+
+        .search-symbol{
+            font-size: 50%;
+        }
+
+        .search-filters-wrapper-inner{
+            padding : 4% 2% ;
+            padding-bottom: 100px;
+        }
+
+        .two-filter-wrapper{
+            margin-bottom: 0;
+        }
+
+        .single-filter-wrapper{
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            line-height: 0.7em;
+        }
+
+        .search-btn{
+            padding: 9px;
+            top: 5px;
+            right: 6px;
+        }
+
+        .tag-input-wrapper {
+            padding-left: 8%;
+            padding-right: 10%;
+            min-height: 18px;
+        }
+
+        .tags-list-mobile{
+            margin-top: 6px;
+        }
+
+        .close-search-popup{
+            top : 5px;
+            right: 5px;
+        }
+
+
+        .search-filters-wrapper{
+            min-height: 600px;
+        }
+    }
+
+
+    /*animation*/
+
+    @keyframes fade-in-slow{
+        from{
+            opacity: 0;
+            visibility: hidden;
+        }
+        to{
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    .display-search-wrapper{
+        animation-name: fade-in-slow;
+        animation-duration: 0.3s;
+    }
+
+    @keyframes fade-move-up{
+        from{
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(200px);
+        }
+        to{
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0px);
+        }
+    }
+
+    .display-search-popup{
+        animation-name: fade-move-up;
+        animation-duration: 0.5s;
+    }
+
+    @keyframes fade-move-down{
+        from{
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0px);
+        } 
+        to{
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100px);
+        }
+
+    }
+
+    @keyframes fade-out-slow{
+        from{
+            opacity: 1;
+            visibility: visible;
+        }
+        to{
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .hide-search-wrapper{
+        animation-name: fade-out-slow;
+        animation-duration: 0.5s;
+    }
+
+    .hide-search-popup{
+        animation-name: fade-move-down;
+        animation-duration: 0.3s;
+    }
+
+    .shown{
+        display: block !important;
+    }
+
+    .slider-div{
+        margin-top: 10px;
+    }
+
+    .reset-btn{
+        cursor: pointer;
+        color: #4da6ff;
+        float: right;
+        display: inline;
+        padding: 10px;
+    }
+
+    .reset-btn:hover{
+        color: #001a33;
+    }
+
+    .search-disabled{
+        opacity: .25;
+    }
+
+
+</style>
+
+
+<div ng-controller="SearchController">
+
+    <div class="search-popup-wrapper hidden" ng-class="{'visible' : displaySearchPopup , 'display-search-wrapper' : displaySearchPopup  , 'hide-search-wrapper' : hideSearchPopup}">
+
+        <div class="search-popup hidden" ng-class="{'display-search-popup' : displaySearchPopup , 'visible' : displaySearchPopup , 'hide-search-popup' : hideSearchPopup}">
+
+            <div class="close-search-popup" ng-click="closeSearchPopup()">
+                <i class="fa fa-close"></i>
+            </div>
+            <div class="search-popup-content" style="display: none;" ng-class="{'shown' : displaySearchPopup }">
+
+                <!-- input -->
+                <div class="search-input-container fh-t-c">
+                    <div class="search-input-wrapper">
+                        <div class="search-symbol">
+                            <i class="fa fa-search fa-2x"></i>
+                        </div>
+                        <div class="tag-input-wrapper">
+                            <div class="inline-div tags-list hide-for-small-only">
+                                <div ng-repeat='locality in localitySearched' class="tag">
+                                    {{locality}}
+                                    <div class="tag-close" ng-click="removeSearchLocation(locality)">
+                                        <i class="fa fa-close"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="input-wrapper">
+                                <input placeholder="Search " class="search-input fh-font-title small-centered fh-t-c" ng-keydown="searchFieldInputChange($event)">
+                            </div>
+                        </div>
+                        <div class="button secondary search-btn" ng-class="{ 'search-disabled' : searchDisabled  }" ng-click="onSearchClick()">Search</div>
+                    </div>  
+
+                    <div class="reset-btn" ng-click="resetAllFilters()">Reset All</div>
+
+                    <!-- tags list mobile -->
+                    <div class="inline-div tags-list tags-list-mobile show-for-small-only ">
+                        <div ng-repeat='locality in localitySearched' class="tag">
+                            {{locality}}
+                            <div class="tag-close" ng-click="removeSearchLocation(locality)">
+                                <i class="fa fa-close"></i>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+                </div>
+
+                <!-- filters -->
+                <div class="search-filters-wrapper">
+                    <div class="search-filters-wrapper-inner">
+                        <!-- bhk and list filter -->
+                        <div class="two-filter-wrapper">
+                            <div class="row">
+                                <div class="columns medium-6 small-12">
+                                    <div class="single-filter-wrapper">
+                                        <div class="fh-font-title filter-heading">BHK</div>
+                                        <div ng-repeat="bhk in bhkFilters" class="filter-tag" ng-click="addFilterFromTags('bhk-filter' ,  bhk)" ng-class="{'selected' : filtersApplied.bhkFilters.indexOf(bhk)!=-1 }">
+                                            {{bhk}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns medium-6 small-12">
+                                    <div class="single-filter-wrapper">
+                                        <div class="fh-font-title filter-heading">Listed By</div>
+                                        <div ng-repeat="roles in listedByFilters" class="filter-tag" ng-click="addFilterFromTags('owner-filter' ,  roles)" ng-class="{'selected' : filtersApplied.ownerFilters.indexOf(roles)!=-1 }">
+                                            {{roles}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- rent filter -->
+                        <div class="two-filter-wrapper single-filter-wrapper row">
+                            <div class="columns">
+                                <div class="fh-font-title filter-heading ">Budget </div>
+                                <div class="slider-div">
+                                    <rzslider rz-slider-model="priceSlider.minValue"
+                                    rz-slider-high="priceSlider.maxValue"
+                                    rz-slider-options="priceSlider.options"></rzslider>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- area filter -->
+                        <div class="two-filter-wrapper single-filter-wrapper row ">
+                            <div class="columns">
+                                <div class="fh-font-title filter-heading">Area </div>
+                                <div class="slider-div">                                  
+                                    <rzslider rz-slider-model="areaSlider.minValue"
+                                    rz-slider-high="areaSlider.maxValue"
+                                    rz-slider-options="areaSlider.options"></rzslider>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- construction and furnishing  -->
+                        <div class="two-filter-wrapper">
+                            <div class="row">
+                                <div class="columns medium-6 small-12">
+                                    <div class="single-filter-wrapper">
+                                        <div class="fh-font-title filter-heading">Construction Stage</div>
+                                        <div ng-repeat="construction in constructionFilters" class="filter-tag" ng-click="addFilterFromTags('construction-filter' ,  construction)" ng-class="{'selected' : filtersApplied.constructionFilters.indexOf(construction)!=-1 }">
+                                            {{construction}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns medium-6 small-12">
+                                    <div class="single-filter-wrapper">
+                                        <div class="fh-font-title filter-heading">Furnishing</div>
+                                        <div ng-repeat="furnishing in furnishingFilters" class="filter-tag" ng-click="addFilterFromTags('furnishing-filter' ,  furnishing)" ng-class="{'selected' : filtersApplied.furnishingFilters.indexOf(furnishing)!=-1 }">
+                                            {{furnishing}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- area filter -->
+                        <div class="two-filter-wrapper single-filter-wrapper row">
+                            <div class="columns">
+                                <div class="fh-font-title filter-heading">Ammenities </div>
+                                <div ng-repeat="ammenities in ammenitiesFilters" class="filter-tag" ng-click="addFilterFromTags('ammenities-filter' ,  ammenities)" ng-class="{'selected' : filtersApplied.ammenitiesFilters.indexOf(ammenities)!=-1 }">
+                                    {{ammenities}}
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

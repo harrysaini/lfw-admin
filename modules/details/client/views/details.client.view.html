@@ -1,0 +1,706 @@
+<style>
+.details-container {
+  padding-top: 1rem;
+}
+
+.upper-details {
+  padding: 1rem;
+  padding-bottom: 5px;
+  background: white;
+  border-bottom: 2px solid #f9f9f9;
+}
+
+.upper-details-1,
+.upper-details-2 {
+  border-right: 1px solid #f9f9f9;
+}
+
+.lower-details-switcher {
+
+  background: white;
+
+  box-shadow: 2px 2px 2px #f1f1f1;
+}
+
+.lower-under {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #c81f32;
+  left: 0;
+  bottom: -5px;
+}
+
+.content-changer {
+  /* padding: 10px; */
+  /* padding-left: 1rem; */
+  /* margin-bottom: 5px; */
+  margin-right: 10px;
+  padding-bottom: 5px;
+  padding-top: 10px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.content-changer:hover {
+  background: #f9f9f9;
+}
+
+.main-upper {
+  margin-bottom: 1rem;
+}
+
+.main-lower {
+  margin-bottom: 1rem;
+}
+
+.main-lower-inner {
+  background: white;
+  padding: 1rem;
+}
+
+.image-outer {
+  position: relative;
+}
+
+.image-inner {
+  overflow: hidden;
+}
+
+.image-inner-wrapper {
+  height: 275px;
+}
+
+.profile-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background-position: center center;
+  background-size: cover;
+  transition: opacity ease 0.3s;
+}
+
+.amenities-section-lower,
+.location-section-lower {
+  padding: 1rem;
+  background: white;
+}
+
+.amenities-section,
+.location-section {
+  margin-bottom: 1rem;
+}
+
+#map {
+  height: 330px;
+}
+
+.similar-properties-lower {
+  padding: 1rem;
+  background: white;
+}
+
+.map-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 500px;
+  top: 52px;
+}
+
+.map-outer {
+  position: relative;
+       margin-top: 10px; 
+}
+
+.distance-time-wrapper {
+  position: absolute;
+  top: 38px;
+  width: 50%;
+}
+
+.map-content {
+  padding-left: 1rem;
+}
+
+.nearby-wrapper {
+  position: relative;
+}
+
+.nearby-wrapper a {
+  display: inline-block;
+  padding: 1rem 0.8rem;
+}
+
+.nearby-wrapper a:hover {
+  color: #fc633f;
+}
+
+.field-card {
+  padding: 0.8rem 0.6rem;
+  margin: 0.8rem 0 0.6rem 0;
+  border: 1px solid #a5a5a5;
+  border-radius: 2px;
+}
+
+.bookmark-button,
+.interest-button {
+  border-radius: 2px;
+  background: #bbbbbb;
+  color: white;
+}
+
+.interest-button.interest-active {
+  background: #c81f32;
+  color: white;
+}
+
+.interest-button.interest-active:hover {
+  background: #c81f32;
+  color: white;
+}
+
+.interest-button:hover {
+  border-radius: 2px;
+  background: #bbbbbb;
+  color: white;
+}
+
+.bookmark-button:hover {
+  border-radius: 2px;
+  background: #bbbbbb;
+  color: white;
+}
+
+.bookmark-button.bookmark-active {
+  border-radius: 2px;
+  background: #2f2d2d;
+  color: white;
+}
+
+.bookmark-button.bookmark-active:hover {
+  border-radius: 2px;
+  background: #2f2d2d;
+  color: white;
+}
+
+.photo-counter {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5rem;
+  background: black;
+  opacity: 0.9;
+  color: #fff;
+  z-index: 3;
+  padding-left: 1rem;
+
+  line-height: 25px;
+}
+
+.house-image-navigation {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: 100%;
+}
+
+.house-image-navigation .icon {
+  height: 24px;
+  top: calc(50% - 12px);
+  position: relative;
+  z-index: 3;
+}
+
+.house-image-navigation .icon.icon-arrow-left {
+  left: 10px;
+}
+
+.house-image-navigation .icon.icon-arrow-right {
+  right: 10px;
+}
+
+.arrow-wrapper {
+  position: absolute;
+  width: 15%;
+  height: 100%;
+  z-index: 2;
+  top: 0;
+  cursor: pointer;
+}
+
+
+
+.arrow-wrapper.arrow-right {
+
+  right: 0;
+}
+.view-all:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+.view-all{
+  margin-left: 1rem
+}
+
+</style>
+<article class='details-container fh-s-bg' ng-controller="detailsController" ng-init="fetch_house()">
+  <div class="main-upper">
+    <div class="row">
+      <div class="columns medium-12">
+        <div class="upper-details">
+          <div class="row">
+            <div class="columns medium-3">
+              <div class="upper-details-1">
+                <div class="fh-font-title fh-t-c font-bold">
+                  &#8377; 1.5 Crore
+                </div>
+                <div class="fh-font-primary fh-t-c">
+                  @ 120,000 per Sq Yards
+                </div>
+                <div class="fh-font-primary fh-t-c">
+                  Estimated 4441,888,444 Per Month
+                </div>
+              </div>
+            </div>
+            <div class="columns medium-3">
+              <div class="upper-details-2 fh-t-c">
+                <div class="fh-font-title uppercase inline-block">{{house_list.propertyFeatures.bedrooms}} BHK &nbsp;
+                </div>
+                <div class="fh-font-title inline-block">&nbsp; {{house_list.propertyFeatures.bathrooms}} Baths
+                </div>
+                <div class="fh-font-primary"> Whats Nearbuy
+                </div>
+              </div>
+            </div>
+            <div class="columns medium-6">
+              <div class="row">
+                <div class="columns medium-6">
+                </div>
+                <div class="columns medium-6">
+                  <div class="button fh-font-primary interest-button  uppercase max-width" ng-click="toggle_interest()" ng-class="{'interest-active':house_list.is_interested}">Interested</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lower-details-switcher">
+          <div class="row large-up-6 medium-up-6">
+            <div class="columns">
+              <div class="content-changer">
+                <div class="fh-font-primary uppercase relative text-center">Overview
+                  <div class="lower-under"></div>
+                </div>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="content-changer">
+                <div class="fh-font-primary uppercase relative text-center" href="#amenities"><a href="#amenities">Amenities</a>
+                  <div class="lower-under"></div>
+                </div>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="content-changer">
+                <div class="fh-font-primary uppercase relative text-center">Location
+                  <div class="lower-under"></div>
+                </div>
+              </div>
+            </div>
+            <div class="columns ">
+              <div class="content-changer">
+                <div class="fh-font-primary uppercase relative text-center">Similar properties
+                  <div class="lower-under"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='main-lower'>
+    <div class="row">
+      <div class="columns medium-12">
+        <div class='main-lower-inner'>
+          <div class="row">
+            <div class="columns medium-4">
+              <div class="image-outer">
+                <div class="image-inner">
+                  <div class="image-inner-wrapper">
+                    <div>
+                      <img class="profile-photo" src='/uploads/{{house_list.photos[house_list.current_image_index].location}}' ng-click="open_photo_gallery()">
+                    </div>
+                    <div class="photo-counter font-bold fh-font-primary">
+                      <div class="photos-title inline-block"><i class="fa fa-picture-o" aria-hidden="true"></i>&nbsp;Photos&nbsp;( {{house_list.current_image_index+1}}/{{house_list.photos.length}} ) </div>
+                      <div class="inline-block view-all fh-font-primary fh-white-c font-bold" ng-click="open_photo_gallery()" >
+                        View all
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="house-image-navigation">
+                  <div class="arrow-wrapper arrow-left" ng-click="prev_image();$event.stopPropagation();$event.preventDefault()">
+                    <img class="icon icon-arrow-left float-left" src="/modules/core/client/img/icons/icon-arrow-left.svg" ng-hide="house_list.current_image_index===0">
+                  </div>
+                  <div class="arrow-wrapper arrow-right" ng-click="next_image();$event.stopPropagation();$event.preventDefault()">
+                    <img class="icon icon-arrow-right float-right" src="/modules/core/client/img/icons/icon-arrow-right.svg" ng-hide="house_list.current_image_index===house_list.photos.length-1">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="columns medium-8">
+              <div class="row medium-up-2 fh-font-primary ">
+                <div class="columns">
+                  <div class="font-bold">Price</div>
+                  <div class="" style="margin-bottom: 10px">1.5 crore</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Type</div>
+                  <div class="" style="margin-bottom: 10px">{{house_list.propertySubType}}</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Floor</div>
+                  <div class="" style="margin-bottom: 15px">{{house_list.propertyFeatures.floorNumber}} out of {{house_list.propertyFeatures.floors}}</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Society</div>
+                  <div class="" style="margin-bottom: 15px">{{house_list.location.nameOfComplex}}</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Landmarks</div>
+                  <div class="" style="margin-bottom: 15px">1.5 crore</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Electricity</div>
+                  <div class="" style="margin-bottom: 15px">1.5 crore</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Configuration</div>
+                  <div class="">{{house_list.propertyFeatures.bedrooms}} Bedrooms</div>
+                  <div class="" style="margin-bottom: 15px">{{house_list.propertyFeatures.washrooms}} washrooms</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Property Age</div>
+                  <div class="" style="margin-bottom: 15px">{{house_list.location.age}} years</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Overlooking</div>
+                  <div class="" style="margin-bottom: 15px">1.5 crore</div>
+                </div>
+                <div class="columns">
+                  <div class="font-bold">Facing</div>
+                  <div class="" style="margin-bottom: 15px">1.5 crore</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fh-font-primary font-bold">About Property</div>
+          <div class="fh-font-primary">t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="amenities-section" id="amenities">
+    <div class="row">
+      <div class="columns medium-12">
+        <div class="amenities-section-lower">
+          <div class="fh-font-primary font-bold">Amenities</div>
+          <div class="row medium-up-4">
+            <div class="columns">
+              ll
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="location-section" id="#location">
+    <div class="row">
+      <div class="columns medium-12">
+        <div class="location-section-lower">
+          <div class="fh-font-primary font-bold">Location</div>
+          <div class="main-head capitalize fh-font-title fh-p-c">Nearby Places &nbsp;<span data-tooltip="View on map"><a href="http://maps.google.com/maps?q={{house_lat}},{{house_lng}}" class="icon-icon-external-link fh-font-subhead" target="_blank"></a></span></div>
+          <div ng-controller="mapController" class="map-outer" ng-init="initialize_map()" ng-init="initialize_map()">
+            <div class="map-content fh-bg">
+              <div class="content-for clearfix">
+                <div class="nearby-wrapper fh-font-subhead-2 uppercase fh-t-c">
+                  <a ng-click="fetch_restaurants()" ng-class="{'fh-p-c':map_field==1}">Restaturants</a>
+                  <a ng-click="fetch_atms()" ng-class="{'fh-p-c':map_field==2}">ATMs</a>
+                  <a ng-click="fetch_banks()" ng-class="{'fh-p-c':map_field==3}">Banks</a>
+                  <a ng-click="fetch_trains()" ng-class="{'fh-p-c':map_field==4}">Train Station</a>
+                  <a ng-click="fetch_buses()" ng-class="{'fh-p-c':map_field==5}">Bus Stands</a>
+                  <a ng-click="fetch_hospitals()" ng-class="{'fh-p-c':map_field==6}">Hospitals</a>
+                  <a ng-click="fetch_gym()" ng-class="{'fh-p-c':map_field==7}">Gyms</a>
+                </div>
+              </div>
+            </div>
+            <div id="map"></div>
+            <div class="distance-time-wrapper fh-font-primary fh-t-c">
+              <div class="">
+                <div class="columns medium-9">
+                  <div class="field-1">
+                    <div ng-repeat="list in r_list" ng-show="r_list.length>0">
+                      <div class="field-card fh-white-bg">
+                        <div class="row collapse">
+                          <div class="columns small-8">{{list.name}}</div>
+                          <div class="columns small-2">{{list.distance}}</div>
+                          <div class="columns small-2">{{list.duration}}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div ng-show="r_list.length==0">
+                      <div class="field-card fh-white-bg">
+                        <div class="row collapse">
+                          <div>No results found</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="field-card fh-white-bg" ng-show="map_field===0">
+                        <div class="row collapse">
+                          <div class="columns medium-10 small-centered text-center">Click above tabs to find points of interests nearby</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+  .outer-wrapper {
+    padding: 10px;
+    border-radius: 2px;
+  }
+
+  .image-inner-similar {
+    height: 135px
+  }
+
+  .similar-title {
+    margin-bottom: 1rem;
+  }
+
+  </style>
+  <div class="similar-properties-section" id="#similar_properties">
+    <div class="row">
+      <div class="columns medium-12">
+        <div class="similar-properties-lower">
+          <div class="fh-font-primary font-bold similar-title">Similar Properties</div>
+          <div class="row medium-up-3 large-up-5 small-up-1 ">
+            <div class="columns">
+              <div class="outer-wrapper fh-s-bg">
+                <div class="image-outer">
+                  <div class="image-inner">
+                    <div class="image-inner-similar">
+                      <div>
+                        <img class="profile-photo" src='https://s3.ap-south-1.amazonaws.com/flathood.com/grams/homes/58a183638e602e463c6fd5ed/7766190dae642d833452a005d7ce9d921486979816308.jpeg'>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="similar-properties-data">
+                  <div class="row collapse">
+                    <div class="columns medium-6">
+                      <div class="similar-price fh-font-primary fh-t-c">1.2 Crore</div>
+                      <div class="similar-price fh-font-primary fh-t-c">Malviyanagar</div>
+                    </div>
+                    <div class="columns medium-6">
+                      <div class="similar-price fh-font-primary fh-t-c text-right">3 BHK</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+  .photos-full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+  }
+
+  .left-navigation,
+  .right-navigation {
+    color: white;
+    font-size: 140px;
+  }
+
+  .photo-viewer li {
+    /*float: left;*/
+    padding: 1rem;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .photo-viewer {
+    width: 100%;
+    padding-top: 2%;
+  }
+
+  .left-navigation,
+  .right-navigation {
+    color: white;
+    font-size: 140px;
+    width: 20px;
+    vertical-align: top;
+    line-height: 500px;
+    opacity: 1;
+    transition: all ease-in 0.3s;
+    cursor: pointer;
+  }
+
+  .left-navigation.hidden,
+  .right-navigation.hidden {
+    visibility: hidden;
+    opacity: 0
+  }
+
+  .photo-wrapper {
+    margin: auto;
+    text-align: center;
+  }
+
+  .image-gallery {
+    white-space: nowrap;
+    /*overflow: hidden;*/
+    position: relative;
+    left: 0;
+    transition: all linear 0.3s;
+  }
+
+  .image-gallery .single-photo {
+    width: 20%;
+    transition: all linear 0.3s;
+    line-height: 500px;
+    vertical-align: middle;
+    padding: 1%;
+    opacity: 0.6;
+  }
+
+  .image-gallery .single-photo.current {
+    width: 60%;
+    opacity: 1;
+  }
+
+  .single-photo img {
+    max-height: 500px;
+  }
+
+  .image-wrapper {
+    overflow: hidden;
+  }
+
+  .photo-caption {
+    margin-bottom: 0.4rem;
+    margin-top: 1.2rem;
+  }
+
+  .current .photo-caption,
+  .current .photo-count {
+    opacity: 1;
+    visibility: visible;
+    transition: all ease 0.3s;
+  }
+
+  .photo-caption,
+  .photo-count {
+    opacity: 0;
+    visibility: hidden;
+    line-height: 1;
+  }
+
+  .close-full-screen img {
+    width: 60px;
+  }
+
+  .show-small-1 {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  .show-small-2 {
+    width: 450px;
+  }
+
+  .photo-viewer-header {
+    color: white;
+    text-align: left;
+    /* border: 1px solid rgba(255, 255, 255, 0.15); */
+    padding: 2rem;
+  }
+
+  .close-full-screen {
+    color: white;
+    cursor: pointer;
+    padding: .5rem 3rem;
+  }
+
+  </style>
+  <div class="photos-full-screen" ng-show="photos_full_screen===true">
+    <div class="full-screen-inner relative">
+      <div class="photo-viewer inline-block">
+        <div class="row collapse full-stretch">
+          <div class="columns medium-1">
+            <div style="position:relative;" class="text-center">
+              <div class="left-navigation inline-block" ng-click="photo_prev()" ng-class="{hidden:current_index===1}">
+                <img src="/modules/core/client/img/icons/icon-arrow-left.svg"></div>
+            </div>
+          </div>
+          <div class="columns medium-10">
+            <div class="image-wrapper">
+              <div class="viewer-header-wraper">
+                <div class="row">
+                  <div class="columns small-12 medium-8">
+                    <div class="text-center photo-viewer-header uppercase">{{house.house_type | uppercase}} {{house.house_class}} in {{house.sub_locality}}, {{house.main_locality}}, {{house.city}} - {{::house.house_rent | currency : "&#8377;": 0 }}</div>
+                  </div>
+                  <div class="columns small-4">
+                    <div class="close-full-screen text-right" ng-click="close_photo_gallery()"><img src="/modules/core/client/img/icons/icon-close-white.svg"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="image-gallery" style="left:20%;">
+                <!-- <li class="blank_node"></li> -->
+                <div>
+                  <div class="single-photo inline-block" ng-class="{current:current_index==$index+1}" ng-repeat="url in house_list.photos track by $index">
+                    <!-- <div><img src="modules/core/client/img/icons/home3.png"></div> -->
+                    <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/f85b3ec5166a6d5edba635b8a3edc326.jpg"></div> -->
+                    <div class="photo-wrapper">
+                      <img src="/uploads/{{url.location}}">
+                    </div>
+                    <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/2d960cada6f117512c684292fc6dcbb0.jpg"></div> -->
+                    <div class="fh-font-title fh-white-c photo-caption text-center">{{url.heading}}</div>
+                    <div class="fh-font-subhead fh-p-c uppercase photo-count text-center">{{$index+1}} of {{photo_length}} photos</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="columns medium-1">
+            <div style="position:relative;" class="text-center">
+              <div class="right-navigation inline-block" ng-click="photo_next()" ng-class="{hidden:current_index===photo_length}"><img src="/modules/core/client/img/icons/icon-arrow-right.svg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

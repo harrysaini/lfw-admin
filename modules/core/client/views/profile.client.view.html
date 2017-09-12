@@ -1,0 +1,339 @@
+<style type="text/css">
+	.tab-switch{
+		width: 100%;
+		background: #f6f6f6;
+		padding : 0px 5%;
+	}
+
+	.tab{
+		cursor: pointer;
+		display : inline;
+		color : #a5a5a5 ;
+		padding: 1rem;
+		margin : 0px 10px ;
+		transition: border 0.5s ease-in ;
+	}
+
+	.tab.active{
+		border-bottom: 2px solid #fc633f;
+		color: #fc633f;
+	}
+
+	.profile-wrapper{
+		padding : 50px 10% ;
+	}
+
+	.profile-overview-wrapper{
+		padding : 25px ;
+		text-align: center;
+	}
+
+	.profile-details-wrapper{
+		padding : 25px 0px ;
+	}
+
+	.profile-block{
+		margin-bottom : 40px;
+		border: 1px solid rgba(148, 156, 154, 0.36);
+		border-radius: 5px;
+		position: relative;
+	}
+
+	.profile-block-title{
+		background: #e1e8e6;
+		padding : 15px ;
+		text-align: center;
+	}
+
+	.profile-block-content{
+		padding: 10px 60px;
+		position: relative;
+
+	}
+
+	.profile-info-div{
+		padding: 10px 2px;
+		margin: 25px 0px;
+		border-bottom: 1px solid rgba(148, 156, 154, 0.36);
+	}
+
+	.profile-image-wrapper{
+		width: 75%;
+		margin: 0 auto ;
+		border-radius: 10%;
+	}
+
+	.profile-image-wrapper>img{
+		border-radius: 10px;
+		border: 1px solid #e4e4e4; 
+	}
+
+	
+	.basic-info-wrapper{
+		padding : 10px;
+
+	}
+	.basic-info-wrapper>div{
+		margin: 10px;
+	}
+
+	.edit-btn{
+		position: absolute;
+		right: 15px;
+		top: 15px;
+		color: #899192;
+		font-weight: 100;
+		font-size: 100%;
+		cursor: pointer;
+	}
+
+	.edit-btn:hover{
+		color : grey;
+	}
+
+	.text-capitilise{
+		text-transform: capitalize;
+	}
+
+	.profile-info-edit-div{
+		border-radius: 5px;
+		top: 0;
+		left: 3%;
+		width: 94%;
+		background: white;
+		z-index: 10;
+		padding : 25px 50px;
+		position: absolute;
+		margin : 0 auto;
+		border: 1px solid #f6f6f6;
+		box-shadow: 0 0 0 0.75pt #d1d1d1, 0 0 3pt 0.75pt #ccc;
+	}
+	.single-edit-block > div{
+		margin : 10px;
+	}
+
+	.single-edit-block{
+		margin : 5px;
+	}
+
+	.edit-div-btns-wrapper{
+		text-align: center;
+	}
+	.edit-div-btns-wrapper .button {
+		margin : 10px;
+		border-radius: 2px;
+		min-width: 25%;
+	}
+
+	.verify-link{
+		float: right;
+		color: #8080ca;
+		cursor: pointer;
+	}
+
+	.verify-link:hover{
+		color: blue;
+	}
+
+
+</style>
+
+<div class="tab-switch">
+	<div class="tabs-list row">
+		<div class="tab" ng-class="{'active' : displayedTab=='Dashboard'}" ng-click="changeDisplayedTab('Dashboard')">
+			Dashboard
+		</div>
+		<div class="tab" ng-class="{'active' : displayedTab=='Shortlisted'}" ng-click="changeDisplayedTab('Shortlisted')">
+			Shortlisted Properties
+		</div>
+	</div>
+</div>
+
+<div ng-show="displayedTab=='Dashboard'">
+
+	<div ng-controller="ProfileController">
+		<div class="profile-wrapper">
+			<div class="profile">
+				<div class="row">
+
+					<div class="columns medium-4">
+						<div class="profile-overview-wrapper">
+							<div class="profile-overview">
+								<div class="profile-image-wrapper">
+									<img src ="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
+								</div>
+								<div class="basic-info-wrapper">
+									<div class="fh-font-title text-capitilise">{{profile.displayName}}</div>
+									<div class="fh-font-secondary">{{profile.email}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns medium-8">
+						<div class="profile-details-wrapper">
+							<div class="profile-details">
+
+
+								<div class="profile-block">
+									<div class="edit-btn"  ng-click="editBlock('basic-info')">
+										<i class="fa fa-pencil"></i> edit
+									</div>
+									<div class="profile-block-title fh-font-title">
+										Basic Information
+									</div>
+									<div class="profile-block-content">	
+
+										<div class="profile-info-div" ng-repeat="(heading , value) in basicInformation" >
+											<div class="row" >
+												<div class="columns small-6 text-capitilise ">
+													{{ heading | underScoreSplit }}
+												</div>
+												<br>
+												<div class="columns small-6 text-capitilise">
+													{{value}}
+												</div>
+											</div>
+
+										</div>
+
+										<div class="profile-info-edit-div" ng-show="isInEdit['basic-info']">
+
+											<div class="single-edit-block" ng-repeat="(heading , value) in basicInformation" > 
+
+												<div class="text-capitilise font-bold">
+													{{ heading | underScoreSplit }}
+												</div>
+												<div class="edit-input">
+													<input type="text" ng-model="editInformation.basicInformation[heading]">
+												</div>
+
+											</div>
+
+
+											<div class="edit-div-btns-wrapper">
+												<div class="button success" ng-click="saveBasicProfile()">{{basicSaveBtnText}}</div>
+												<div class="button secondary" ng-click="cancelEditField('basic-info')"> Cancel</div>
+											</div>
+
+										</div>
+
+
+									</div>
+								</div>
+
+
+								<div class="profile-block">
+									<div class="edit-btn"  ng-click="editBlock('contact-info')">
+										<i class="fa fa-pencil"></i> edit
+									</div>
+									<div class="profile-block-title fh-font-title">
+										Contact Information
+									</div>
+									<div class="profile-block-content">	
+
+										<div class="profile-info-div" >
+											<div class="row" >
+												<div class="columns small-6 text-capitilise ">
+													Mobile Number
+												</div>
+												<br>
+												<div class="columns small-6">
+													{{contactInformation.phone}}
+
+													<div class="verify-link" ng-click="showMobileVerifyPopup()">
+														verify
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+
+										<div class="profile-info-div" >
+											<div class="row" >
+												<div class="columns small-6 text-capitilise ">
+													Email Id
+												</div>
+												<br>
+												<div class="columns small-6">
+													{{contactInformation.email}}
+
+													<div class="verify-link" ng-click="showEmailVerifyPopup()">
+														verify
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="profile-info-edit-div" ng-show="isInEdit['contact-info']">
+
+											<div class="single-edit-block" > 
+
+												<div class="text-capitilise font-bold">
+													Mobile Number
+												</div>
+												<div class="">
+													<div class="phone-wrapper" style="width: 100%;">
+														<input type="text" class="phone-code-input" placeholder="+91" value="+91" ng-model="editInformation.contactInformation.phoneCode"
+														ng-class="{'error-input' : !contactValidations.isCodeValid}"> 
+														<input type="text" class="phone-number-input" placeholder="primary phone" ng-model="editInformation.contactInformation.phoneNumber"
+														ng-class="{'error-input' :!contactValidations.isPhoneValid}">
+													</div>
+												</div>
+												<div class="error" ng-show="!contactValidations.isPhoneValid">
+													Please provide correct phone number
+												</div>
+												<div class="error" ng-show="!contactValidations.isCodeValid">
+													Please provide correct phone code 
+												</div>
+
+											</div>
+
+											<div class="single-edit-block" > 
+
+												<div class="text-capitilise font-bold">
+													Email id
+												</div>
+												<div class="edit-input">
+													<input type="email" ng-model="editInformation.contactInformation.email"
+													ng-class="{'error-input' : !contactValidations.isEmailvalid }"> 
+												</div>
+												<div class="error" ng-show="!contactValidations.isEmailvalid">Please provide correct email</div>
+
+											</div>
+
+
+											<div class="edit-div-btns-wrapper">
+												<div class="button success" ng-click="saveContactData()">{{contactSaveBtnText}}</div>
+												<div class="button secondary" ng-click="cancelEditField('contact-info')"> Cancel</div>
+											</div>
+
+										</div>
+
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div ng-show="displayedTab=='Shortlisted'">
+
+	<div ng-include="'/modules/core/client/views/shortlist.client.view.html'"></div>
+
+</div>
+
+

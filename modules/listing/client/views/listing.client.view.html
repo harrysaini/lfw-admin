@@ -1,0 +1,469 @@
+<style>
+  <<<<<<< HEAD .listing-wrapper {
+    min-height: 100vh;
+  }
+
+
+  .listing-wrapper-inner {
+    padding: 20px;
+    border: 1px solid #f1f1f1;
+    border-radius: 2px;
+    background: white;
+  }
+
+  .image-outer {
+    position: relative;
+  }
+
+  .image-inner {
+    overflow: hidden;
+  }
+
+  .image-inner-wrapper {
+    height: 155px;
+  }
+
+  .profile-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    background-position: center center;
+    background-size: cover;
+    transition: opacity ease 0.3s;
+  }
+
+  .listing-wrapper-details {
+    border: 1px solid #e4dfdf;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+
+  .listing-wrapper-details:hover {
+    box-shadow: 0 0 10px 0px rgba(167, 165, 164, 0.74);
+  }
+
+  .side-details-1 {
+    padding: 15px 10px;
+    border-bottom: 1px solid #d2cece;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .side-details-2 {
+    padding: 10px;
+    padding-left: 20px;
+    border-bottom: 1px solid #d2cece;
+  }
+
+  .side-details-3 {
+    padding: 10px;
+    padding-left: 20px;
+    border-bottom: 1px solid #d2cece;
+  }
+
+  .fh-font-subhead-2 {
+    letter-spacing: 0rem
+  }
+
+  .agent-section {
+    padding: 15px;
+    border-right: 1px solid #d2cece;
+  }
+
+  .interest-button {
+    margin-top: 10px;
+  }
+
+  .feature-section {
+    padding: 20px;
+  }
+
+  .filter-wrapper {
+    border-radius: 2px;
+  }
+
+  .filter-wrapper-inner {
+    padding: 10px;
+    padding-top: 0px;
+  }
+
+
+  .clear-btn-filters {
+    display: inline;
+    float: right;
+  }
+
+  .filter-name {
+    display: inline;
+  }
+
+  .filters-list-box {
+    margin-top: 5px;
+    padding: 5px;
+    background: white;
+  }
+
+  .single-filter {
+    padding: 5px;
+    border-bottom: 2px solid #eccece;
+    margin-bottom: 10px;
+  }
+
+  .full-width {
+    width: 98% !important;
+    max-width: 100%;
+  }
+
+  .filter-checkbox label {
+    font-size: 80%;
+    text-transform: capitalize;
+  }
+
+  .filters-lists {
+    margin: 10px 0px;
+    overflow: auto;
+  }
+
+  .map_icon {
+    position: absolute;
+    top: 3px;
+    right: 6px;
+  }
+
+  .map_icon:hover {
+    color: #ca0c0c;
+  }
+
+  .map_model {
+    position: fixed;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    left: 25%;
+    background: white;
+    border-radius: 2px;
+  }
+
+  .google-map {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .map-modelinner {
+    padding: 10px;
+  }
+
+  .slider-div {
+    margin-top: 10px;
+  }
+
+
+
+
+
+
+  /*search box css*/
+
+  .search-input-wrapper {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    padding: 11px 5px;
+    box-sizing: border-box;
+    color: #656d78;
+  }
+
+  .search-symbol {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+  }
+
+  .search-input {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    outline: 0;
+    line-height: 1.70em;
+  }
+
+  .tag-input-wrapper {
+    cursor: text;
+    width: 100%;
+    padding-left: 45px;
+    padding-right: 80px;
+    display: inline-block;
+    min-height: 36px;
+  }
+
+  .search-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    float: right;
+    border-radius: 2px;
+  }
+
+  .tag {
+    display: inline-block;
+    /*background: #99c2ff;*/
+    border: 1px solid #99c2ff;
+    border-radius: 15px;
+    padding: 8px 12px;
+    margin: 2px;
+    padding-right: 6px;
+  }
+
+  .tag-close {
+    display: inline;
+    font-size: 75%;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+
+  .tag-close:hover {
+    color: rgba(40, 49, 127, 0.67);
+  }
+
+  .tags-list {
+    display: inline-block;
+  }
+
+  .input-wrapper {
+    display: inline-block;
+    margin-left: 5px;
+    padding-top: 2px;
+  }
+
+  .listing-search-div {
+    padding: 10px;
+    margin: 0 auto;
+  }
+
+  .search-disabled {
+    opacity: .25;
+  }
+
+  .loading-div {
+    text-align: center;
+    padding-top: 7em;
+  }
+
+  .filter-applied-list{
+    margin : 0 auto;
+    padding : 10px ;
+  }
+
+  .filter-type-list{
+    display: inline-block;
+  }
+
+  .inline{
+    display: inline-block;
+  }
+
+
+  .filter-tag-wrapper{
+    display: inline-block;
+  }
+
+  .filter{
+    padding: 6px 11px;
+    display: inline-block;
+    border: 1px solid #9fdfe6;
+    border-radius: 24px;
+    margin: 0px 5px;
+  }
+
+</style>
+<article class="listing-controller" ng-controller="ListingController" ng-init="fetch_houses()">
+  <div class="listing-search-div medium-7 ">
+    <div class="search-input-wrapper">
+      <div class="search-symbol">
+        <i class="fa fa-search fa-2x"></i>
+      </div>
+      <div class="tag-input-wrapper">
+        <div class="inline-div tags-list hide-for-small-only">
+        <div ng-repeat='locality in inputLocalitySearched' class="tag">
+            {{locality}}
+            <div class="tag-close" ng-click="removeSearchLocation(locality)">
+              <i class="fa fa-close"></i>
+            </div>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <input placeholder="Search " class="search-input fh-font-title small-centered fh-t-c" ng-keydown="searchFieldInputChange($event)">
+        </div>
+      </div>
+      <div class="button secondary search-btn" ng-class="{ 'search-disabled' : searchDisabled  }" ng-click="onSearchClick()">Search</div>
+    </div>
+  </div>
+
+  
+
+  <div class="listing-wrapper">
+
+    <div class="filter-applied-list-wrapper">
+      <div class="filter-applied-list medium-7 fh-font-primary">
+        <div class="search-applied-list inline" ng-repeat="search in localitySearched" >
+          <div class="filter">
+            {{search}}
+            <div class="tag-close" ng-click="removeSearchApplied(search)">
+              <i class="fa fa-close"></i>
+            </div>
+          </div>
+
+        </div>
+        <div class="filter-type-list" ng-repeat="(filterName , filterList) in filtersApplied" >
+          <div class="filter-tag-wrapper" ng-repeat="(filter , val) in filterList "  >
+            <div class="filter" ng-if="val">
+              {{filter}}
+              <div class="tag-close" ng-click="removeAppliedFilter(filterName , filter )" ">
+                <i class="fa fa-close"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row  collapse full-width">
+      <div class="columns medium-2">
+        <div class="filter-wrapper">
+          <div class="filter-wrapper-inner">
+            <div class="sort-container">
+              <div class="filter-name fh-font-primary text-left">Sort by</div>
+              <select ng-model="sortBy">
+                <option ng-repeat="sortOptions in allSortOptions" value="{{sortOptions}}">{{sortOptions}}</option>
+              </select>
+            </div>
+            <div class="filter-container">
+              <div class="filter-name fh-font-primary text-left">Filters</div>
+              <div class="clear-btn-filters fh-font-primary text-left">Clear All</div>
+              <div class="filters-list-box">
+                <!-- budget filter -->
+                <div class="single-filter">
+                  <div class="fh-font-secondary text-left">
+                    Budget
+                  </div>
+                  <div class="slider-div">
+                    <rzslider rz-slider-model="priceSlider.minValue" rz-slider-high="priceSlider.maxValue" rz-slider-options="priceSlider.options"></rzslider>
+                  </div>
+                </div>
+                <!-- budget filter -->
+                <div class="single-filter">
+                  <div class="fh-font-secondary text-left">
+                    Area
+                  </div>
+                  <div class="slider-div">
+                    <rzslider rz-slider-model="areaSlider.minValue" rz-slider-high="areaSlider.maxValue" rz-slider-options="areaSlider.options"></rzslider>
+                  </div>
+                </div>
+                <!-- all checkbox filters -->
+                <div class="single-filter" ng-repeat="( filterName , filterValues ) in filtersList ">
+                  <div class="fh-font-secondary text-left">
+                    {{filterName}}
+                  </div>
+                  <div class="filters-lists row collapse medium-up-1 " ng-class="{'medium-up-2' : filterName ==='Bedroom' }">
+                    <div ng-repeat="filters in filterValues" class="filter-checkbox columns ">
+                      <input ng-attr-id="{{ filters+'-filter' }}" type="checkbox" ng-checked="filtersApplied[filterName][filters]" ng-model='filtersApplied[filterName][filters]' ng-change="applyCheckboxFilters(filterName)">
+                      <label ng-attr-for="{{ filters+'-filter' }}">{{filters}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns medium-7 ">
+        <div class="loading-div" ng-show="!searchResultsFetched">
+          <img src="/images/loading.gif" > 
+        </div>
+        <div class="listing-wrapper-inner" ng-show="searchResultsFetched">
+          <div class="no-results-found text-center" ng-show="noResultsFound">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> No results found
+          </div>
+          <div class="listing-wrapper-details " ng-repeat="house in house_list ">
+            <a ui-sref="details-property({slug:house.property_params.house_slug})">
+              <!--    <div class="map_icon fh-t-c fh-font-primary " ng-click="map_initializer(house)"><a href="http://maps.google.com/maps?q={{house.property_params.location.loc[1]}},{{house.property_params.location.loc[0]}}" class="icon-icon-external-link " target="_blank"><i class=" fh-p-c fa fa-location-arrow" aria-hidden="true"> </i> Map</a></div> -->
+              <div class="row collapse ">
+                <div class="columns medium-4 ">
+                  <div class="image-outer">
+                    <div class="image-inner">
+                      <div class="image-inner-wrapper">
+                        <div>
+                          <img class="profile-photo" src='https://s3.ap-south-1.amazonaws.com/flathood.com/grams/homes/58a183638e602e463c6fd5ed/7766190dae642d833452a005d7ce9d921486979816308.jpeg'>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="columns medium-8">
+                  <div class="side-details-1">
+                    <div class="row collapse">
+                      <div class="columns medium-3">
+                        <div class="fh-font-primary font-bold fh-t-c"> &#8377; 1.5 crore</div>
+                      </div>
+                      <div class="columns medium-9">
+                        <div class="fh-font-primary capitalize fh-p-c ">{{house.property_params.propertyFeatures.bedrooms}} BHK {{house.property_params.propertySubType}} in {{house.property_params.location.main_locality}}</div>
+                      </div>
+                    </div>
+                    <!-- <div class="map_model"> -->
+                    <!--   <div class="map-modelinner">
+                      <div id="map"></div>
+                    </div>
+                  </div> -->
+                </div>
+                <div class="side-details-2">
+                  <div class="row collapse">
+                    <div class="columns medium-10">
+                      <div class="fh-font-subhead-2 fh-t-c">Built up Area : {{house.property_params.propertyFeatures.area.coveredArea}} @4444</div>
+                    </div>
+                  </div>
+                  <div class="row collapse">
+                    <div class="columns medium-10">
+                      <div class="fh-font-subhead-2 fh-t-c">Society :<span class="fh-font-primary" style="color:black"> {{house.property_params.location.nameOfComplex}}</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="side-details-3">
+                  <div class="row collapse">
+                    <div class="columns medium-12">
+                      <div class="fh-font-subhead-2 fh-t-c">Highlights : Resale / Ready to move / 1 yrs old / floor 2 of 4 / reserved parking</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="columns medium-4 ">
+                <div class="agent-section">
+                  <div class="agent-name fh-font-primary">John Doe</div>
+                  <div class="agent-class fh-font-primary">Abc Property</div>
+                  <div class="button interest-button fh-p-bg" style="width:100%">Interested</div>
+                </div>
+              </div>
+              <div class="columns medium-8">
+                <div class="feature-section">
+                  <div class="row collapse">
+                    <div class="columns medium-12">
+                      <div class="fh-font-subhead-2 fh-t-c">Description : Resale / Ready to move / 1 yrs old / floor 2 of 4 / reserved parking</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</article>

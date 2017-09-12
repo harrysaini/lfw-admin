@@ -1,0 +1,117 @@
+<style>
+.header {
+  position: fixed;
+  background: white;
+  height: 50px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 2px #f1f1f1;
+}
+
+.sub-header {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px 25px 0 25px;
+  position: relative;
+}
+
+
+.max {
+  max-width: 100%
+}
+
+.sub-header {
+  cursor: pointer;
+}
+
+.customer-image {
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  background-size: cover;
+  background-position: center center;
+}
+
+.customer-info-panel {
+  position: relative;
+  padding: 0 0.6rem;
+  cursor: pointer;
+  padding-right: 1.5rem;
+}
+
+.customer-info-panel .dropdown {
+  border: 1px solid #f9f9f9;
+  position: absolute;
+  width: 200px;
+  z-index: 101;
+  top: 51px;
+  right: 0;
+}
+
+svg#profile-downarrow {
+  width: .4rem;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  transition: transform .2s linear
+}
+
+svg#profile-downarrow.arrow-active {
+  width: .4rem;
+  -ms-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  transition: transform .2s linear
+}
+
+span.profile-dropdown {
+  margin-left: .4rem;
+  vertical-align: middle;
+}
+
+.dd-list>li {
+  padding: 5px 10px
+}
+
+.dd-list>li:hover {
+  background: #f9f9f9;
+}
+
+.dd-list {
+  margin-bottom: 0
+}
+
+</style>
+<section ng-controller="HeaderController">
+  <div class="header">
+    <div class="row collapse full-stretch max">
+      <div class="columns medium-12">
+        <div class="login float-right " ng-show="user==null">
+          <div class="sub-header fh-p-c fh-font-primary uppercase" ng-click="openLoginSignupPopup()">
+            Login/Signup
+          </div>
+        </div>
+        <div class="login float-right " ng-show="user">
+          <div class="customer-info-panel" ng-click="dd_profile=!dd_profile;fetch_interested()">
+            <div class="relative" ng-show="user!==null">
+              <span class="customer-name fh-font-primary fh-t-c">{{::user.email}}
+                                </span>
+              <span class="customer-image vertical-align" style="background-image:url('{{::user.profileImageURL}}') "></span>
+              <span class="profile-dropdown"><svg id="profile-downarrow" data-name="profile-downarrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.13 33.2" ng-class="{'arrow-active':dd_profile}"><defs><style>.profile-downarrow{fill:rgba(59, 224, 192, 0);;stroke:#c81f32;stroke-miterlimit:10;stroke-width:2.5px;}</style></defs><title>icon-arrow-right</title><polyline class="profile-downarrow" points="0.27 0.27 16.6 16.6 0.27 32.93"></polyline></svg>
+                                </span>
+              <div class="dropdown fh-white-bg" ng-show="dd_profile===true">
+                <ul class="no-bullet dd-list fh-font-primary fh-t-c">
+                  <li><a ui-sref="dashboard-home" href="/dashboard/home">View Your Shortlisted ({{interest_count}}) </a></li>
+                  <li><a ui-sref="dashboard-home" href="/dashboard/home">Dashboard</a></li>
+                  <li><a href="/api/auth/signout" target="_self">Log Out</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

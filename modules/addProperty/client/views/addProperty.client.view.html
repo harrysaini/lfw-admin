@@ -1,0 +1,810 @@
+<article class="add-contr" ng-controller="addPropertyController" ng-init="switch_type='1'">
+  <style type="text/css">
+.add-contr {
+    background: #f7f7f7;
+    padding-top: 1rem;
+    min-height: 100vh
+  }
+
+  .tabs-list {
+    background: white;
+    border: solid grey 1px;
+    border-radius: 2px;
+    padding: 10px;
+    line-height: 80%;
+    overflow-x: auto;
+    width: 88%;
+  }
+
+  .tabs-list>ul {
+    margin-bottom: 0px;
+  }
+
+  .tab-component {
+    padding: 15px;
+    padding-left: 40px;
+    background: white;
+
+    border: solid 1px grey;
+    border-radius: 2px;
+  }
+
+  .tab-component-2 {
+    padding: 15px;
+
+    background: white;
+
+    border: solid 1px grey;
+    border-radius: 2px;
+  }
+
+  .tab-component>div {
+    margin: 15px;
+  }
+
+
+  .add-title {
+    padding-top: 8px;
+  }
+
+  .basic-details-lower {
+    margin-top: 1rem;
+  }
+
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+    .tabs-list {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 40.063em) {
+    .tabs-list .inline-list {
+
+      width: 450px
+    }
+    .tabs-list {
+      overflow-x: scroll;
+      width: 100%;
+    }
+  }
+
+  .button-property {
+    border-radius: 0px;
+    padding: 8px 30px;
+    background: #f1f1f1;
+    display: inline-block;
+    border: 1px solid #d2c7d1;
+    cursor: pointer;
+
+    color: rgb(144, 140, 140);
+  }
+
+  .title-heading {
+    margin-top: 1rem;
+    color: rgb(144, 140, 140);
+  }
+
+  .residential-features {
+    margin-top: 1rem;
+    margin-left: 5px
+  }
+
+  .button-property.active {
+    font-weight: bold;
+    color: rgba(21, 22, 25, 0.74);
+    background: white
+  }
+
+  .available-for {
+    border-radius: 2px;
+    height: 2.5rem;
+  }
+
+  .top-switch.active {
+    font-weight: bold;
+  }
+}
+
+  </style>
+  <div class="row">
+    <div class="columns medium-7 medium-centered">
+      <div class="row">
+        <div class="columns large-3  medium-3 small-12">
+          <div class="fh-font-title font-bold add-title ">Add a Property</div>
+        </div>
+        <div class="columns large-9  medium-9 small-12">
+          <div class="tabs-list ">
+            <ul class="inline-list fh-font-primary fh-t-c">
+              <li>
+                <a class="top-switch" ng-click="switch_type='1'" ng-class="{active:switch_type=='1'}">Basic details</a>
+              </li>
+              <li>
+                <a class="top-switch" ng-click="switch_type='2';initialize_map()" ng-class="{active:switch_type=='2'}">Location</a>
+              </li>
+              <li>
+                <a class="top-switch" ng-click="switch_type='3'" ng-class="{active:switch_type=='3'}">Propery details</a>
+              </li>
+              <li>
+                <a class="top-switch" ng-click="switch_type='4'" ng-class="{active:switch_type=='4'}">Pricing</a>
+              </li>
+              <li>
+                <a class="top-switch" ng-click="switch_type='5'; next_button_text='Submit'" ng-class="{active:switch_type=='5'}">Features</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <style>
+  .prev-button {
+    display: inline-block;
+    text-align: center;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-transition: background-color .25s ease-out, color .25s ease-out;
+    transition: background-color .25s ease-out, color .25s ease-out;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: .85em 1em;
+    margin: 0 0 1rem;
+    font-size: .9rem;
+    background-color: #2199e8;
+    color: #fefefe;
+    width: 100%;
+  }
+
+  .next-button {
+    display: inline-block;
+    text-align: center;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-transition: background-color .25s ease-out, color .25s ease-out;
+    transition: background-color .25s ease-out, color .25s ease-out;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 0;
+    padding: .85em 1em;
+    margin: 0 0 1rem;
+    font-size: .9rem;
+
+    color: #fefefe;
+    width: 100%;
+    border-radius: 2px;
+  }
+
+  </style>
+  <section ng-show="switch_type=='1'">
+    <div class="row">
+      <div class="columns large-7 small-centered medium-10">
+        <div id="basic-details" class="tab-component">
+          <div class="row">
+            <div class="columns medium-3 small-12">
+              <div class="title-heading fh-font-subhead-2 fh-t-c font-bold">List property for</div>
+            </div>
+            <div class="columns medium-7 small-12 fh-font-primary fh-t-c">
+              <div class=" button-property " ng-class="{'active':post_property.transitionType=='sell'}" ng-click="transitionType('sell')">Sell</div>
+              <div class=" button-property " ng-class="{'active':post_property.transitionType=='rent'}" ng-click="transitionType('rent')">Rent</div>
+              <div class=" button-property " ng-class="{'active':post_property.transitionType=='paying guest'}" ng-click="transitionType('paying guest')">Paying Guest</div>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="columns medium-3 small-12 ">
+              <div class="title-heading fh-font-subhead-2 fh-t-c font-bold">Property Type</div>
+            </div>
+            <div class="columns medium-7 small-12 fh-font-primary ">
+              <div class=" button-property " ng-class="{'active':post_property.propertyType=='residential'}" ng-click="propertyType('residential')">Residential</div>
+              <div class=" button-property " ng-class="{'active':post_property.propertyType=='commercial'}" ng-click="propertyType('commercial')">Commercial</div>
+              <div class="residential-features ">
+                <div ng-repeat="type in residential_type " ng-if="post_property.propertyType=='residential'">
+                  <input type="radio" name="propertyType" ng-model="post_property.propertySubType" value="{{type}}" required>
+                  <label for="propertySubType" class="capitalize">{{type}}</label>
+                </div>
+                <div ng-repeat="type in commercial_type " ng-if="post_property.propertyType=='commercial'">
+                  <input type="radio" name="propertyType" ng-model="post_property.propertySubType" value="{{type}}" required>
+                  <label for="propertySubType" class="capitalize">{{type}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="columns medium-3 small-12 ">
+              <div class="title-heading fh-font-subhead-2 fh-t-c font-bold">Willing to rent to</div>
+            </div>
+            <div class="columns medium-4 small-12 ">
+              <select class="available-for" ng-model="post_property.available_for">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in available_for">{{type}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="columns medium-3 small-12 ">
+              <div class="title-heading fh-font-subhead-2 fh-t-c font-bold"> Agreement type
+              </div>
+            </div>
+            <div class="columns medium-8 small-12 ">
+              <input id="checkbox1 " type="radio" value="Company lease agreement" ng-model="post_property.agreementType">
+              <label for="checkbox1 ">Company lease agreement</label>
+              <input id="checkbox2 " type="radio" value="any" ng-model="post_property.agreementType">
+              <label for="checkbox2 ">Any</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns medium-4 medium-centered">
+              <button class="next-button fh-p-bg" ng-click="nextCall()" ng-disabled="next_button_disable">{{next_button_text}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+  input.location-input {
+    margin-bottom: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .auto-complete-places {
+    border-bottom: 1px solid #f1f1f2
+  }
+
+  .map-marker-info {
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 2px;
+  }
+
+  .map-marker-info.active {
+    animation-duration: 1s;
+  }
+
+  #map {
+    height: 300px;
+  }
+
+  .center_map_marker {
+    position: absolute;
+    top: calc(50%);
+    left: calc( 50% - 11px);
+    width: 22px;
+    height: auto;
+    z-index: 1;
+    margin-top: -40px;
+  }
+
+  .additional-text {
+    margin-top: 5px;
+    height: 35px;
+    border-radius: 2px;
+    color: #4f4f4f;
+  }
+
+  hr {
+    border-bottom: 1px solid #c3b5b5;
+  }
+
+  .lower-details>input[type='radio'] {}
+
+  input[type='radio'] {
+    box-sizing: border-box;
+    appearance: none;
+    background: white;
+    outline: 1px solid #333;
+    border: 3px solid white;
+    width: 13px;
+    height: 13px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+
+
+
+  input[type='radio']:checked {
+    background: #333;
+  }
+
+  input[type='checkbox'] {
+    box-sizing: border-box;
+    appearance: none;
+    background: white;
+    outline: 1px solid #333;
+    border: 3px solid white;
+    width: 13px;
+    height: 13px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+
+
+
+  input[type='checkbox']:checked {
+    background: #333;
+  }
+
+  label {
+    padding-bottom: 5px;
+  }
+
+  </style>
+  <section ng-show="switch_type=='2'">
+    <div class="row">
+      <div class="columns large-7 small-centered medium-10">
+        <div id="basic-details" class="tab-component-2">
+          <div class="location-input">
+            <div class="auto-complete-places">
+              <input ng-model="locality" id="autocomplete-address" type="text" value="" class="location-input fh-p-c" placeholder="Enter your society, locality, or nearest landmark" />
+            </div>
+            <div style="position: relative;overflow: hidden;">
+              <div id="map"></div>
+              <div ng-show="location_entered">
+                <div class="absolute fh-white-bg fh-t-c fh-font-primary map-marker-info slideInDown text-center
+" ng-class="{active:location_entered}">
+                  Drag the map to fix marker at the approx. house location
+                </div>
+              </div>
+              <div class="center_map_marker" ng-show="location_entered"><img src="/assets/icons/spotlight-poi_hdpi.png">
+              </div>
+            </div>
+          </div>
+          <div class="basic-details-lower">
+            <div class="row medium-up-3 small-up-2 fh-font-subhead-2 fh-t-c font-bold capitalize">
+              <div class="columns  fh-t-c ">
+                <span class="city-span ">city</span>
+                <input type="text" class="additional-text" ng-model="post_property.city">
+              </div>
+              <div class="columns  fh-t-c">
+                <span class="city-span ">state</span>
+                <input type="text" class="additional-text" ng-model="post_property.state">
+              </div>
+              <div class="columns  fh-t-c">
+                <span class="city-span ">pincode</span>
+                <input type="text" class="additional-text" ng-model="post_property.pincode">
+              </div>
+              <hr>
+              <div class="columns  fh-t-c">
+                <span class="city-span ">sub locality</span>
+                <input type="text" class="additional-text" ng-model="post_property.sub_locality">
+              </div>
+              <div class="columns  fh-t-c">
+                <span class="city-span ">main locality</span>
+                <input type="text" class="additional-text" ng-model="post_property.main_locality">
+              </div>
+            </div>
+            <hr>
+            <div class="row medium-up-3 fh-font-subhead-2 fh-t-c font-bold capitalize ">
+              <div class="columns  fh-t-c">
+                <span class="city-span ">Name of complex</span>
+                <input type="text" class="additional-text" ng-model="post_property.nameOfComplex">
+              </div>
+              <div class="columns  fh-t-c">
+                <span class="city-span ">Building name</span>
+                <input type="text" class="additional-text" ng-model="post_property.buildingName">
+              </div>
+            </div>
+            <hr>
+            <div class="row fh-font-subhead-2 fh-t-c font-bold">
+              <div class="columns medium-12 fh-t-c">
+                <span class="city-span ">Address</span>
+                <input type="text" class="additional-text" ng-model="post_property.address">
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns medium-4 medium-centered">
+                <button class="next-button fh-p-bg" ng-click="nextCall()" ng-disabled="next_button_disable">{{next_button_text}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section ng-show="switch_type=='4'">
+    <div class="row">
+      <div class="columns large-7 small-centered medium-10">
+        <div id="basic-details" class="tab-component-2">
+          <div class="row medium-up-3">
+            <div class="columns">
+              <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Expected Price</label>
+              <input id="plotarea" type="number" ng-model="post_property.expectedPrice" placeholder="Amount">
+            </div>
+            <div class="columns">
+              <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Token Amount</label>
+              <input id="plotarea" type="number" ng-model="post_property.tokenAmount" placeholder="Amount">
+            </div>
+            <div class="columns">
+              <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Maintainance Charge</label>
+              <input id="plotarea" type="number" ng-model="post_property.maintainanceCharges" placeholder="Charges per unit">
+            </div>
+            <div class="columns">
+              <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Brokerage Amount</label>
+              <input id="plotarea" type="number" ng-model="post_property.borkerageAmount" placeholder="Amount">
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns medium-4 medium-centered">
+              <button class="next-button fh-p-bg" ng-click="nextCall()" ng-disabled="next_button_disable">{{next_button_text}}</button>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section ng-show="switch_type=='3'">
+    <div class="row">
+      <div class="columns large-7 small-centered medium-10">
+        <div id="basic-details" class="tab-component-2">
+          <div class="row medium-up-2 ">
+            <div class="columns  ">
+              <div class="row">
+                <div class="columns medium-6">
+                  <label for="coveredarea" class="fh-font-subhead-2 fh-t-c font-bold">Covered Area</label>
+                  <input id="coveredarea" type="number" ng-model="post_property.coveredArea">
+                </div>
+                <div class="columns medium-6">
+                  <label for="coveredarea" class="fh-font-subhead-2 fh-t-c font-bold">Area Type</label>
+                  <select class="available-for" ng-model="post_property.area_type">
+                    <option value="">Select</option>
+                    <option value="{{type}}" ng-repeat="type in area_type">{{type}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="columns  ">
+              <div class="row">
+                <div class="columns medium-6">
+                  <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Plot Area</label>
+                  <input id="plotarea" type="number" ng-model="post_property.plotArea">
+                </div>
+                <div class="columns medium-6">
+                  <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Area Type</label>
+                  <select clbass="available-for" ng-model="post_property.area_type">
+                    <option value="">Select</option>
+                    <option value="{{type}}" ng-repeat="type in area_type">{{type}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="columns  ">
+              <div class="row">
+                <div class="columns medium-6">
+                  <label for="plotarea" class="fh-font-subhead-2 fh-t-c font-bold">Carpet Area</label>
+                  <input id="carpetarea" type="number" ng-model="post_property.carpetArea">
+                </div>
+                <div class="columns medium-6">
+                  <label for="carpetarea" class="fh-font-subhead-2 fh-t-c font-bold">Area Type</label>
+                  <select class="available-for" ng-model="post_property.area_type">
+                    <option value="">Select</option>
+                    <option value="{{type}}" ng-repeat="type in area_type">{{type}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row medium-up-3">
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Bedrooms</label>
+              <select class="available-for" ng-model="post_property.bedrooms">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in room_lenght">{{type}}</option>
+              </select>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Bathrooms</label>
+              <select class="available-for" ng-model="post_property.bathrooms">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in room_lenght">{{type}}</option>
+              </select>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Balconies</label>
+              <select class="available-for" ng-model="post_property.balconies">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in room_lenght">{{type}}</option>
+              </select>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="columns medium-4">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Furnishing status</label>
+              <select class="available-for" ng-model="post_property.furnishingStatus">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in house_furnishing">{{type}}</option>
+              </select>
+            </div>
+          </div>
+          <hr>
+          <div class="row medium-up-3">
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Total floors</label>
+              <select class="available-for" ng-model="post_property.floors">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in room_lenght">{{type}}</option>
+              </select>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold">Property on floor</label>
+              <select class="available-for" ng-model="post_property.floorNumber">
+                <option value="">Select</option>
+                <option value="{{type}}" ng-repeat="type in room_lenght">{{type}}</option>
+              </select>
+            </div>
+          </div>
+          <hr>
+          <div class="row medium-up-3 fh-font-primary">
+            <div class="columns">
+              <label class="fh-font-subhead-2 fh-t-c font-bold lower-details">Transaction Type</label>
+              <input type="radio" value="resale" ng-model="post_property.transactionType">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Resale</label>
+              <input type="radio" value="new" ng-model="post_property.transactionType">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">New</label>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Possesion Type</label>
+              <input type="radio" value="under construction" ng-model="post_property.possessionType">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">UnderConstruction</label>
+              <input type="radio" value="ready to move" ng-model="post_property.possessionType">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Ready to move</label>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Currently leased out</label>
+              <input type="radio" value="true" ng-model="post_property.leasedOut">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Yes</label>
+              <input type="radio" value="false" ng-model="post_property.leasedOut">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">No</label>
+            </div>
+          </div>
+          <hr>
+          <div class="row medium-up-3">
+            <div class="columns">
+              <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Shared Office Space</label>
+              <input type="radio" value="under construction" ng-model="post_property.sharedOfficeSpace">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Yes</label>
+              <input type="radio" value="ready to move" ng-model="post_property.sharedOfficeSpace">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">No</label>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Personal washroom</label>
+              <input type="radio" value="true" ng-model="post_property.personalWashroom">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Yes</label>
+              <input type="radio" value="false" ng-model="post_property.personalWashroom">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">No</label>
+            </div>
+            <div class="columns">
+              <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Pantry</label>
+              <input type="radio" value="true" ng-model="post_property.pantry">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">Yes</label>
+              <input type="radio" value="false" ng-model="post_property.pantry">
+              <label class="fh-font-primary fh-t-c font-bold lower-details">No</label>
+            </div>
+          </div>
+          <hr>
+          <label class="fh-font-subhead-2 lower-details fh-t-c font-bold">Available from</label>
+          <datepicker date-min-limit="{{::current_date}}" date-format="MMMM d, y" datepicker-mobile="true">
+            <input ng-model="post_property.available_from" class="fh-font-action fh-p-c datepicker medium-4 available-from" placeholder="Date and Month" type="text">
+          </datepicker>
+          <div class="row">
+            <div class="columns medium-4 medium-centered">
+              <button class="next-button fh-p-bg" ng-click="nextCall()" ng-disabled="next_button_disable">{{next_button_text}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+  .row .single-image.columns {
+    padding: 1rem;
+    position: relative;
+  }
+
+  .single-image img {
+    border: 1px solid #a5a5a5;
+  }
+
+  .add-photos-button {
+    width: 100%;
+    height: 100px;
+    border: 2px dashed #a5a5a5;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-photos-button:hover {
+    border: 2px solid #a5a5a5;
+  }
+
+  .progress-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 5px;
+  }
+
+  a.remove-image {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    width: 20px;
+    top: 0;
+    background: rgba(255, 255, 255, 0.8);
+    line-height: 1;
+    transition: all ease 0.3s;
+    opacity: 0;
+  }
+
+  .single-image:hover a.remove-image {
+    opacity: 1;
+  }
+
+  @-webkit-keyframes slideInDown {
+    from {
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+      visibility: visible;
+    }
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes slideInDown {
+    from {
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+      visibility: visible;
+    }
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .slideInDown.active {
+    -webkit-animation-name: slideInDown;
+    animation-name: slideInDown;
+  }
+
+  .amenities-section {
+    padding-left: 1rem;
+  }
+
+  </style>
+  <section ng-show="switch_type=='5'">
+    <div class="row">
+      <div class="columns large-7 small-centered medium-10">
+        <div id="basic-details" class="tab-component-2">
+          <div class="fh-font-title text-left">Add Photos</div>
+          <div class="house-input">
+            <p class="fh-blk-c fh-font-primary uppercase"> House Photos<sup class="fh-hl-c fh-font-primary">*</sup> <span class="fh-font-action lowercase"> [max 12]</span><span ng-show="show_error.photos" class="alert label">Please select</span></p>
+            <hr>
+            <p class="fh-hl-c fh-font-subhead text-left show-for-small-only" style="color:#ef5656">Due to mobile performance issue, please upload 3 to 4 pictures only and wait for 15-20sec after selecting them.</p>
+            <ul class="no-bullet medium-up-3 images_to_upload clearfix row align-top collapse small-up-2">
+              <li class="columns single-image" ng-repeat="photo in photos track by $index">
+                <div style="position:relative;">
+                  <div style="position:relative;" class="text-right">
+                    <img class="img-to-can" ngf-src="photo">
+                    <a class=" make-primary fh-font-subhead fh-t-c " ng-click="set_primary_pic($index)" ng-init="photo.is_primary=true" ng-show="photo.is_primary">make primary</a>
+                    <a class=" make-primary fh-font-subhead fh-p-c" ng-init="photo.is_primary=true" ng-show="!photo.is_primary">* primary</a>
+                  </div>
+                  <a class="remove-image" ng-click="removeImagefromUpload(photos,$index)">
+                    <svg class="icon-close-svg icon" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.09 47.09">
+                      <rect class="cls-1" x="-477.01" y="169.36" width="2.75" height="63" transform="translate(217.54 -454.51) rotate(-45)" />
+                      <rect class="cls-1" x="-506.54" y="198.89" width="63" height="2.75" transform="translate(218.13 -454.27) rotate(-45)" />
+                    </svg>
+                  </a>
+                  <div class="progress-bar fh-font-subhead fh-white-c text-center" ng-show="photo.progress >= 0">
+                    <div class="fh-hl-bg" style="width:{{photo.progress}}%; height:5px;"></div>
+                  </div>
+                </div>
+              </li>
+              <!-- <li class="columns single-image" ng-repeat="p in new_photos track by $index">
+                                    <img ngf-src="p">
+                                        <div class="progress-bar fh-font-subhead fh-white-c text-center" ng-show="p.progress >= 0">
+                                    <div class="fh-hl-bg" style="width:{{p.progress}}%; height:5px;"></div>
+                                </div>
+                                    </li> -->
+              <li class="columns single-image" ng-hide="photos.length===12">
+                <div class="add-photos-button fh-font-primary fh-t-c " accept="image/*" ngf-max-size="50MB" ng-model="photos" ngf-multiple="true" ngf-keep="'distinct'" multiple="multiple" ngf-select ngf-change="uploadPhotos($files, $newFiles, $duplicateFiles, $invalidFiles, $event)" ngf-max-files="12">
+                  <!-- ngf-select="uploadFilesAsync($files, $invalidFiles)" -->
+                  <div style="align-self:center;">
+                    <!-- ngf-change="uploadFilesAsync($files, $newFiles, $duplicateFiles, $invalidFiles, $event)" -->
+                    <div>
+                      <div>
+                        <div style="font-size:1rem">Add <span ng-show="photos.length>0"> more </span> Photos</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!--     <li ng-repeat="f in errFiles">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                                    </li> -->
+            </ul>
+            <!-- {{errorMsg}} -->
+          </div>
+          <div class="amenities-section">
+            <div class="amenities-title fh-t-c uppercase fh-font-primary">
+              Amenities
+            </div>
+            <div class="row medium-up-3 small-up-1 collapse">
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.waterStorage">
+                <label class="fh-font-primary fh-t-c lower-details">Water Storage</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.visitorParking">
+                <label class="fh-font-primary fh-t-c  lower-details">Visitor Parking</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.vaastu">
+                <label class="fh-font-primary fh-t-c  lower-details">Feng shui/vaastu</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.park">
+                <label class="fh-font-primary fh-t-c lower-details">Park</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.wasteDisposal">
+                <label class="fh-font-primary fh-t-c  lower-details">Waste Disposal</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.pipedGas">
+                <label class="fh-font-primary fh-t-c  lower-etails">Piped-gas</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.waterPurifier">
+                <label class="fh-font-primary fh-t-c  lower-details">Water Purifier</label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.maintainanceStaff">
+                <label class="fh-font-primary fh-t-c  lower-details">Maintainence Staff
+                  <label>
+              </div>
+              <div class="columns">
+                <input type="checkbox" value="ready to move" ng-model="post_property.rainWater">
+                <label class="fh-font-primary fh-t-c  lower-details">Rain Water Harvesting</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns medium-4 medium-centered">
+              <button class="next-button fh-p-bg fh-p-bg" ng-click="nextCall()" ng-if="switch_type!='5'">{{next_button_text}}</button>
+              <button class="next-button fh-p-bg fh-p-bg" ng-click="form_submit()" ng-if="switch_type=='5'">{{next_button_text}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>
