@@ -706,7 +706,7 @@ angular.module('core').factory('addPropertyService', ['$resource',
     });
 
     $stateProvider
-      .state('home', {
+      .state('overview', {
         url: '/',
         templateUrl: '/modules/core/client/views/home.client.view.html',
         controller: 'HomeController',
@@ -755,7 +755,13 @@ angular.module('core').factory('addPropertyService', ['$resource',
           userId : null
         },
         controller : 'ProfileController'
-      });
+      }).state('users',{
+        url : '/users',
+        templateUrl : '/modules/core/client/views/users-list.client.view.html'
+      }).state('add-user',{
+        url : '/users/addUser',
+        templateUrl : '/modules/core/client/views/user-add.client.view.html'
+      });;
   }
 }());
 
@@ -864,164 +870,84 @@ angular.module('core').factory('addPropertyService', ['$resource',
   'use strict';
 
   angular
-    .module('core')
-    .controller('HeaderController', HeaderController);
+  .module('core')
+  .controller('HeaderController', HeaderController);
 
-  HeaderController.$inject = ['$scope', '$state', 'Authentication', 'menuService', '$rootScope', '$window', 'commonService'];
+  HeaderController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService'];
 
 
-  function HeaderController($scope, $state, Authentication, menuService, $rootScope, $window, commonService) {
+  function HeaderController($scope, $state, Authentication, $rootScope, $window, commonService) {
 
     $scope.user = $window.user || null;
+
+
+    $rootScope.setNavBarActive = function(name){
+      $scope.navBarHeading = name ;
+    }
+
     $scope.openLoginSignupPopup = function openLoginSignupPopup() {
 
       $rootScope.displayLoginSignupPopup();
     }
-    $scope.fetch_interested = function() {
-      if ($rootScope.user_compare_list) {
-        $scope.interest_count = $rootScope.user_compare_list.interested.length;
 
-        return;
-      }
-      commonService.fetch_list_interest_bookmarked({}, function(response) {
-        if (response.status) {
-          $rootScope.user_compare_list = response.data;
-          $scope.interest_count = response.data.interested.length;
-        } else {
-          $rootScope.user_compare_list = null;
-          $scope.interest_count = null;
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+      $scope.navBarHeading  = toState.name;
+    })
+    
 
-        }
-
-      })
-
-    }
+    
 
 
 
   }
 }());
 
-'use strict';
+
+(function() {
+  'use strict';
+
+  angular
+  .module('core')
+  .controller('HomeController', HomeController);
+
+  HomeController.$inject = ['$rootScope', '$scope', '$state'];
 
 
+  function HomeController($rootScope, $scope , $state) {
+
+    $rootScope.setNavBarActive('overview');
+
+    $scope.propertiesInfo = {
+      new : 14,
+      total : 220,
+      notReviewed : 15,
+      increment : 7
+    }  
+
+    $scope.usersInfo = {
+      new : 14,
+      total : 220,
+      notReviewed : 15,
+      increment : 7
+    }    
 
 
-angular.module('core').controller('HomeController', ['$rootScope', '$scope',
-  function($rootScope, $scope) {
-
-    $scope.openSearchPopup = function(){
-      $rootScope.showSearchPopup();
+    $scope.interestInfo = {
+      clicksNew : 35,
+      increment : 2
     }
-
-    
-    $scope.testimons = [{
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, {
-      text: "We have always received good service from the flathood team",
-      from: "Shouvik, Rimi , Swastika & Lily",
-      city: "New Delhi",
-      photo: "assets/img/tenant3.png"
-
-    }, ];
-    console.log("xxx", $scope.testimons);
-    if (window.innerWidth > 450 && window.innerWidth < 768) {
-      var length= Math.ceil($scope.testimons.length / 3);
-
-    } else if (window.innerWidth > 768) {
-      var length = Math.ceil($scope.testimons.length / 4);
-
-    }else{
-    	var length=$scope.testimons.length;
-    }
-    console.log("jjj", $scope.testimons.length);
-
-
-
-
-    $scope.testimonial_index = 0;
-    $scope.testimonial_left_disable = 1;
-
-    $scope.testinomial_change = function(change_to) {
-
-
-
-      if (change_to === "prev") {
-
-
-        if ($scope.testimonial_index != 0) {
-          $scope.testimonial_index--;
-          $scope.testimonial_left_disable = 0;
-          $scope.testimonial_right_disable = 0;
-
-          if ($scope.testimonial_index === 0) {
-            $scope.testimonial_left_disable = 1;
-
-          }
-
-        } else {
-
-          $scope.testimonial_left_disable = 1;
-
-        }
-
-      } else if (change_to === "next") {
-
-        if ($scope.testimonial_index + 1 < length) {
-          $scope.testimonial_index++;
-          $scope.testimonial_right_disable = 0;
-          $scope.testimonial_left_disable = 0;
-          if ($scope.testimonial_index === length - 1) {
-            $scope.testimonial_right_disable = 1;
-
-          }
-
-
-        } else {
-          $scope.testimonial_right_disable = 1;
-
-        }
-
-      }
-
-    };
 
   }
-  ]);
+
+    
+
+
+
+  
+}());
+
+
+
 
 (function() {
 	'use strict';
@@ -1666,6 +1592,76 @@ angular.module('core').controller('HomeController', ['$rootScope', '$scope',
 	}
 }());
 
+(function() {
+  'use strict';
+
+  angular
+  .module('core')
+  .controller('UserListController', UserListController);
+
+  UserListController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService'];
+
+
+  function UserListController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService) {
+
+      $scope.displayedTable= 'tenant';
+      $scope.showLoader = true;
+
+      $rootScope.setNavBarActive('users');
+
+      $scope.changeDisplayedTable = function(table){
+        $scope.displayedTable = table;
+      }
+
+
+      /*get tenants list*/
+      function getTenantsList(){
+        usersListService.getTenantsList({limit : 5 }).then(function(response){
+          $scope.tenantsList = response.users ; 
+        })
+      }
+
+      getTenantsList();
+
+
+
+
+      // testing data
+
+      $scope.tenantsList = [];
+      var p =[];
+      for(var i=0;i<15;i++){
+        p.push({
+          displayName : 'Aashish'+i,
+          email : 'ab@gmail.com'+i,
+          interestCount : i+6,
+          phoneNumber : '+91-9805641230',
+          verificationStatus : 'verified' 
+        })
+      }
+
+      $scope.tenantsList = p;
+
+      var k =[];
+      for(var i=0;i<15;i++){
+        k.push({
+          displayName : 'Aashish'+i,
+          email : 'ab@gmail.com'+i,
+          propertiesCount : 15%i,
+          phoneNumber : '+91-9805641230',
+          verificationStatus : 'verified' 
+        })
+      }
+      $scope.brokerList = k;
+
+
+    
+
+
+
+  }
+}());
+
 (function () {
   'use strict';
 
@@ -2144,6 +2140,50 @@ angular.module('core').factory('commonService', ['$resource',
     }
   }
 }());
+
+'use strict';
+
+
+
+angular.module('core').factory('usersListService', ['$resource',
+	function($resource) {
+
+		var List =  $resource('/api/admin/usersList', {}, {
+
+			getTenants: {
+				method: 'GET',
+				url: '/api/admin/usersList/tenants'
+			},
+			getBrokers: { 
+				method: 'GET', 
+				url: '/api/admin/usersList/brokers'
+			},
+			getLandlords: { 
+				method: 'GET', 
+				url: '/api/admin/usersList/landlords'
+			},
+		});
+
+		angular.extend(List , {
+			getTenantsList : function(searchObj){
+				return this.getTenants(searchObj).$promise;
+			},
+			getBrokersList : function(searchObj){
+				return this.getBrokers(searchObj).$promise;
+			},
+			getLandlordsList : function(searchObj){
+				return this.getLandlords(searchObj).$promise;
+			},
+
+		});
+
+		return List;
+
+
+
+
+	}
+	]);
 
 (function() {
   'use strict';
@@ -3981,7 +4021,6 @@ angular.module('details').factory('detailsService', ['$resource',
   Authentication.$inject = ['$window'];
 
   function Authentication($window) {
-    console.log("user",user,$window);
     var auth = {
       user: $window.user
     };

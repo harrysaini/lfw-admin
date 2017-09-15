@@ -10,7 +10,6 @@
   Authentication.$inject = ['$window'];
 
   function Authentication($window) {
-    console.log("user",user,$window);
     var auth = {
       user: $window.user
     };

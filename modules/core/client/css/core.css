@@ -235,20 +235,39 @@ theme maker
 
 .fh-font-primary {
 
-                font-size: 0.875rem;
-                line-height: 21px;
-                font-family: Fmedium;
+	font-size: 0.875rem;
+	line-height: 21px;
+	font-family: Fmedium;
+}
+
+.fh-font-primary-light {
+
+	font-size: 0.875rem;
+	line-height: 21px;
+	font-family: Flight;
 }
 
 .fh-font-title {
-                font-size: 1.25rem;
-                font-family: Fmedium;
+	font-size: 1.25rem;
+	font-family: Fmedium;
+}
+
+.fh-font-title-light {
+	font-size: 1.25rem;
+	font-family: Flight;
 }
 
 .fh-font-subhead {
-                font-size: 0.6875rem;
-                letter-spacing: 0.1rem;
-                font-family: Fmedium;
+	font-size: 0.6875rem;
+	letter-spacing: 0.1rem;
+	font-family: Fmedium;
+
+}
+
+.fh-font-subhead-light {
+	font-size: 0.6875rem;
+	letter-spacing: 0.1rem;
+	font-family: Flight;
 
 }
 
@@ -260,15 +279,38 @@ theme maker
 
 .fh-font-title-2 {
 
-                font-size: 1.75rem;
-                font-family: Fmedium
+	font-size: 1.75rem;
+	font-family: Fmedium
+}
+
+.fh-font-title-3{
+	font-size: 3.0rem;
+	font-family: Fmedium
+}
+
+.fh-font-title-3-light {
+
+	font-size: 3.0rem;
+	font-family: Flight
 }
 
 .fh-font-subhead-2 {
-                font-size: 0.875rem;
-                letter-spacing: 0.1rem;
-                font-family: Fmedium;
+	font-size: 0.875rem;
+	letter-spacing: 0.1rem;
+	font-family: Fmedium;
 
+}
+
+.fh-font-subhead-2-light {
+	font-size: 0.875rem;
+	letter-spacing: 0.1rem;
+	font-family: Flight;
+
+}
+
+
+.font-medium{
+	font-family: Fmedium;
 }
 
 
@@ -345,7 +387,7 @@ a:hover {
 
 .font-bold {
 
-                font-family: Fregular;
+	font-family: Fregular;
 
 }
 
@@ -376,18 +418,18 @@ a:hover {
 
 @font-face {
 
-                font-family: Flight;
-                src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Light-8191d5473a5ccd7b25e738600215254c.woff2');
+	font-family: Flight;
+	src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Light-8191d5473a5ccd7b25e738600215254c.woff2');
 }
 
 @font-face {
-                font-family: Fmedium;
-                src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Book-b222d268121d6dbe23687b805b117820.woff2');
+	font-family: Fmedium;
+	src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Book-b222d268121d6dbe23687b805b117820.woff2');
 }
 
 @font-face {
-                font-family: Fregular;
-                src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Bold-f6a8738f19ae14110b36ff16220403d9.woff2');
+	font-family: Fregular;
+	src: url('https://a0.muscache.com/airbnb/static/airbnb-o2/fonts/Circular_Air-Bold-f6a8738f19ae14110b36ff16220403d9.woff2');
 
 }
 
@@ -415,14 +457,14 @@ h6 {
 
 header {
 
-                height: 50px;
-                line-height: 50px;
-                position: fixed;
-                width: 100%;
-                top: 0;
-                left: 0;
-                z-index: 10;
-                /*overflow: hidden;*/
+	height: 50px;
+	line-height: 50px;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	/*overflow: hidden;*/
 }
 
 header.header>.inner-wrapper {
@@ -718,7 +760,7 @@ button {
 }
 
 .content {
-	margin-top: 52px;
+	padding-top: 110px;
 }
 
 
@@ -729,4 +771,27 @@ button {
 
 .error{
 	color: red;
+}
+
+
+.fh-color-dark-red{
+	color: rgb(218, 58, 59);
+}
+
+.lfw-smooth-border{
+	border-radius: 5px;
+}
+
+
+.font-light{
+	font-family : Flight;
+}
+
+table.myunstriped tbody tr:nth-child(even){
+
+	background: none;
+}
+
+table.myunstriped tbody tr {
+	border-bottom: 1px solid #f1f1f1;
 }

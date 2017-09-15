@@ -27,7 +27,7 @@
     });
 
     $stateProvider
-      .state('home', {
+      .state('overview', {
         url: '/',
         templateUrl: '/modules/core/client/views/home.client.view.html',
         controller: 'HomeController',
@@ -76,6 +76,12 @@
           userId : null
         },
         controller : 'ProfileController'
-      });
+      }).state('users',{
+        url : '/users',
+        templateUrl : '/modules/core/client/views/users-list.client.view.html'
+      }).state('add-user',{
+        url : '/users/addUser',
+        templateUrl : '/modules/core/client/views/user-add.client.view.html'
+      });;
   }
 }());
