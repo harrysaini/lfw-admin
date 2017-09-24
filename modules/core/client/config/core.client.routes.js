@@ -75,13 +75,10 @@
         params : {
           userId : null
         },
-        controller : 'ProfileController'
-      }).state('users',{
-        url : '/users',
-        templateUrl : '/modules/core/client/views/users-list.client.view.html'
-      }).state('add-user',{
-        url : '/users/addUser',
-        templateUrl : '/modules/core/client/views/user-add.client.view.html'
-      });;
+        controller : 'ProfileController',
+        data : {
+          roles : ['user' , 'admin']
+        }
+      });
   }
 }());

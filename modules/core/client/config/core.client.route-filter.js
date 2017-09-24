@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-    .module('core')
-    .run(routeFilter);
+  .module('core')
+  .run(routeFilter);
 
   routeFilter.$inject = ['$rootScope', '$state', 'Authentication'];
 
@@ -28,10 +28,8 @@
           if (Authentication.user !== null && typeof Authentication.user === 'object') {
             $state.transitionTo('forbidden');
           } else {
-            $state.go('authentication.signin').then(function () {
-              // Record previous state
-              storePreviousState(toState, toParams);
-            });
+            $state.go('overview');
+            
           }
         }
       }

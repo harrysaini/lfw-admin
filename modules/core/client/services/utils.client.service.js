@@ -25,7 +25,7 @@
     }
 
     function isMobileCodeValid(code) {
-      var codeRegex = /^[+]{1}[0-9]{1,4}/;
+      var codeRegex = /^[+]{1}[0-9]{1,4}$/;
       return codeRegex.test(code);
     }
 

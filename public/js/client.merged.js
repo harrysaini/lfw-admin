@@ -100,6 +100,13 @@
 (function (app) {
   'use strict';
 
+  app.registerModule('admin', ['core']);// The core module is required for special route handling; see /core/client/config/core.client.routes
+  app.registerModule('admin.routes', ['ui.router', 'core.routes']);
+}(ApplicationConfiguration));
+
+(function (app) {
+  'use strict';
+
   app.registerModule('core',['rzModule']);
   app.registerModule('core.routes', ['ui.router']);
   app.registerModule('core.admin', ['core']);
@@ -539,6 +546,569 @@ angular.module('core').factory('addPropertyService', ['$resource',
   'use strict';
 
   angular
+  .module('admin.routes')
+  .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+
+  function routeConfig($stateProvider, $urlRouterProvider) {
+
+    $urlRouterProvider.rule(function ($injector, $location) {
+      var path = $location.path();
+      var hasTrailingSlash = path.length > 1 && path[path.length - 1] === '/';
+
+      if (hasTrailingSlash) {
+        // if last character is a slash, return the same url without the slash
+        var newPath = path.substr(0, path.length - 1);
+        $location.replace().path(newPath);
+      }
+    });
+
+
+    // Redirect to 404 when route not found
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+      $injector.get('$state').transitionTo('not-found', null, {
+        location: false
+      });
+    });
+
+    
+    $stateProvider
+    .state('users',{
+        url : '/users',
+        templateUrl : '/modules/admin/client/views/users-list.client.view.html'
+      }).state('add-user',{
+        url : '/users/addUser',
+        templateUrl : '/modules/admin/client/views/user-add.client.view.html'
+      });
+  }
+
+
+}());
+
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
+  .controller('UserAddController', UserAddController);
+
+  UserAddController.$inject = ['$scope', '$state', 'Authentication', '$rootScope' , 'MyUtilityService' , 'AdminService' ,'Notification'];
+
+
+  function UserAddController($scope, $state, Authentication, $rootScope , MyUtilityService , AdminService ,Notification) {
+
+    var utils = MyUtilityService;
+
+    $rootScope.setNavBarActive('users');
+
+
+    $scope.displayViewPassword = true;
+    $scope.showPassword = false;
+
+
+    function initFormData(){
+      $scope.userObj = {
+        firstName : "",
+        lastName : "",
+        email: "",
+        password: "",
+        phoneCode: '+91',
+        phoneNumber: null,
+        userRole: ""
+      };
+
+      $scope.isValid = true;
+      $scope.isEmailvalid = true;
+      $scope.isMobileVaild = true;
+      $scope.isCodeValid = true;
+    }
+    initFormData();
+    
+
+
+    $scope.displayPasswordField = function() {
+
+      $scope.displayViewPassword = !$scope.displayViewPassword;
+      $scope.showPassword = !$scope.showPassword;
+      if ($scope.showPassword) {
+        document.getElementById('user-passsword').setAttribute('type', 'text');
+
+      } else {
+        document.getElementById('user-passsword').setAttribute('type', 'password');
+      }
+    }
+
+
+
+    function validateSignUpData() {
+
+      var isEmailvalid = utils.isValidEmail($scope.userObj.email);
+      var isMobileVaild = utils.isValidMobile($scope.userObj.phoneNumber);
+      var isCodeValid = utils.isMobileCodeValid($scope.userObj.phoneCode);
+      var isUserRoleSet = $scope.userObj.userRole === "" ? false : true;
+      var isPasswordSet = $scope.userObj.password === "" ? false : true;
+      var isFirstNameSet = $scope.userObj.firstName === "" ? false : true ;
+      var isLastNameSet  = $scope.userObj.lastName === "" ? false : true ;
+
+
+      $scope.isEmailvalid = isEmailvalid;
+      $scope.isMobileVaild = isMobileVaild;
+      $scope.isCodeValid = isCodeValid;
+
+
+      $scope.isValid = isEmailvalid && isMobileVaild && isCodeValid && isUserRoleSet && isPasswordSet && isFirstNameSet && isLastNameSet;
+
+      return $scope.isValid;
+    }
+
+
+    $scope.saveUserData = function(){
+      var isValid = validateSignUpData();
+      if(isValid){
+        AdminService.addUser($scope.userObj)
+        .then(addUserSucess)
+        .catch(addUserFailed);
+
+      }
+    }
+
+
+    function addUserSucess(response){
+      initFormData();
+      Notification.success({ 
+        message: "User added successfully", 
+        title: 'User added', 
+        delay: 6000 }
+        );
+    }
+
+    function addUserFailed(response){
+      Notification.error({ 
+        message: response.data.message, 
+        title: 'Failed!', 
+        delay: 6000 }
+        );
+    }
+
+    $scope.resetFormData = function(){
+      initFormData();
+    }
+
+  }
+}());
+
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
+  .controller('UserListController', UserListController);
+
+  UserListController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService' , '$timeout' , 'Notification'];
+
+
+  function UserListController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService , $timeout ,Notification) {
+
+
+    var fetched = {
+      tenant : true,
+      broker : false,
+      landlord :  false
+    };
+    var perPageCount = 50 ;
+
+
+    $scope.displayedTable= 'tenant';
+    $scope.showLoader = true;
+    $scope.displayFilters = false;
+    $scope.isLoading = false;
+    $scope.tenantsData = {};
+    $scope.brokersData = {};
+    $scope.landlordsData = {};
+    $scope.searchQuery = "";
+    $scope.displayExportPopup = false;
+    $scope.searchType = "";
+    $scope.pageNumber = 1;
+
+
+
+
+    function initFilterVariable(){
+      $scope.filters = {
+        verified : false,
+        notVerified : false
+      }
+      $scope.displayFilters = false;
+
+    }
+
+    initFilterVariable();
+
+    $rootScope.setNavBarActive('users');
+
+    $scope.changeDisplayedTable = function(table){
+      $scope.displayedTable = table;
+      fetchUsersOnTabSwitch(table);
+      initFilterVariable();
+    }
+
+
+    function fetchUsersOnTabSwitch(table) {
+      if(!fetched[table]){
+        fetchUsersList();
+        fetched[table]  = true ;
+      }else{
+        setPaginationInformationOnTabSwitch();
+      }
+    }
+
+
+
+
+    function toggleLoader(show){
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.isLoading = show;
+        });
+      }, 100);
+    }
+
+
+    /*get tenants list*/
+    function getTenantsList(isSearch){
+      toggleLoader(true);
+
+      var query = isSearch ? $scope.searchQuery : "" ;
+      var searchObj = {};
+      searchObj.search = query ? query : '';
+      searchObj.searchType = $scope.searchType ;
+
+        //todo get filters for tenants only
+        searchObj.filters = $scope.filters;
+
+        searchObj.skip = 50 * ($scope.pageNumber -1);
+
+        usersListService.getTenantsList(searchObj).then(function(response){
+
+          toggleLoader(false);
+          $scope.tenantsData.list = response.users ; 
+          $scope.tenantsData.total = response.totalUsers;
+
+          $scope.setPaginationVariable({
+            count : response.totalUsers,
+            currentPage : $scope.pageNumber
+          });
+
+        }).catch(apiFailureHandler);
+      }
+
+
+
+      /*get brokers list*/
+      function getBrokersList(isSearch){
+        toggleLoader(true);
+
+        var query = isSearch ? $scope.searchQuery : "";
+        var searchObj = {};
+        searchObj.search = query ? query : '';
+        searchObj.searchType = $scope.searchType ;
+
+        //todo get filters for tenants only
+        searchObj.filters = $scope.filters;
+
+        //searchObj.limit = 50;
+        searchObj.skip = 50 * ($scope.pageNumber-1);
+
+        usersListService.getBrokersList(searchObj).then(function(response){
+
+          toggleLoader(false);
+          $scope.brokersData.list = response.users ; 
+          $scope.brokersData.total = response.totalUsers;
+
+          $scope.setPaginationVariable({
+            count : response.totalUsers,
+            currentPage : $scope.pageNumber
+          });
+
+        }).catch(apiFailureHandler);
+      }
+
+      /*get landlords list*/
+      function getLandlordsList(isSearch){
+        toggleLoader(true);
+
+        var query = isSearch ? $scope.searchQuery : "" ;
+        var searchObj = {};
+        searchObj.search = query ? query : '';
+        searchObj.searchType = $scope.searchType ;
+
+        //todo get filters for tenants only
+        searchObj.filters = $scope.filters;
+
+        //searchObj.limit = 50;
+        searchObj.skip = 50 * ($scope.pageNumber-1);
+
+        usersListService.getLandlordsList(searchObj).then(function(response){
+
+          toggleLoader(false);
+          $scope.landlordsData.list = response.users ; 
+          $scope.landlordsData.total = response.totalUsers;
+
+          $scope.setPaginationVariable({
+            count : response.totalUsers,
+            currentPage : $scope.pageNumber
+          });
+
+        }).catch(apiFailureHandler);
+      }
+
+      getTenantsList();
+
+
+      /*reset pagination variabllels*/
+      function setPaginationInformationOnTabSwitch(){
+       
+        var displayedTable = $scope.displayedTable;
+
+        $scope.pageNumber = 1;
+
+        if(displayedTable==='tenant'){
+          $scope.setPaginationVariable({
+            count : $scope.tenantsData.total,
+            currentPage : $scope.pageNumber
+          });
+        }
+        if(displayedTable==='broker'){
+          $scope.setPaginationVariable({
+            count : $scope.brokersData.total,
+            currentPage : $scope.pageNumber
+          });
+        }
+        if(displayedTable==='landlord'){
+          $scope.setPaginationVariable({
+            count : $scope.landlordsData.total,
+            currentPage : $scope.pageNumber
+          });
+        }
+      }
+
+      function fetchUsersList(isSearch , isPageChange ){
+
+        //if not page change
+        if(!isPageChange){
+          $scope.pageNumber = 1 ;
+        }
+
+        var displayedTable = $scope.displayedTable;
+
+        if(displayedTable==='tenant'){
+          return getTenantsList(isSearch);
+        }
+        if(displayedTable==='broker'){
+          return getBrokersList(isSearch);
+        }
+        if(displayedTable==='landlord'){
+          return getLandlordsList(isSearch);
+        }
+      }
+
+
+      function apiFailureHandler(response) {
+        Notification.error({ 
+          message: 'api failure' , 
+          title: 'Request Failed!!', 
+          delay: 6000 }
+          );
+      }
+
+
+
+      $scope.showFilters = function(){
+        $scope.displayFilters = true;
+      }
+
+
+      $scope.showExportsPopup = function(show){
+        $scope.displayExportPopup = show;
+      }
+
+
+      $scope.applyFilters = function(){
+        $scope.displayFilters = false;
+        fetchUsersList();
+
+      }
+
+
+      $scope.searchBtnClick = function(){
+        initPageNumber();
+        fetchUsersList(true);
+      }
+
+      $scope.fetchUserCsv = function(userType){
+        var getObj = {
+          userType : userType
+        };
+        usersListService.getUsersCSV(getObj).then(function(data){
+          console.log(data);
+        }).catch(apiFailureHandler);
+      }     
+      
+
+      /* update page */
+      function updatePage(page){
+        $scope.pageNumber = page;
+        fetchUsersList(false , true );
+      }
+
+
+
+      /* pagination */
+      $scope.currentPage = 1;
+      $scope.frontCount = [];
+      $scope.lastCount = [];
+      $scope.showEclipses = true;
+      $scope.lastPage = 0;
+
+
+      $scope.setPaginationVariable = function(options){
+        $scope.currentPage = options.currentPage;
+        $scope.lastPage = Math.ceil(options.count/perPageCount);
+        $scope.showPagination = options.showPagination;
+        $scope.renderPagination();
+      }
+
+      function getFrontCount(current , lastPage){
+        var frontCount = [];
+        for(var i = current-1 ; i<current+3;i++){
+          if(i>0 && i <= lastPage){
+            frontCount.push(i);
+          }
+        }
+        return frontCount;
+      }
+
+      function getLastCount(last , current){
+        var lastCount = [];
+        for(var i = last-2 ; i <= last ;i++){
+          if(i > 0 && i > current+2){
+            lastCount.push(i);
+          }
+        }
+
+        return lastCount;
+      }
+
+      $scope.renderPagination = function(){
+        if($scope.currentPage>$scope.lastPage){
+          $scope.currentPage = $scope.lastPage;
+        }
+        $scope.frontCount = getFrontCount($scope.currentPage , $scope.lastPage);
+        $scope.lastCount = getLastCount($scope.lastPage , $scope.currentPage);
+        $scope.showEclipses = ( ($scope.lastPage-3) > ($scope.currentPage+2)) ? true : false;
+      }
+
+      $scope.setPageAs = function(page){
+        $scope.currentPage = page;
+        updatePage(page);
+      }
+      /*pagination ends*/
+
+
+
+
+
+    }
+  }());
+
+(function () {
+  'use strict';
+
+  // Users service used for communicating with the users REST endpoint
+  angular
+  .module('admin')
+  .factory('AdminService', AdminService);
+
+  AdminService.$inject = ['$resource'];
+
+  function AdminService($resource) {
+   
+
+    var AdminApi = $resource('/api/admin', {}, {
+      add_user : {
+        method : 'POST',
+        url : '/api/admin/addUser'
+      }
+    });
+
+    angular.extend(AdminApi, {
+      addUser : function(user){
+        return this.add_user(user).$promise;
+      }
+    });
+
+    return AdminApi;
+  }
+
+
+}());
+
+'use strict';
+
+
+
+angular.module('admin').factory('usersListService', ['$resource',
+	function($resource) {
+
+		var List =  $resource('/api/admin/usersList', {}, {
+
+			getTenants: {
+				method: 'GET',
+				url: '/api/admin/usersList/tenants'
+			},
+			getBrokers: { 
+				method: 'GET', 
+				url: '/api/admin/usersList/brokers'
+			},
+			getLandlords: { 
+				method: 'GET', 
+				url: '/api/admin/usersList/landlords'
+			},
+			get_users_CSV : {
+				method : 'GET',
+				url : '/api/admin/getCSV'
+			}
+		});
+
+		angular.extend(List , {
+			getTenantsList : function(searchObj){
+				return this.getTenants(searchObj).$promise;
+			},
+			getBrokersList : function(searchObj){
+				return this.getBrokers(searchObj).$promise;
+			},
+			getLandlordsList : function(searchObj){
+				return this.getLandlords(searchObj).$promise;
+			},
+			getUsersCSV : function(dataObj){
+				return this.get_users_CSV(dataObj).$promise;
+			}
+
+		});
+
+		return List;
+
+
+
+
+	}
+	]);
+
+(function () {
+  'use strict';
+
+  angular
     .module('core.admin')
     .run(menuConfig);
 
@@ -623,8 +1193,8 @@ angular.module('core').factory('addPropertyService', ['$resource',
   'use strict';
 
   angular
-    .module('core')
-    .run(routeFilter);
+  .module('core')
+  .run(routeFilter);
 
   routeFilter.$inject = ['$rootScope', '$state', 'Authentication'];
 
@@ -649,10 +1219,8 @@ angular.module('core').factory('addPropertyService', ['$resource',
           if (Authentication.user !== null && typeof Authentication.user === 'object') {
             $state.transitionTo('forbidden');
           } else {
-            $state.go('authentication.signin').then(function () {
-              // Record previous state
-              storePreviousState(toState, toParams);
-            });
+            $state.go('overview');
+            
           }
         }
       }
@@ -754,14 +1322,11 @@ angular.module('core').factory('addPropertyService', ['$resource',
         params : {
           userId : null
         },
-        controller : 'ProfileController'
-      }).state('users',{
-        url : '/users',
-        templateUrl : '/modules/core/client/views/users-list.client.view.html'
-      }).state('add-user',{
-        url : '/users/addUser',
-        templateUrl : '/modules/core/client/views/user-add.client.view.html'
-      });;
+        controller : 'ProfileController',
+        data : {
+          roles : ['user' , 'admin']
+        }
+      });
   }
 }());
 
@@ -1592,76 +2157,6 @@ angular.module('core').factory('addPropertyService', ['$resource',
 	}
 }());
 
-(function() {
-  'use strict';
-
-  angular
-  .module('core')
-  .controller('UserListController', UserListController);
-
-  UserListController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService'];
-
-
-  function UserListController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService) {
-
-      $scope.displayedTable= 'tenant';
-      $scope.showLoader = true;
-
-      $rootScope.setNavBarActive('users');
-
-      $scope.changeDisplayedTable = function(table){
-        $scope.displayedTable = table;
-      }
-
-
-      /*get tenants list*/
-      function getTenantsList(){
-        usersListService.getTenantsList({limit : 5 }).then(function(response){
-          $scope.tenantsList = response.users ; 
-        })
-      }
-
-      getTenantsList();
-
-
-
-
-      // testing data
-
-      $scope.tenantsList = [];
-      var p =[];
-      for(var i=0;i<15;i++){
-        p.push({
-          displayName : 'Aashish'+i,
-          email : 'ab@gmail.com'+i,
-          interestCount : i+6,
-          phoneNumber : '+91-9805641230',
-          verificationStatus : 'verified' 
-        })
-      }
-
-      $scope.tenantsList = p;
-
-      var k =[];
-      for(var i=0;i<15;i++){
-        k.push({
-          displayName : 'Aashish'+i,
-          email : 'ab@gmail.com'+i,
-          propertiesCount : 15%i,
-          phoneNumber : '+91-9805641230',
-          verificationStatus : 'verified' 
-        })
-      }
-      $scope.brokerList = k;
-
-
-    
-
-
-
-  }
-}());
-
 (function () {
   'use strict';
 
@@ -2141,50 +2636,6 @@ angular.module('core').factory('commonService', ['$resource',
   }
 }());
 
-'use strict';
-
-
-
-angular.module('core').factory('usersListService', ['$resource',
-	function($resource) {
-
-		var List =  $resource('/api/admin/usersList', {}, {
-
-			getTenants: {
-				method: 'GET',
-				url: '/api/admin/usersList/tenants'
-			},
-			getBrokers: { 
-				method: 'GET', 
-				url: '/api/admin/usersList/brokers'
-			},
-			getLandlords: { 
-				method: 'GET', 
-				url: '/api/admin/usersList/landlords'
-			},
-		});
-
-		angular.extend(List , {
-			getTenantsList : function(searchObj){
-				return this.getTenants(searchObj).$promise;
-			},
-			getBrokersList : function(searchObj){
-				return this.getBrokers(searchObj).$promise;
-			},
-			getLandlordsList : function(searchObj){
-				return this.getLandlords(searchObj).$promise;
-			},
-
-		});
-
-		return List;
-
-
-
-
-	}
-	]);
-
 (function() {
   'use strict';
 
@@ -2212,7 +2663,7 @@ angular.module('core').factory('usersListService', ['$resource',
     }
 
     function isMobileCodeValid(code) {
-      var codeRegex = /^[+]{1}[0-9]{1,4}/;
+      var codeRegex = /^[+]{1}[0-9]{1,4}$/;
       return codeRegex.test(code);
     }
 

@@ -131,6 +131,10 @@ var UserSchema = new Schema({
     type : String ,
     validate : [validateLocalMobileNumber , 'Please provide phone in numbers only']
   },
+  isVerified : {
+    type : Boolean,
+    default : false
+  },
   phone : {
     type : String,
     default : ""
