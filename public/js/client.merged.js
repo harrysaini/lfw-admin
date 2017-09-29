@@ -193,7 +193,7 @@ angular.module('addProperty').controller('addPropertyController', ['$rootScope',
       'office in IT park/SEZ', 'commercial shop', 'commercial showroom', 'commercial land', 'warehouse/godown', 'industrial land', 'industrial building'
     ]
     $scope.available_for = ['all', 'family only', 'family & boys only', 'family & girls only', 'bachelors only', 'boys only', 'girls only', 'expats only'];
-    $scope.house_furnishing = 'Not Furnished', 'Semi-Furnished', 'Furnished','Fully-Furnished';
+    $scope.house_furnishing = ['Not Furnished', 'Semi-Furnished', 'Furnished','Fully-Furnished'];
     $scope.house_type = ['1 RK', '1 BHK' ,'2 BHK', '3 BHK', '4 BHK','5 BHK','6 BHK','7 BHK','8 BHK','9 BHK'];
     $scope.area_type = ['Sqft', 'Sqmt'];
     $scope.room_lenght = ['1', '2', '3', '4', '5', '6'];
@@ -580,6 +580,15 @@ angular.module('core').factory('addPropertyService', ['$resource',
       }).state('add-user',{
         url : '/users/addUser',
         templateUrl : '/modules/admin/client/views/user-add.client.view.html'
+      }).state('properties',{
+        url : '/properties',
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+      }).state('verify_properties',{
+        url : '/verify-properties',
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+      }).state('verify_users',{
+        url : '/verify-users',
+        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
       });
   }
 
@@ -1078,6 +1087,10 @@ angular.module('admin').factory('usersListService', ['$resource',
 			get_users_CSV : {
 				method : 'GET',
 				url : '/api/admin/getCSV'
+			},
+			get_unverified_users : {
+				method : 'GET',
+				url : '/api/admin/userList/unverified-users'
 			}
 		});
 
@@ -1093,6 +1106,9 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			getUsersCSV : function(dataObj){
 				return this.get_users_CSV(dataObj).$promise;
+			},
+			getUnverifiedUsersList : function(data){
+				return this.get_unverified_users(data).$promise;
 			}
 
 		});
@@ -1444,6 +1460,7 @@ angular.module('admin').factory('usersListService', ['$resource',
   function HeaderController($scope, $state, Authentication, $rootScope, $window, commonService) {
 
     $scope.user = $window.user || null;
+    $scope.showUsersMenu = false;
 
 
     $rootScope.setNavBarActive = function(name){
@@ -1455,9 +1472,7 @@ angular.module('admin').factory('usersListService', ['$resource',
       $rootScope.displayLoginSignupPopup();
     }
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-      $scope.navBarHeading  = toState.name;
-    })
+    
     
 
     

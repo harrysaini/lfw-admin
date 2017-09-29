@@ -9,6 +9,7 @@ module.exports = function(app){
 	app.route('/api/admin/userslist/tenants').get(lfwAdminUsers.getTenantsList);
 	app.route('/api/admin/userslist/brokers').get(lfwAdminUsers.getBrokersList);
 	app.route('/api/admin/userslist/landlords').get(lfwAdminUsers.getLandlordsList);
+	app.route('/api/admin/userList/unverified-users').get(lfwAdminUsers.getUnverifiedUsersList);
 
 
 	//add users

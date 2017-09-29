@@ -5,44 +5,35 @@
     width: 100%;
     box-shadow: 2px 2px #f1f1f1;
   }
-
   .sub-header {
     display: inline-block;
     vertical-align: middle;
     margin: 0px 25px 0 25px;
     position: relative;
   }
-
-
   .max {
     max-width: 100%
   }
-
   .sub-header {
     cursor: pointer;
   }
-
   .nav-link{
     width: 100%;
     color: white;
     cursor: pointer;
-    padding : 0px 0px 0px 20px;
+    padding: 10px;
+    padding-left :  20px;
   }
-
   .nav-link:hover{
     background: rgb(56, 45, 44);
   }
-
   .nav-link.selected{
     background: #251a19;
   }
-
-
   .nav-headng{
     height: 75px;
     color: white;
   }
-
   .nav-bar{
     position: fixed;
     top : 0 ;
@@ -50,18 +41,36 @@
     min-height: 100vh;
     background: #3b3b3b;
   }
-
   .header-heading{
     display: inline;
     text-transform: capitalize;
     padding : 20px ;
   }
-
   .height-full{
     height: 100%;
   }
-  
-
+  .sub-menu{
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+  }
+  .sub-menu.hidden{
+    max-height: 0px;
+  }
+  .sub-menu.open{
+    max-height: 250px;
+  }
+  .sub-menu .nav-link{
+    padding-left: 40px;
+    font-size: 90%;
+  }
+  .down-icon{
+    display: inline-block;
+    float: right;
+    transition: transform 0.5s ease-in-out;
+  }
+  .down-icon.revert{
+    transform: rotate(180deg);
+  }
 </style>
 <section ng-controller="HeaderController">
   <div class="header medium-push-2">
@@ -70,52 +79,85 @@
         <div class="fh-font-title-2 header-heading">
           {{navBarHeading}}
         </div>
-
         <div class="login float-right " ng-show="user==null">
           <div class="sub-header fh-p-c fh-font-primary uppercase" ng-click="openLoginSignupPopup()">
             Login/Signup
           </div>
         </div>
-
       </div>
     </div>
   </div>
-
   <div class="nav-bar medium-2">
     <div class="nav-bar-inner">
       <div class="nav-bar-content">
-          <div class="nav-headng">
-            <div class="fh-font-title">
-              LFW Dashboard
-            </div>
+        <div class="nav-headng">
+          <div class="fh-font-title">
+            LFW Dashboard
           </div>
-          <div class="nav-links-wrapper text-left fh-font-subhead-2-light">
-            <div class="nav-link " ui-sref="overview" 
-            ng-class="{'selected' : navBarHeading==='overview' }">
-              Overview
-            </div>
-            <div class="nav-link" ui-sref="not-found"
-              ng-class="{'selected' : navBarHeading==='properties' }">
-              Properties
-            </div>
-            <div class="nav-link " ui-sref="users"
-              ng-class="{'selected' : navBarHeading==='users' }">
-              Users
-            </div>
-            <div class="nav-link  " ui-sref="area/localities" 
-              ng-class="{'selected' : navBarHeading==='localities' }">
-              Area/Localities
-            </div>
-            <div class="nav-link  " ui-sref="email/messages" 
-              ng-class="{'selected' : navBarHeading==='messages' }">
-              Email/Messages
-            </div>
-            <div class="nav-link  " ui-sref="settings">
-              Settings
-            </div>
-
+        </div>
+        <div class="nav-links-wrapper text-left fh-font-primary-2">
+          <div class="nav-link " ui-sref="overview"
+          ng-class="{'selected' : navBarHeading==='overview' }">
+          <i class="fa fa-line-chart" aria-hidden="true"></i> Overview
+        </div>
+        <div class="sub-menu-wrapper">
+          <div class="nav-link"
+          ng-class="{'selected' : navBarHeading==='properties' }"
+          ng-click=" showPropertiesMenu ? showPropertiesMenu=false : showPropertiesMenu=true ">
+          <i class="fa fa-home" aria-hidden="true"></i> Properties
+          <div class="down-icon" ng-class="{'revert' : showPropertiesMenu }">
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
           </div>
+        </div>
+        <div class="sub-menu" ng-class="{'open' : showPropertiesMenu , 'hidden' : !showPropertiesMenu}">
+          <div class="nav-link" ui-sref="properties" >
+            Properties List
+          </div>
+          <div class="nav-link"  >
+            Search Properties
+          </div>
+          <div class="nav-link" ui-sref="verify_properties" >
+            Verify Properties
+          </div>
+          <div class="nav-link" ui-sref="add_property" >
+            Add Properties
+          </div>
+        </div>
+      </div>
+      <div class="sub-menu-wrapper">
+        <div class="nav-link "
+        ng-class="{'selected' : navBarHeading==='users' }"
+        ng-click=" showUsersMenu ? showUsersMenu=false : showUsersMenu=true ">
+        <i class="fa fa-user" aria-hidden="true"></i> Users
+        <div class="down-icon" ng-class="{'revert' : showUsersMenu }">
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="sub-menu" ng-class="{'open' : showUsersMenu , 'hidden' : !showUsersMenu}">
+        <div class="nav-link"  ui-sref="users">
+          Users List
+        </div>
+        <div class="nav-link" ui-sref="add-user">
+          Add users
+        </div>
+        <div class="nav-link" ui-sref="verify_users">
+          Verify users
+        </div>
       </div>
     </div>
+    <div class="nav-link  " ui-sref="area/localities"
+    ng-class="{'selected' : navBarHeading==='localities' }">
+    <i class="fa fa-globe" aria-hidden="true"></i> Area/Localities
   </div>
+  <div class="nav-link  " ui-sref="email/messages"
+  ng-class="{'selected' : navBarHeading==='messages' }">
+  <i class="fa fa-envelope" aria-hidden="true"></i> Email/Messages
+</div>
+<div class="nav-link  " ui-sref="settings">
+  <i class="fa fa-cog" aria-hidden="true"></i> Settings
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>

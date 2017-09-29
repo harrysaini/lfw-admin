@@ -240,6 +240,14 @@ theme maker
 	font-family: Fmedium;
 }
 
+
+.fh-font-primary-2 {
+
+	font-size: 0.95rem;
+	line-height: 21px;
+	font-family: Fmedium;
+}
+
 .fh-font-primary-light {
 
 	font-size: 0.875rem;
@@ -795,5 +803,15 @@ table.myunstriped tbody tr:nth-child(even){
 table.myunstriped tbody tr {
 	border-bottom: 1px solid #f1f1f1;
 }
+
+
+.active-page,.active-page a{
+    background: #1779ba !important;
+    color: #fefefe !important;
+    cursor: default !important;
+  }
+  .active-page:hover{
+    background: #1779ba !important;
+  }
 
 

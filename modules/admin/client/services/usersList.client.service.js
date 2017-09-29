@@ -22,6 +22,10 @@ angular.module('admin').factory('usersListService', ['$resource',
 			get_users_CSV : {
 				method : 'GET',
 				url : '/api/admin/getCSV'
+			},
+			get_unverified_users : {
+				method : 'GET',
+				url : '/api/admin/userList/unverified-users'
 			}
 		});
 
@@ -37,6 +41,9 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			getUsersCSV : function(dataObj){
 				return this.get_users_CSV(dataObj).$promise;
+			},
+			getUnverifiedUsersList : function(data){
+				return this.get_unverified_users(data).$promise;
 			}
 
 		});

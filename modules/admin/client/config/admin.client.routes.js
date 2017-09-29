@@ -36,6 +36,15 @@
       }).state('add-user',{
         url : '/users/addUser',
         templateUrl : '/modules/admin/client/views/user-add.client.view.html'
+      }).state('properties',{
+        url : '/properties',
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+      }).state('verify_properties',{
+        url : '/verify-properties',
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+      }).state('verify_users',{
+        url : '/verify-users',
+        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
       });
   }
 

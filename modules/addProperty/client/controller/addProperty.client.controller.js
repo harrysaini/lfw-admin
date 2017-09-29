@@ -12,7 +12,7 @@ angular.module('addProperty').controller('addPropertyController', ['$rootScope',
       'office in IT park/SEZ', 'commercial shop', 'commercial showroom', 'commercial land', 'warehouse/godown', 'industrial land', 'industrial building'
     ]
     $scope.available_for = ['all', 'family only', 'family & boys only', 'family & girls only', 'bachelors only', 'boys only', 'girls only', 'expats only'];
-    $scope.house_furnishing = 'Not Furnished', 'Semi-Furnished', 'Furnished','Fully-Furnished';
+    $scope.house_furnishing = ['Not Furnished', 'Semi-Furnished', 'Furnished','Fully-Furnished'];
     $scope.house_type = ['1 RK', '1 BHK' ,'2 BHK', '3 BHK', '4 BHK','5 BHK','6 BHK','7 BHK','8 BHK','9 BHK'];
     $scope.area_type = ['Sqft', 'Sqmt'];
     $scope.room_lenght = ['1', '2', '3', '4', '5', '6'];

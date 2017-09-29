@@ -241,6 +241,11 @@ var PropertySchema = new Schema({
 
   postedUserType: {
     type: String
+  },
+
+  isVerified : {
+    type : Boolean,
+    default : false
   }
 
 

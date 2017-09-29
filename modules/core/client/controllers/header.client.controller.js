@@ -11,6 +11,7 @@
   function HeaderController($scope, $state, Authentication, $rootScope, $window, commonService) {
 
     $scope.user = $window.user || null;
+    $scope.showUsersMenu = false;
 
 
     $rootScope.setNavBarActive = function(name){
@@ -22,9 +23,7 @@
       $rootScope.displayLoginSignupPopup();
     }
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-      $scope.navBarHeading  = toState.name;
-    })
+    
     
 
     

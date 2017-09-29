@@ -30,6 +30,13 @@
  /* add search and filter query*/
  function _addSearchAndFilterQuery(searchStr , filters , query , searchType) {
  	var startRegex = new RegExp('^'+searchStr , 'i')
+ 	
+ 	try{
+ 		filters = JSON.parse(filters);
+ 	}catch(e){
+
+ 	}
+ 	
 
  	if(searchStr){
  		query[searchType]  = { $regex : startRegex };
@@ -37,6 +44,9 @@
 
  	if(filters.verified && !filters.notVerified){
  		query.isVerified = true ;
+ 	}
+ 	if(!filters.verified && filters.notVerified){
+ 		query.isVerified = false ;
  	}
 
  	
@@ -289,5 +299,58 @@
  	});
  }
 
+
+
+/*get unverified users list*/
+exports.getUnverifiedUsersList = function(req , res){
+
+	var limit  = req.query.limit ? parseInt(req.query.limit) : 50 ;
+ 	var skip = req.query.skip ? parseInt(req.query.skip) : 0 ;
+
+
+ 	var query = {
+ 		isVerified : false
+ 	}
+
+
+
+ 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+
+ 		if (error) {
+ 			return res.status(422).send({
+ 				status: 1,
+ 				message: errorHandler.getErrorMessage(error)
+ 			});
+
+ 		} else {
+
+ 			if (!data || data.length == 0) {
+ 				res.json({
+ 					status: 0,
+ 					message: 'No users',
+ 					users: []
+ 				})
+ 			}
+
+			//get user count
+			getUserListCount(query).then(function(count){
+ 				//send response to client
+ 				res.json({
+ 					status: 0,
+ 					users: data,
+ 					totalUsers : count
+ 				});
+ 			}).catch(function(error){
+ 				return res.status(422).send({
+ 					status: 1,
+ 					message: errorHandler.getErrorMessage(error)
+ 				});
+ 			});
+
+ 		}
+
+ 	});
+
+}
 
 

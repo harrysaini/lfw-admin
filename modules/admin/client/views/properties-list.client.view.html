@@ -1,0 +1,222 @@
+<style type="text/css">
+	
+
+
+	.listing-wrapper {
+		background: white
+	}
+
+
+
+	.listing-wrapper-inner {
+		padding: 20px;
+		border: 1px solid #f1f1f1;
+		border-radius: 2px;
+		background: #f9f9f9;
+	}
+
+	.image-outer {
+		position: relative;
+	}
+
+	.image-inner {
+		overflow: hidden;
+	}
+
+	.image-inner-wrapper {
+		height: 162px;
+	}
+
+	.profile-photo {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		z-index: 2;
+		background-position: center center;
+		background-size: cover;
+		transition: opacity ease 0.3s;
+	}
+
+	.listing-wrapper-details {
+		border: 1px solid #e4dfdf;
+		border-radius: 2px;
+		cursor: pointer;
+		margin-bottom: 1rem;
+		background: white
+	}
+
+	.listing-wrapper-details:hover {
+		box-shadow: 0 0 10px 0px rgba(167, 165, 164, 0.74);
+	}
+
+	.side-details-1 {
+		padding: 10px 10px;
+		border-bottom: 1px solid #d2cece;
+		padding-left: 20px;
+		position: relative;
+	}
+
+	.side-details-2 {
+		padding: 10px;
+		padding-left: 20px;
+		border-bottom: 1px solid #d2cece;
+	}
+
+	.side-details-3 {
+		padding: 10px;
+		padding-left: 20px;
+	}
+
+	.properties-list-container{
+		border: 1px solid #bcdef3;
+		border-radius: 5px;
+		background: rgba(246, 249, 251, 0.41);
+	}
+
+	.properties-list-wrapper{
+		padding: 10px 25px;
+	}
+
+
+	.properties-list-inner{
+		padding: 35px;
+	}
+
+	.add-btn{
+		display: inline-block;
+		float: right;
+	}
+
+
+</style>
+<section class="section-1" ng-controller="PropertiesListController">
+	<div class="container">
+		<div class="properties-list-wrapper medium-10 medium-push-2">
+			<div class="fh-font-title-2" ng-show="!isVerifiedPage">
+				Properties
+			</div>
+			<div class="fh-font-title-2" ng-show="isVerifiedPage">
+				Verify Properties
+			</div>
+			<div class="prop-btn-wrappers" style=" display: flow-root ">
+				<div class="button primary add-btn lfw-smooth-border" ui-sref="add_property">
+					<i class="fa fa-plus" aria-hidden="true"></i>  Add property
+				</div>
+			</div>
+			<br>
+			<div class="properties-list-container">
+
+				<div class="loader-div text-center" style="padding:50px" ng-show='isLoading'>
+					<img src="/images/loader.gif">
+				</div>
+
+				<div class="no-results-found text-center" style="padding:50px" ng-show="noResultsFound">
+					<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> No properties found
+				</div>
+				<div class="properties-list-inner" ng-show='!isLoading && !noResultsFound'>
+					
+					<div class="fh-font-primary">
+						Showing 20 properties per page / Total <strong>{{propertiesData.total}}</strong> properties
+					</div>
+					<br>
+
+					<div class="properties-list-table">
+
+						<div class="listing-wrapper-details " ng-repeat="house in house_list " >
+							<a ui-sref="details-property({slug:house.property_params.house_slug})">
+
+								<div class="row collapse ">
+									<div class="columns medium-3 ">
+										<div class="image-outer">
+											<div class="image-inner">
+												<div class="image-inner-wrapper">
+													<div>
+														<img class="profile-photo" src='https://s3.ap-south-1.amazonaws.com/flathood.com/grams/homes/58a183638e602e463c6fd5ed/7766190dae642d833452a005d7ce9d921486979816308.jpeg'>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="columns medium-9">
+										<div class="side-details-1">
+											<div class="row collapse">
+												<div class="columns medium-3">
+													<div class="fh-font-primary font-bold fh-t-c"> &#8377; 1.5 crore</div>
+												</div>
+												<div class="columns medium-9">
+													<div class="fh-font-primary capitalize fh-p-c ">{{house.property_params.propertyFeatures.bedrooms}} BHK {{house.property_params.propertySubType}} in {{house.property_params.location.main_locality}} ,
+														{{house.property_params.location.city}}
+													</div>
+												</div>
+											</div>
+											
+										</div>
+										<div class="side-details-2">
+											<div class="row collapse">
+												<div class="columns medium-10">
+													<div class="fh-font-subhead-2 fh-t-c">Built up Area : <span class="fh-font-primary"> {{house.property_params.propertyFeatures.area.coveredArea}} sq ft</span></div>
+												</div>
+											</div>
+											<div class="row collapse">
+												<div class="columns medium-10">
+													<div class="fh-font-subhead-2 fh-t-c">Society :<span class="fh-font-primary" style="color:black"> {{house.property_params.location.nameOfComplex}}</span></div>
+												</div>
+											</div>
+											<div class="row collapse">
+												<div class="columns medium-10">
+													<div class="fh-font-subhead-2 fh-t-c">Locality :<span class="fh-font-primary" style="color:black"> {{house.property_params.location.sub_locality}}</span></div>
+												</div>
+											</div>
+										</div>
+										<div class="side-details-3">
+											<div class="row collapse">
+												<div class="columns medium-12">
+													<div class="fh-font-subhead-2 fh-t-c">Highlights : {{house.property_params.propertyFeatures.transactionType}} / {{house.property_params.propertyFeatures.possesionType}} / {{house.property_params.location.age}} yrs old / floor {{house.property_params.propertyFeatures.floorNumber}} of {{house.property_params.propertyFeatures.floors}} 
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+						
+					</div>
+
+
+
+					<br>
+					<ul class="pagination text-center" role="navigation" aria-label="Pagination" >
+						<li class="pagination-previous" ng-if="currentPage!=1">
+							<a ng-click="setPageAs(currentPage-1)">
+								Previous
+							</a>
+						</li>
+						<li class="pagination-previous disabled" ng-if="currentPage==1">Previous</li>
+						<li ng-repeat = "page in frontCount" ng-class="{'active-page' : currentPage==page}">
+							<a ng-click="setPageAs(page)">
+								{{page}}
+							</a>
+						</li>
+						<li class="ellipsis" aria-hidden="true" ng-show="showEclipses"></li>
+						<li ng-repeat = "page in lastCount" ng-class="{'active-page' : currentPage==page}" >
+							<a ng-click="setPageAs(page)">
+								{{page}}
+							</a>
+						</li>
+						<li class="pagination-next" ng-if="currentPage!=lastPage">
+							<a ng-click="setPageAs(currentPage+1)" aria-label="Next page">Next </a>
+						</li>
+						<li class="pagination-next disabled" ng-if="currentPage==lastPage">Next</li>
+
+					</ul>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</section>

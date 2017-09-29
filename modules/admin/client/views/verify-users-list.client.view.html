@@ -1,0 +1,315 @@
+<style type="text/css">
+	.link-btn{
+		padding : 10px;
+		cursor: pointer;
+		color: #3b3b3b;
+	}
+
+	.link-btn:hover{
+		color: #251a19;
+	}
+
+	.left-float{
+		display: inline;
+		float: left;
+	}
+
+	.right-float{
+		display: inline;
+		float: right;
+	}
+
+	.users-list-wrapper{
+		padding: 10px 25px;
+	}
+
+	.btn-wrappers{
+		padding : 10px;
+		display: flow-root;
+	}
+
+
+	.users-list-container{
+		border: 1px solid #bcdef3;
+		border-radius: 5px;
+	}
+
+	.user-list-tabs{
+		border-bottom: 1px solid #bcdef3;
+	}
+
+	.user-list-tabs>ul{
+		margin : 0;
+	}
+
+	.user-list-tab{
+		padding: 10px;
+		cursor: pointer;
+		color: rgb(99, 115, 129);
+	}
+
+	.user-list-tab:hover{
+		border-bottom: 2px solid rgb(196, 205, 213);
+		color : rgb(33, 43, 53);
+	}
+
+	.user-list-tab.selected{
+		border-bottom: 2px solid rgb(92, 106, 196);
+		color: rgb(33, 43, 53);
+	}
+
+	.user-list-table{
+		padding: 25px 15px ;
+	}
+
+	.user-table tbody tr {
+		cursor: pointer;
+	}
+
+
+	.filter-search-wrapper{
+		padding: 5px 25px 15px 25px;
+
+	}
+
+	.filter-serach-div{
+		border: 1px solid #bcdef3;
+		border-radius: 5px;
+	}
+
+	.full-width{
+		width: 100%;
+		height: 100%;
+	}
+
+
+	.simple-input{
+		padding: 0;
+		border: none;
+		background-color: transparent;
+		outline: 0;
+	}
+
+
+	.filter-btn{
+		padding: 10px;
+		border-right: 1px solid #bcdef3;
+		cursor: pointer;
+	}
+
+	.filter-btn:hover{
+		background: linear-gradient(to bottom, #f9fafb, #f4f6f8);
+	}
+
+	.padding-lr{
+		padding: 0px 15px !important;
+	}
+
+	.filters-popup{
+		width: 125%;
+	}
+
+	.export-popup{
+		width: 350%;
+	}
+
+	.ui-popup{
+		z-index: 10;
+		position: absolute;
+		top : 105%;
+		border-radius: 5px; 
+		background-color: rgba(255,255,255,0.98);
+		box-shadow: 0 0 0 1px rgba(39,44,48,0.05), 0 2px 7px 1px rgba(39,44,48,0.16);
+		visibility : hidden;
+		opacity: 0;
+		transform: scale(0.75);
+		-webkit-transition: opacity .25s ease-out,transform .25s ease-out;
+		transition: opacity .25s ease-out,transform .25s ease-out;
+		transform-origin: 50% 0%;
+	}
+
+	.ui-popup.shown{
+		visibility: visible;
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.filters-popup-inner{
+		padding: 20px;
+	}
+
+	.ui-btn{
+		cursor: pointer;
+		background: linear-gradient(to bottom, #fff, #f9fafb);
+		border: 1px solid #c4cdd5;
+		box-shadow: 0 1px 0 0 rgba(22,29,37,0.05);
+		border-radius: 3px;
+		font-size: 1.4rem;
+		line-height: 1.6rem;
+		color: #212b35;
+		padding: 3px 10px;
+		font-size: 0.85rem;
+		line-height: 1.2rem;
+		display :inline-block;
+		transition: background 0.2s ;
+	}
+
+
+	.ui-btn:hover{
+		background: linear-gradient(to bottom, #f9fafb, #f4f6f8);
+	}
+
+
+	.export-wrapper{
+		position: relative;
+	}
+
+
+
+	.export-popup-inner{
+		padding: 30px 20px;
+	}
+
+	.export-btn-wrapper > a >div{
+		margin: 10px;
+	}
+
+
+	.export-popup-inner-wrapper{
+		position: relative;
+	}
+
+	.export-close-btn{
+		position: absolute;
+		top : 0px;
+		right : 0px;
+	}
+
+
+	.no-padding-select {
+		margin: 0;
+		border: none;
+		border-right: 1px solid #bcdef3;
+	}
+
+
+</style>
+
+<section class="section-1" ng-controller="UserListUnverifiedController">
+	<div class="container">
+		<div class="users-list-wrapper medium-10 medium-push-2">
+
+			<div class="fh-font-title-2">
+				Users
+			</div>
+
+			<div class="btn-wrappers fh-font-subhead-2-light">
+				<div class="left-float">
+					
+					
+				</div>
+				<div class="right-float">
+					<div class="button primary lfw-smooth-border" ui-sref="add-user">
+						Add a user
+					</div>
+				</div>
+			</div>
+
+			<br>
+			<br>
+
+			<div class="users-list-container ">
+				<div class="users-list-container-inner">
+					
+
+					<div class="user-list-table-wrapper">
+
+						<div class="user-list-table font-medium">
+
+
+
+
+
+
+
+
+
+							<div class="loader-div text-center" style="padding:50px" ng-show='isLoading'>
+								<img src="/images/loader.gif">
+							</div>
+
+							<div class="user-list-table-innner" ng-show="!isLoading">
+
+								<div class="tenants-table">
+									<div class="btn-wrappers">
+										<div class="left-float">
+											<div class="fh-font-primary">
+												Showing 50 results per page / Total  <strong>{{usersData.total}}</strong> tenants
+											</div>
+										</div>
+										<div class="right-float">
+											<div class="link-btn">
+												<i class="fa fa-refresh" aria-hidden="true"></i> Refresh 
+											</div>
+										</div>
+									</div>
+
+									<table class="hover myunstriped user-table">
+										<thead class="font-bold">
+											<tr>
+												<th>Name</th>
+												<th class="text-center">Email</th>
+												<th class="text-center">Phone</th>
+												<th class="text-center">User Type</th>
+												<th class="text-right">Verification Status</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat= "tenant in usersData.list">
+												<td> {{tenant.displayName}} </td>
+												<td class="text-center"> {{tenant.email}}</td>
+												<td class="text-center"> {{tenant.phoneNumber}}</td>
+												<td class="text-center"> {{tenant.userRole}}</td>
+												<td class="text-right"> {{tenant.isVerified}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+
+							</div>
+
+
+							<br>
+							<ul class="pagination text-center" role="navigation" aria-label="Pagination" >
+								<li class="pagination-previous" ng-if="currentPage!=1">
+									<a ng-click="setPageAs(currentPage-1)">
+										Previous
+									</a>
+								</li>
+								<li class="pagination-previous disabled" ng-if="currentPage==1">Previous</li>
+								<li ng-repeat = "page in frontCount" ng-class="{'active-page' : currentPage==page}">
+									<a ng-click="setPageAs(page)">
+										{{page}}
+									</a>
+								</li>
+								<li class="ellipsis" aria-hidden="true" ng-show="showEclipses"></li>
+								<li ng-repeat = "page in lastCount" ng-class="{'active-page' : currentPage==page}" >
+									<a ng-click="setPageAs(page)">
+										{{page}}
+									</a>
+								</li>
+								<li class="pagination-next" ng-if="currentPage!=lastPage">
+									<a ng-click="setPageAs(currentPage+1)" aria-label="Next page">Next </a>
+								</li>
+								<li class="pagination-next disabled" ng-if="currentPage==lastPage">Next</li>
+
+							</ul>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
