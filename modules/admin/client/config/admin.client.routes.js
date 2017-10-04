@@ -45,6 +45,12 @@
       }).state('verify_users',{
         url : '/verify-users',
         templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
+      }).state('add-admin',{
+        url : '/add-admin',
+        templateUrl : '/modules/admin/client/views/add-admin.client.view.html'
+      }).state('admins_list',{
+        url : '/admins',
+        templateUrl : '/modules/admin/client/views/admins-list.client.view.html'
       });
   }
 

@@ -113,7 +113,7 @@ var UserSchema = new Schema({
     type : String,
     default : "tenant",
     lowercase : true,
-    enum: ['tenant','broker','landlord']
+    enum: ['tenant','broker','landlord','admin']
   
   },
   roles: {
@@ -161,7 +161,7 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function (next) {
 
   //save phone number
-  this.phone = "("+this.phoneCode+")-" + this.phoneNumber ; 
+  this.phone = ""+this.phoneCode+"-" + this.phoneNumber ; 
 
   if (this.password && this.isModified('password')) {
     this.salt = crypto.randomBytes(16).toString('base64');

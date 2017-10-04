@@ -195,53 +195,19 @@
 
 </style>
 
-<section class="section-1" ng-controller="UserListController">
+<section class="section-1" ng-controller="AdminListController">
 	<div class="container">
 		<div class="users-list-wrapper medium-10 medium-push-2">
 
 			<div class="fh-font-title-2">
-				Users
+				Admins
 			</div>
 
-			<div class="btn-wrappers fh-font-subhead-2-light">
-				<div class="left-float">
-					
-					<div class="export-wrapper">
-						<div class="link-btn" ng-click="showExportsPopup(true)">
-							<i class="fa fa-download" aria-hidden="true"></i> Export Users
-						</div>
-						<div class="ui-popup export-popup" ng-class="{'shown':displayExportPopup }">
-							<div class="export-popup-inner-wrapper">
-								<div class="export-popup-inner">
-									<div class="export-btn-wrapper">
-										<a target="_self" ng-href="/api/admin/getCSV?userType=tenant">
-											<div class="ui-btn" >
-												Tenants CSV
-											</div>
-										</a>
-										<a target="_self" ng-href="/api/admin/getCSV?userType=broker">
-											<div class="ui-btn" ng-click="fetchUserCsv('broker')">
-												Brokers CSV
-											</div>
-										</a>
-										<a target="_self" ng-href="/api/admin/getCSV?userType=landlord">
-											<div class="ui-btn" ng-click="fetchUserCsv('landlord')">
-												Landlords CSV
-											</div>
-										</a>
-									</div>
-								</div>
-								<div class="export-close-btn" ng-click="showExportsPopup(false)">
-									<div class="link-btn">X</div>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-				</div>
+			<div class="btn-wrappers">
+				
 				<div class="right-float">
-					<div class="button primary lfw-smooth-border fh-font-primary" ui-sref="add-user">
-						<i class="fa fa-plus" aria-hidden="true"></i> Add a user
+					<div class="button primary lfw-smooth-border" ui-sref="add-user">
+						<i class="fa fa-plus" aria-hidden="true"></i> Add a Admin
 					</div>
 				</div>
 			</div>
@@ -251,31 +217,7 @@
 
 			<div class="users-list-container ">
 				<div class="users-list-container-inner">
-					<div class="user-list-tabs">
-						<ul class="inline-list ">
-							<li>
-								<div class="user-list-tab " 
-								ng-class="{'selected' : displayedTable==='tenant'}"
-								ng-click="changeDisplayedTable('tenant')">
-								Tenants
-							</div>
-						</li>
-						<li>
-							<div class="user-list-tab" 
-							ng-class="{'selected' : displayedTable==='broker'}"
-							ng-click="changeDisplayedTable('broker')">
-							Broker
-						</div>
-					</li>
-					<li>
-						<div class="user-list-tab"
-						ng-class="{'selected' : displayedTable==='landlord'}"
-						ng-click="changeDisplayedTable('landlord')">
-						Landlords
-					</div>
-				</li>
-			</ul>
-		</div>
+					
 
 		<div class="user-list-table-wrapper">
 
@@ -297,12 +239,12 @@
 									<div class="filters-popup-inner">
 										<div class="single-filter-div">
 											<input id="verfiy-toggle" type="checkbox" ng-model="filters.verified">
-											<label for="verify-toggle">Verified Users</label>
+											<label for="verify-toggle">Verified Admins</label>
 										</div>
 
 										<div class="single-filter-div">
 											<input id="verfiy-toggle-1" type="checkbox" ng-model="filters.notVerified">
-											<label for="verify-toggle-1">Not Verified Users</label>
+											<label for="verify-toggle-1">Not Verified Admins</label>
 										</div>
 
 										<div class="apply-filter-btn ui-btn" ng-click="applyFilters()">
@@ -315,8 +257,8 @@
 						<div class="columns medium-2">
 							<select ng-model="searchType" class="full-width no-padding-select">
 								<option value="">Search by</option>
-								<option value="displayName">User Name</option>
-								<option value="email">User Email</option>
+								<option value="displayName">Admin Name</option>
+								<option value="email">Admin Email</option>
 							</select>
 						</div>
 						<div class="columns medium-6 padding-lr">
@@ -341,11 +283,11 @@
 
 			<div class="user-list-table-innner" ng-show="!isLoading">
 
-				<div class="tenants-table" ng-show="displayedTable==='tenant'">
+				<div class="admin-table" >
 					<div class="btn-wrappers">
 						<div class="left-float">
 							<div class="fh-font-primary">
-								Showing 50 results per page / Total  <strong>{{tenantsData.total}}</strong> tenants
+								Showing 50 results per page / Total  <strong>{{adminsData.total}}</strong> tenants
 							</div>
 						</div>
 						<div class="right-float">
@@ -365,64 +307,22 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat= "tenant in tenantsData.list">
-								<td> {{tenant.displayName}} </td>
-								<td class="text-center"> {{tenant.email}}</td>
-								<td class="text-center"> {{tenant.phoneNumber}}</td>
-								<td class="text-center"> {{tenant.interestCount}}</td>
-								<td class="text-right"> {{tenant.isVerified}}</td>
+							<tr ng-repeat= "admin in adminsData.list">
+								<td> {{admin.displayName}} </td>
+								<td class="text-center"> {{admin.email}}</td>
+								<td class="text-center"> {{admin.phoneNumber}}</td>
+								<td class="text-center"> {{admin.interestCount}}</td>
+								<td class="text-right"> {{admin.isVerified}}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 
 
-				<div class="broker-table" ng-show="displayedTable==='broker'">
-					<table class="hover myunstriped user-table">
-						<thead class="font-bold">
-							<tr>
-								<th>Name</th>
-								<th class="text-center">Email</th>
-								<th class="text-center">Phone</th>
-								<th class="text-center">Properties</th>
-								<th class="text-right">Verification Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat= "broker in brokersData.list">
-								<td> {{broker.displayName}} </td>
-								<td class="text-center"> {{broker.email}}</td>
-								<td class="text-center"> {{broker.phoneNumber}}</td>
-								<td class="text-center"> {{broker.propertiesCount}}</td>
-								<td class="text-right"> {{broker.isVerified}}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				
 
 
-				<div class="broker-table" ng-show="displayedTable==='landlord'">
-					<table class="hover myunstriped user-table">
-						<thead class="font-bold">
-							<tr>
-								<th>Name</th>
-								<th class="text-center">Email</th>
-								<th class="text-center">Phone</th>
-								<th class="text-center">Properties</th>
-								<th class="text-right">Verification Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat= "broker in landlordsData.list">
-								<td> {{broker.displayName}} </td>
-								<td class="text-center"> {{broker.email}}</td>
-								<td class="text-center"> {{broker.phoneNumber}}</td>
-								<td class="text-center"> {{broker.propertiesCount}}</td>
-								<td class="text-right"> {{broker.isVerified}}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				
 
 
 			</div>

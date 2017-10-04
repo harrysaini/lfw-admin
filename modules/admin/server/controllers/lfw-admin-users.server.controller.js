@@ -353,4 +353,61 @@ exports.getUnverifiedUsersList = function(req , res){
 
 }
 
+/**
+* gwt admins list 
+*/
+exports.getAdminsList = function (req , res) {
+	
+	var limit  = req.query.limit ? parseInt(req.query.limit) : 50 ;
+ 	var skip = req.query.skip ? parseInt(req.query.skip) : 0 ;
+ 	var searchStr = req.query.search ? req.query.search : '' ;
+ 	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
+ 	var filters = req.query.filters ? req.query.filters : {} ;
+
+ 	var query = {
+ 		userRole : 'admin',
+ 		roles : 'admin'
+ 	}
+
+ 	_addSearchAndFilterQuery(searchStr , filters , query , searchType );
+
+ 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+
+ 		if (error) {
+ 			return res.status(422).send({
+ 				status: 1,
+ 				message: errorHandler.getErrorMessage(error)
+ 			});
+
+ 		} else {
+
+ 			if (!data || data.length == 0) {
+ 				res.json({
+ 					status: 0,
+ 					message: 'No users',
+ 					users: []
+ 				})
+ 			}
+
+			//get user count
+			getUserListCount(query).then(function(count){
+ 				//send response to client
+ 				res.json({
+ 					status: 0,
+ 					users: data,
+ 					totalUsers : count
+ 				});
+ 			}).catch(function(error){
+ 				return res.status(422).send({
+ 					status: 1,
+ 					message: errorHandler.getErrorMessage(error)
+ 				});
+ 			});
+
+ 		}
+
+ 	});
+
+}
+
 

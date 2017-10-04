@@ -1,0 +1,199 @@
+<style type="text/css">
+
+	
+
+	
+
+	.border-left{
+		border-left: 3px solid #ccd9ff;
+		margin-left: 0px; 
+	}
+
+	.border-right{
+		border-right: 3px solid #ccd9ff;
+		margin-right: 0px;
+	}
+
+	.padding-inner{
+		padding : 10px;
+		padding-right: 15px;
+		padding-left: 15px;
+	}
+
+	.phone-wrapper{
+		display: table;
+
+	}
+
+	.phone-code-input{
+		width: 20%;
+		margin-right: 5%;
+		display: inline;
+	}
+
+	.phone-number-input{
+		width: 75%;
+		display: inline;
+	}
+
+	.fb-btn{
+		width: 100%;
+		margin-bottom: 15px;
+	}
+
+	.google-btn{
+		width: 100%;
+	}
+
+	.light-font{
+		color: #00cccc;
+	}
+
+	.mybtn{
+		border-radius: 2px;
+		width: 100%;
+
+	}
+
+
+	.popup-container input, .popup-container select{
+		color: #248f8f !important; 
+	}
+
+	
+
+	.sign-up-login-popup-mobile{
+		z-index: 101;
+		background: white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+	}
+
+	.text-link{
+		color: #8080ff;
+		cursor: pointer;
+	}
+	.text-link:hover{
+		color: #000033;
+	}
+
+
+	.password-wrapper{
+		position: relative;
+	}
+
+	.password-view{
+		position: absolute;
+		right: 10px;
+		top : 10px;
+		font-size: 127%;
+		cursor: pointer;
+		color:  #b3cccc;
+	}
+	.password-view:hover{
+		color: #293d3d;
+	}
+
+	.popup-wrapper{
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top :0;
+		left: 0 ;
+		z-index: 100;
+		background: rgba(0, 0, 0, 0.23);
+	}
+
+	
+
+
+	.error{
+		color: red;
+		font-size: 80%;
+	}
+
+
+	.ui-backgroud-img{
+		background-image: url("https://s3.ap-south-1.amazonaws.com/flathood.com/assets/img/home-cover-new.jpg");
+		min-height: 250px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		position: relative;
+	}
+
+	.ui-backgroud-img-2{
+		background-image: url("https://s3.ap-south-1.amazonaws.com/flathood.com/assets/img/home-cover-new.jpg");
+		min-height: 250px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		position: relative;
+	}
+
+	.index-login-main{
+		z-index: 1;
+		border-radius: 5px;
+		background: white;
+		position: absolute;
+		top: 50%;
+		left: 21%;
+		padding: 30px 40px;
+		border: 1px solid #e6e6e6;
+		box-shadow: 0 0 10px 0px rgba(167, 165, 164, 0.74);
+
+	}
+
+	.about{
+		padding: 25px;
+	}
+
+
+
+</style>
+<div ng-controller="IndexController">
+	<div class="medium-10 medium-push-2">
+		<div class="index-login-wrapper">
+
+			<div class="ui-backgroud-img">
+				<div class="index-login-main card medium-7 medium-centered" >
+
+					<div class="login-box">
+
+
+						<div class="text-center padding-inner">
+							<div class="fh-font-title text-left" style="margin-top: 4px;">LFW Dashboard Login</div>
+							<br><br>
+
+
+							<input type="email" placeholder="email address" ng-class="{'error-input-red' : !loginValidations.isEmailPresent}" ng-model="loginData.usernameOrEmail">
+							
+							<input type="password" placeholder="password"  ng-class="{'error-input-red' : !loginValidations.isPasswordPresent}" ng-model="loginData.password">
+							
+
+							<button class="button secondary mybtn" ng-click="loginClick()" ng-class="{'disabled': isLoading }">Login</button>
+							<br>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="ui-backgroud-img-2">
+			</div>
+
+			<div class="about">
+			<div class="fh-font-title">About LFW Dashboard</div>
+				<div class="fh-font-primary sec-2-sub-content">
+					esktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).eadable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like
+				</div>
+			</div>
+		</div>
+		
+
+	</div>
+</div>

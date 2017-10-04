@@ -25,7 +25,11 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			get_unverified_users : {
 				method : 'GET',
-				url : '/api/admin/userList/unverified-users'
+				url : '/api/admin/usersList/unverified-users'
+			},
+			getAdmins : {
+				method : 'GET',
+				url : '/api/admin/usersList/admins'
 			}
 		});
 
@@ -44,6 +48,9 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			getUnverifiedUsersList : function(data){
 				return this.get_unverified_users(data).$promise;
+			},
+			getAdminsList : function(data){
+				return this.getAdmins(data).$promise;
 			}
 
 		});

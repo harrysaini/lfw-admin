@@ -15,12 +15,19 @@
       add_user : {
         method : 'POST',
         url : '/api/admin/addUser'
+      },
+      add_admin : {
+        method : 'POST',
+        url : '/api/admin/auth/add-admin'
       }
     });
 
     angular.extend(AdminApi, {
       addUser : function(user){
         return this.add_user(user).$promise;
+      },
+      addAdmin : function(user){
+        return this.add_admin(user).$promise;
       }
     });
 

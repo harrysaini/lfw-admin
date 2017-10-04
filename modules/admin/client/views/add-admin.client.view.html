@@ -1,0 +1,156 @@
+<style type="text/css">
+	
+	.users-add-wrapper{
+		padding: 20px 50px;
+	}
+
+	.password-wrapper-add{
+		position: relative;
+	}
+
+	.password-view-add {
+		position: absolute;
+		right: 10px;
+		top: 5px;
+		font-size: 127%;
+		cursor: pointer;
+		color: #b3cccc;
+	}
+
+
+
+	.password-view-add:hover{
+		color: #293d3d;
+	}
+
+	.button-wrapper{
+		padding: 15px;
+	}
+
+	.button-wrapper .button{
+		margin: 15px;
+	}
+
+	.add-user-content{
+		padding: 15px 0px;
+	}
+
+</style>
+
+<section class="section-1" ng-controller="AdminAddController">
+	<div class="container">
+		<div class="users-add-wrapper medium-10 medium-push-2">
+
+			<div class="fh-font-title">
+				Add Admin 
+			</div>
+
+			<br>
+			<br>
+
+			<div class="add-user-content medium-6">
+				<div class="single-input-div">
+					
+					<label>
+						First Name *
+						<input type="text" " ng-model="userObj.firstName">
+					</label>
+
+
+				</div>
+				<div class="single-input-div">
+					
+					<label>
+						Last Name *
+						<input type="text"  ng-model="userObj.lastName">
+					</label>
+
+
+				</div>
+				<div class="single-input-div">
+					
+					<label>
+						Email *
+						<input type="email" value="100" ng-model="userObj.email">
+					</label>
+
+
+				</div>
+
+				<div class="single-input-div">		
+					<label>
+						Password *
+						<div class="password-wrapper-add">
+
+
+							<input type="password"  id="user-passsword" ng-model="userObj.password">
+
+
+
+							<div class="password-view-add" ng-click="displayPasswordField()">
+								<div ng-if = "displayViewPassword">
+									<i class="fa fa-eye" aria-hidden="true"></i>
+								</div>
+								<div ng-if = "!displayViewPassword">
+									<i class="fa fa-eye-slash" aria-hidden="true"></i>
+								</div>
+							</div>
+						</div>
+					</label>
+
+				</div>
+
+				
+
+				<div class="single-input-div">
+					<div class="row">
+						<div class="medium-3">
+							<label>
+								Phone Code *
+								<input type="text"  ng-model="userObj.phoneCode">
+							</label>
+						</div>
+
+						<div class="medium-8 medium-push-1">
+							<label>
+								Phone Number *
+								<input type="number"  ng-model="userObj.phoneNumber">
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="error" ng-show="!isValid">
+					Please enter all the mandatory fields.
+				</div>
+				<div class="error" ng-show="!isEmailvalid">
+					Please enter correct email.
+				</div>
+				<div class="error" ng-show="!isMobileVaild">
+					Please enter correct phone number.
+				</div>
+				<div class="error" ng-show="!isCodeValid">
+					Please enter correct phone code.
+				</div>
+
+
+				<div class="button-wrapper text-center fh-font-primary-light">
+					<div class="button primary lfw-smooth-border"
+						ng-click="saveUserData()">
+						<i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+					</div>
+					<div class="button alert lfw-smooth-border"
+						ui-sref='users'>
+						<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Cancel
+					</div>
+
+					<div class="button secondary lfw-smooth-border"
+						ng-click="resetFormData()">
+						<i class="fa fa-refresh " aria-hidden="true"></i> Reset
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</section>

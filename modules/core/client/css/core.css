@@ -777,6 +777,10 @@ button {
 	border-color: red;
 }
 
+.error-input-red{
+	border-color: red;
+}
+
 .error{
 	color: red;
 }

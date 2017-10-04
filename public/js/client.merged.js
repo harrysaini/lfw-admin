@@ -589,10 +589,300 @@ angular.module('core').factory('addPropertyService', ['$resource',
       }).state('verify_users',{
         url : '/verify-users',
         templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
+      }).state('add-admin',{
+        url : '/add-admin',
+        templateUrl : '/modules/admin/client/views/add-admin.client.view.html'
+      }).state('admins_list',{
+        url : '/admins',
+        templateUrl : '/modules/admin/client/views/admins-list.client.view.html'
       });
   }
 
 
+}());
+
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
+  .controller('AdminAddController', AdminAddController);
+
+  AdminAddController.$inject = ['$scope', '$state', 'Authentication', '$rootScope' , 'MyUtilityService' , 'AdminService' ,'Notification'];
+
+
+  function AdminAddController($scope, $state, Authentication, $rootScope , MyUtilityService , AdminService ,Notification) {
+
+    var utils = MyUtilityService;
+
+    $rootScope.setNavBarActive('users');
+
+
+    $scope.displayViewPassword = true;
+    $scope.showPassword = false;
+
+
+    function initFormData(){
+      $scope.userObj = {
+        firstName : "",
+        lastName : "",
+        email: "",
+        password: "",
+        phoneCode: '+91',
+        phoneNumber: null,
+      };
+
+      $scope.isValid = true;
+      $scope.isEmailvalid = true;
+      $scope.isMobileVaild = true;
+      $scope.isCodeValid = true;
+    }
+    initFormData();
+    
+
+
+    $scope.displayPasswordField = function() {
+
+      $scope.displayViewPassword = !$scope.displayViewPassword;
+      $scope.showPassword = !$scope.showPassword;
+      if ($scope.showPassword) {
+        document.getElementById('user-passsword').setAttribute('type', 'text');
+
+      } else {
+        document.getElementById('user-passsword').setAttribute('type', 'password');
+      }
+    }
+
+
+
+    function validateSignUpData() {
+
+      var isEmailvalid = utils.isValidEmail($scope.userObj.email);
+      var isMobileVaild = utils.isValidMobile($scope.userObj.phoneNumber);
+      var isCodeValid = utils.isMobileCodeValid($scope.userObj.phoneCode);
+      var isPasswordSet = $scope.userObj.password === "" ? false : true;
+      var isFirstNameSet = $scope.userObj.firstName === "" ? false : true ;
+      var isLastNameSet  = $scope.userObj.lastName === "" ? false : true ;
+
+
+      $scope.isEmailvalid = isEmailvalid;
+      $scope.isMobileVaild = isMobileVaild;
+      $scope.isCodeValid = isCodeValid;
+
+
+      $scope.isValid = isEmailvalid && isMobileVaild && isCodeValid  && isPasswordSet && isFirstNameSet && isLastNameSet;
+
+      return $scope.isValid;
+    }
+
+
+    $scope.saveUserData = function(){
+      var isValid = validateSignUpData();
+      if(isValid){
+        AdminService.addAdmin($scope.userObj)
+        .then(addUserSucess)
+        .catch(addUserFailed);
+
+      }
+    }
+
+
+    function addUserSucess(response){
+      initFormData();
+      Notification.success({ 
+        message: "Admin added successfully", 
+        title: 'Admin added', 
+        delay: 6000 }
+        );
+    }
+
+    function addUserFailed(response){
+      Notification.error({ 
+        message: response.data.message, 
+        title: 'Failed!', 
+        delay: 6000 }
+        );
+    }
+
+    $scope.resetFormData = function(){
+      initFormData();
+    }
+
+  }
+}());
+
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
+  .controller('PropertiesListController', PropertiesListController);
+
+  PropertiesListController.$inject = ['$scope', '$state'  ,'propertiesListService' , '$timeout' , 'Notification' ,'$rootScope'];
+
+
+  function PropertiesListController($scope, $state , propertiesListService , $timeout ,Notification , $rootScope) {
+
+    $rootScope.setNavBarActive('properties');
+
+    var perPageCount = 20;
+    var isVerifiedPage = $state.current.name==="verify_properties" ? true : false;
+
+    $scope.isVerifiedPage = isVerifiedPage;
+
+    $scope.pageNumber = 1 ;
+    $scope.propertiesData = {};
+    $scope.isLoading = false;
+    $scope.noResultsFound = true;
+
+    
+    function fetchPropertiesList(){
+      toggleLoader(true);
+      var obj={
+        limit : perPageCount,
+        skip : (perPageCount*($scope.pageNumber-1))
+      }
+
+      propertiesListService.fetchProperties(obj)
+      .then(function(response){
+        toggleLoader(false);
+        $scope.house_list = response.properties;
+        $scope.propertiesData.total = response.count;
+
+        if(response.properties.length>0){
+          $scope.noResultsFound = false;
+        }else{
+          $scope.noResultsFound = true;
+        }
+
+        $scope.setPaginationVariable({
+         count : response.count,
+         currentPage : $scope.pageNumber
+       })
+
+      }).catch(apiFailureHandler);
+    }
+
+
+    function fetchUnverifiedProperties(){
+      toggleLoader(true);
+      var obj={
+        limit : perPageCount,
+        skip : (perPageCount*($scope.pageNumber-1))
+      }
+
+      propertiesListService.fetchUnverifiedProperties(obj)
+      .then(function(response){
+        toggleLoader(false);
+        $scope.house_list = response.properties;
+        $scope.propertiesData.total = response.count;
+        
+        if(response.properties.length>0){
+          $scope.noResultsFound = false;
+        }else{
+          $scope.noResultsFound = true;
+        }
+
+        $scope.setPaginationVariable({
+         count : response.count,
+         currentPage : $scope.pageNumber
+       })
+
+      }).catch(apiFailureHandler);
+    }
+
+    function fetchProperties(){
+      if(isVerifiedPage){
+        fetchUnverifiedProperties();
+      }else{
+        fetchPropertiesList();
+      }
+    }
+
+    fetchProperties();
+
+
+    function toggleLoader(show){
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.isLoading = show;
+        });
+      }, 100);
+    }
+
+
+
+    function apiFailureHandler(response) {
+      Notification.error({ 
+        message: 'api failure' , 
+        title: 'Request Failed!!', 
+        delay: 6000 }
+        );
+    }
+
+
+    function updatePage(page){
+      $scope.pageNumber = page;
+      fetchProperties();
+    }
+
+
+
+    /* pagination */
+    $scope.currentPage = 1;
+    $scope.frontCount = [];
+    $scope.lastCount = [];
+    $scope.showEclipses = true;
+    $scope.lastPage = 0;
+
+
+    $scope.setPaginationVariable = function(options){
+      $scope.currentPage = options.currentPage;
+      $scope.lastPage = Math.ceil(options.count/perPageCount);
+      $scope.showPagination = options.showPagination;
+      $scope.renderPagination();
+    }
+
+    function getFrontCount(current , lastPage){
+      var frontCount = [];
+      for(var i = current-1 ; i<current+3;i++){
+        if(i>0 && i <= lastPage){
+          frontCount.push(i);
+        }
+      }
+      return frontCount;
+    }
+
+    function getLastCount(last , current){
+      var lastCount = [];
+      for(var i = last-2 ; i <= last ;i++){
+        if(i > 0 && i > current+2){
+          lastCount.push(i);
+        }
+      }
+
+      return lastCount;
+    }
+
+    $scope.renderPagination = function(){
+      if($scope.currentPage>$scope.lastPage){
+        $scope.currentPage = $scope.lastPage;
+      }
+      $scope.frontCount = getFrontCount($scope.currentPage , $scope.lastPage);
+      $scope.lastCount = getLastCount($scope.lastPage , $scope.currentPage);
+      $scope.showEclipses = ( ($scope.lastPage-3) > ($scope.currentPage+2)) ? true : false;
+    }
+
+    $scope.setPageAs = function(page){
+      $scope.currentPage = page;
+      updatePage(page);
+    }
+    /*pagination ends*/
+
+
+
+
+  }
 }());
 
 (function() {
@@ -1031,6 +1321,152 @@ angular.module('core').factory('addPropertyService', ['$resource',
     }
   }());
 
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
+  .controller('UserListUnverifiedController', UserListUnverifiedController);
+
+  UserListUnverifiedController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService' , '$timeout' , 'Notification'];
+
+
+  function UserListUnverifiedController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService , $timeout ,Notification) {
+
+
+
+    var perPageCount = 50 ;
+
+
+    $scope.showLoader = true;
+    $scope.isLoading = false;
+    $scope.usersData = {};
+    $scope.pageNumber = 1;
+
+
+
+
+
+   
+
+
+    function toggleLoader(show){
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.isLoading = show;
+        });
+      }, 100);
+    }
+
+
+    /*get userss list*/
+    function getUsersList(){
+      toggleLoader(true);
+
+      var searchObj = {};
+
+
+        searchObj.skip = 50 * ($scope.pageNumber -1);
+
+        usersListService.getUnverifiedUsersList(searchObj).then(function(response){
+
+          toggleLoader(false);
+          $scope.usersData.list = response.users ; 
+          $scope.usersData.total = response.totalUsers;
+
+          $scope.setPaginationVariable({
+            count : response.totalUsers,
+            currentPage : $scope.pageNumber
+          });
+
+        }).catch(apiFailureHandler);
+      }
+
+
+      getUsersList();
+
+
+      
+      function apiFailureHandler(response) {
+        Notification.error({ 
+          message: 'api failure' , 
+          title: 'Request Failed!!', 
+          delay: 6000 }
+          );
+      }
+
+
+
+
+
+     
+
+      /* update page */
+      function updatePage(page){
+        $scope.pageNumber = page;
+        getUsersList();
+      }
+
+
+
+      /* pagination */
+      $scope.currentPage = 1;
+      $scope.frontCount = [];
+      $scope.lastCount = [];
+      $scope.showEclipses = true;
+      $scope.lastPage = 0;
+
+
+      $scope.setPaginationVariable = function(options){
+        $scope.currentPage = options.currentPage;
+        $scope.lastPage = Math.ceil(options.count/perPageCount);
+        $scope.showPagination = options.showPagination;
+        $scope.renderPagination();
+      }
+
+      function getFrontCount(current , lastPage){
+        var frontCount = [];
+        for(var i = current-1 ; i<current+3;i++){
+          if(i>0 && i <= lastPage){
+            frontCount.push(i);
+          }
+        }
+        return frontCount;
+      }
+
+      function getLastCount(last , current){
+        var lastCount = [];
+        for(var i = last-2 ; i <= last ;i++){
+          if(i > 0 && i > current+2){
+            lastCount.push(i);
+          }
+        }
+
+        return lastCount;
+      }
+
+      $scope.renderPagination = function(){
+        if($scope.currentPage>$scope.lastPage){
+          $scope.currentPage = $scope.lastPage;
+        }
+        $scope.frontCount = getFrontCount($scope.currentPage , $scope.lastPage);
+        $scope.lastCount = getLastCount($scope.lastPage , $scope.currentPage);
+        $scope.showEclipses = ( ($scope.lastPage-3) > ($scope.currentPage+2)) ? true : false;
+      }
+
+      $scope.setPageAs = function(page){
+        $scope.currentPage = page;
+        updatePage(page);
+      }
+      /*pagination ends*/
+
+
+
+
+
+    }
+  }());
+
 (function () {
   'use strict';
 
@@ -1048,16 +1484,62 @@ angular.module('core').factory('addPropertyService', ['$resource',
       add_user : {
         method : 'POST',
         url : '/api/admin/addUser'
+      },
+      add_admin : {
+        method : 'POST',
+        url : '/api/admin/auth/add-admin'
       }
     });
 
     angular.extend(AdminApi, {
       addUser : function(user){
         return this.add_user(user).$promise;
+      },
+      addAdmin : function(user){
+        return this.add_admin(user).$promise;
       }
     });
 
     return AdminApi;
+  }
+
+
+}());
+
+(function () {
+  'use strict';
+
+  // Users service used for communicating with the users REST endpoint
+  angular
+  .module('admin')
+  .factory('propertiesListService', propertiesListService);
+
+  propertiesListService.$inject = ['$resource'];
+
+  function propertiesListService($resource) {
+   
+
+    var propertyApi = $resource('/api/admin', {}, {
+      fetch_properties : {
+        method : 'GET',
+        url : '/api/admin/properties/list'
+      },
+      fetch_unverified : {
+        method : 'GET',
+        url : '/api/admin/properties/verify-list'
+      }
+    });
+
+    angular.extend(propertyApi, {
+      fetchProperties : function(data){
+        return this.fetch_properties(data).$promise;
+      },
+      fetchUnverifiedProperties : function(data){
+        return this.fetch_unverified(data).$promise;
+      }
+    });
+
+    return propertyApi;
   }
 
 
@@ -1090,7 +1572,11 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			get_unverified_users : {
 				method : 'GET',
-				url : '/api/admin/userList/unverified-users'
+				url : '/api/admin/usersList/unverified-users'
+			},
+			getAdmins : {
+				method : 'GET',
+				url : '/api/admin/usersList/admins'
 			}
 		});
 
@@ -1109,6 +1595,9 @@ angular.module('admin').factory('usersListService', ['$resource',
 			},
 			getUnverifiedUsersList : function(data){
 				return this.get_unverified_users(data).$promise;
+			},
+			getAdminsList : function(data){
+				return this.getAdmins(data).$promise;
 			}
 
 		});
@@ -1291,9 +1780,13 @@ angular.module('admin').factory('usersListService', ['$resource',
 
     $stateProvider
       .state('overview', {
-        url: '/',
+        url: '/overview',
         templateUrl: '/modules/core/client/views/home.client.view.html',
         controller: 'HomeController',
+      })
+      .state('index', {
+        url: '/',
+        templateUrl: '/modules/core/client/views/index.client.view.html',
       })
       .state('not-found', {
         url: '/not-found',
@@ -1528,6 +2021,87 @@ angular.module('admin').factory('usersListService', ['$resource',
 
 
 
+
+(function() {
+	'use strict';
+
+	angular
+	.module('core')
+	.controller('IndexController', IndexController);
+
+	IndexController.$inject = ['$scope', '$state', '$rootScope', 'UsersService', 'MyUtilityService', 'Authentication', '$timeout','$window','Notification'];
+
+	function IndexController($scope, $state, $rootScope, UsersService, MyUtilityService, Authentication, $timeout,$window , Notification) {
+
+		var utils = MyUtilityService;
+		$scope.isLoading = false;
+
+		$scope.loginData = {
+			usernameOrEmail: "",
+			password: ""
+		};
+
+		function setValidationVariables(){
+			$scope.loginValidations = {
+				isEmailPresent : true,
+				isPasswordPresent : true
+			}
+		}
+		setValidationVariables();
+
+		function toggleLoader(show){
+			$timeout(function() {
+				$scope.$apply(function() {
+					$scope.isLoading = show;
+				});
+			}, 100);
+		}
+
+		function loginValidations(){
+			
+			var isEmailPresent = $scope.loginData.usernameOrEmail !=="" ? true : false;
+			var isPasswordPresent = $scope.loginData.password !== "" ? true : false ;
+
+
+			$scope.loginValidations.isEmailPresent = isEmailPresent;
+			$scope.loginValidations.isPasswordPresent = isPasswordPresent;
+
+			return isEmailPresent && isPasswordPresent;
+		}
+
+
+		$scope.loginClick = function() {
+			
+			setValidationVariables();
+
+			var isValid = loginValidations();
+			if(isValid){
+				toggleLoader(true);
+				UsersService.userSignin($scope.loginData).then(loginInSucess).catch(loginInFailed);
+			}
+		}
+
+		function loginInSucess(user){
+			toggleLoader(false);
+			Authentication.user = user;
+			$scope.displayPopup = false;
+			$state.go('overview');
+		}
+
+		function loginInFailed(){
+			toggleLoader(false);
+			Notification.error({ 
+				message: "Incorrect username or password", 
+				title: 'Login Failed!', 
+				delay: 6000 }
+				);
+		}
+
+		
+
+
+	}
+}());
 
 (function() {
 	'use strict';
@@ -2014,162 +2588,6 @@ angular.module('admin').factory('usersListService', ['$resource',
 
 	}
 
-}());
-
-(function() {
-	'use strict';
-
-	angular
-	.module('core')
-	.controller('SignupLoginController', SignupLoginController);
-
-	SignupLoginController.$inject = ['$scope', '$state', '$rootScope', 'UsersService', 'MyUtilityService', 'Authentication', '$timeout','$window','Notification'];
-
-	function SignupLoginController($scope, $state, $rootScope, UsersService, MyUtilityService, Authentication, $timeout,$window , Notification) {
-
-		var utils = MyUtilityService;
-
-		$scope.displayPopup = false;
-		$scope.hidePopup = false;
-		$scope.mobileComponentDisplayed = 'signup';
-		$scope.displayViewPassword = true;
-		$scope.showPassword = false;
-
-		function reInitScopeVariables(){
-
-			$scope.signUpData = {
-				email: "",
-				password: "",
-				phoneCode: '+91',
-				phoneNumber: null,
-				userRole: ""
-			};
-
-			$scope.loginData = {
-				usernameOrEmail: "",
-				password: ""
-			};
-
-			$scope.signUpValidations = {
-				isEmailvalid: true,
-				isMobileVaild: true,
-				isCodeValid: true,
-				allValid: false,
-				isUserRoleSet: true,
-				isPasswordSet: true
-			}
-		}
-		
-		reInitScopeVariables();
-		
-
-		function addHideListenersForHidingPopup() {
-
-			document.addEventListener('keydown', function(e) {
-				if (e.key === "Escape") {
-					if ($scope.displayPopup === true) {
-						$scope.$apply(function() {
-							$scope.displayPopup = false;
-						});
-					}
-				}
-			});
-		}
-		addHideListenersForHidingPopup();
-
-		$rootScope.displayLoginSignupPopup = function() {
-			reInitScopeVariables();
-			$scope.displayPopup = true;
-			$scope.hidePopup = false;
-		}
-
-		$scope.changeMobileDisplayed = function(displayedComponent) {
-			$scope.mobileComponentDisplayed = displayedComponent;
-		}
-
-		$scope.closeSignupLoginPopup = function() {
-			$scope.displayPopup = false;
-			$scope.hidePopup = true;
-		}
-
-		function validateSignUpData() {
-
-			var isEmailvalid = utils.isValidEmail($scope.signUpData.email);
-			var isMobileVaild = utils.isValidMobile($scope.signUpData.phoneNumber);
-			var isCodeValid = utils.isMobileCodeValid($scope.signUpData.phoneCode);
-			var isUserRoleSet = $scope.signUpData.userRole === "" ? false : true;
-			var isPasswordSet = $scope.signUpData.password === "" ? false : true;
-
-			$scope.signUpValidations.isEmailvalid = isEmailvalid;
-			$scope.signUpValidations.isMobileVaild = isMobileVaild;
-			$scope.signUpValidations.isCodeValid = isCodeValid;
-			$scope.signUpValidations.isUserRoleSet = isUserRoleSet;
-			$scope.signUpValidations.isPasswordSet = isPasswordSet;
-
-			$scope.signUpValidations.allValid = isEmailvalid && isMobileVaild && isCodeValid && isUserRoleSet && isPasswordSet;
-
-			return $scope.signUpValidations.allValid;
-		}
-
-
-		$scope.signUpClick = function() {
-			var isValid = validateSignUpData();
-			if (isValid) {
-				UsersService.userSignup($scope.signUpData).then(signUpSucess).catch(signUpFailed);
-			}
-		}
-
-
-		function signUpSucess(user) {
-			Authentication.user = user;
-			$scope.displayPopup = false;
-			$window.location.reload();
-		}
-
-		function signUpFailed(response) {
-			Notification.error({ 
-				message: response.data.message, 
-				title: 'Signup Error!', 
-				delay: 6000 }
-				);
-		}
-
-
-		$scope.loginClick = function() {
-			UsersService.userSignin($scope.loginData).then(loginInSucess).catch(loginInFailed);
-		}
-
-		function loginInSucess(user){
-			Authentication.user = user;
-			$scope.displayPopup = false;
-			$window.location.reload();
-		}
-
-		function loginInFailed(){
-			Notification.error({ 
-				message: "Incorrect username or password", 
-				title: 'Login Failed!', 
-				delay: 6000 }
-				);
-		}
-
-		$scope.displayPasswordField = function() {
-
-			$scope.displayViewPassword = !$scope.displayViewPassword;
-			$scope.showPassword = !$scope.showPassword;
-			if ($scope.showPassword) {
-				document.getElementById('password-input-desktop').setAttribute('type', 'text');
-				document.getElementById('password-input-mobile').setAttribute('type', 'text');
-
-			} else {
-				document.getElementById('password-input-desktop').setAttribute('type', 'password');
-				document.getElementById('password-input-mobile').setAttribute('type', 'password');
-			}
-		}
-
-
-
-	}
 }());
 
 (function () {

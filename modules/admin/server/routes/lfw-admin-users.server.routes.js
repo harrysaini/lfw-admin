@@ -6,10 +6,12 @@ module.exports = function(app){
 
 
 	//get users list
-	app.route('/api/admin/userslist/tenants').get(lfwAdminUsers.getTenantsList);
-	app.route('/api/admin/userslist/brokers').get(lfwAdminUsers.getBrokersList);
-	app.route('/api/admin/userslist/landlords').get(lfwAdminUsers.getLandlordsList);
-	app.route('/api/admin/userList/unverified-users').get(lfwAdminUsers.getUnverifiedUsersList);
+	app.route('/api/admin/usersList/tenants').get(lfwAdminUsers.getTenantsList);
+	app.route('/api/admin/usersList/brokers').get(lfwAdminUsers.getBrokersList);
+	app.route('/api/admin/usersList/landlords').get(lfwAdminUsers.getLandlordsList);
+	app.route('/api/admin/usersList/admins').get(lfwAdminUsers.getAdminsList);
+
+	app.route('/api/admin/usersList/unverified-users').get(lfwAdminUsers.getUnverifiedUsersList);
 
 
 	//add users
