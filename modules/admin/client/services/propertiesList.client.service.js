@@ -11,7 +11,7 @@
   function propertiesListService($resource) {
    
 
-    var propertyApi = $resource('/api/admin', {}, {
+    var propertyApi = $resource('/api/admin', {propertyId : '@id' }, {
       fetch_properties : {
         method : 'GET',
         url : '/api/admin/properties/list'
@@ -20,9 +20,12 @@
         method : 'GET',
         url : '/api/admin/properties/verify-list'
       }
+
+      
     });
 
     angular.extend(propertyApi, {
+     
       fetchProperties : function(data){
         return this.fetch_properties(data).$promise;
       },

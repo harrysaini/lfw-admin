@@ -1,255 +1,366 @@
 <style>
-.details-container {
-  padding: 10px 25px;
-  padding-top: 1rem;
-}
+  .details-container {
+    padding: 10px 25px;
+    padding-top: 1rem;
+  }
 
-.upper-details {
-  padding: 1rem;
-  padding-bottom: 5px;
-  background: white;
-  border-bottom: 2px solid #f9f9f9;
-}
+  .upper-details {
+    padding: 1rem;
+    padding-bottom: 5px;
+    background: white;
+    border-bottom: 2px solid #f9f9f9;
+  }
 
-.upper-details-1,
-.upper-details-2 {
-  border-right: 1px solid #f9f9f9;
-}
+  .upper-details-1,
+  .upper-details-2 {
+    border-right: 1px solid #f9f9f9;
+  }
 
-.lower-details-switcher {
+  .lower-details-switcher {
 
-  background: white;
+    background: white;
 
-  box-shadow: 2px 2px 2px #f1f1f1;
-}
+    box-shadow: 2px 2px 2px #f1f1f1;
+  }
 
-.lower-under {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: #c81f32;
-  left: 0;
-  bottom: -5px;
-}
+  .lower-under {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #c81f32;
+    left: 0;
+    bottom: -5px;
+  }
 
-.content-changer {
-  /* padding: 10px; */
-  /* padding-left: 1rem; */
-  /* margin-bottom: 5px; */
-  margin-right: 10px;
-  padding-bottom: 5px;
-  padding-top: 10px;
-  margin-left: 5px;
-  cursor: pointer;
-}
+  .content-changer {
+    /* padding: 10px; */
+    /* padding-left: 1rem; */
+    /* margin-bottom: 5px; */
+    margin-right: 10px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
 
-.content-changer:hover {
-  background: #f9f9f9;
-}
+  .content-changer:hover {
+    background: #f9f9f9;
+  }
 
-.main-upper {
-  margin-bottom: 1rem;
-}
+  .main-upper {
+    margin-bottom: 1rem;
+  }
 
-.main-lower {
-  margin-bottom: 1rem;
-}
+  .main-lower {
+    margin-bottom: 1rem;
+  }
 
-.main-lower-inner {
-  background: white;
-  padding: 1rem;
-}
+  .main-lower-inner {
+    background: white;
+    padding: 1rem;
+  }
 
-.image-outer {
-  position: relative;
-}
+  .image-outer {
+    position: relative;
+  }
 
-.image-inner {
-  overflow: hidden;
-}
+  .image-inner {
+    overflow: hidden;
+  }
 
-.image-inner-wrapper {
-  height: 275px;
-}
+  .image-inner-wrapper {
+    height: 275px;
+  }
 
-.profile-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 2;
-  background-position: center center;
-  background-size: cover;
-  transition: opacity ease 0.3s;
-}
+  .profile-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    background-position: center center;
+    background-size: cover;
+    transition: opacity ease 0.3s;
+  }
 
-.amenities-section-lower,
-.location-section-lower {
-  padding: 1rem;
-  background: white;
-}
+  .amenities-section-lower,
+  .location-section-lower {
+    padding: 1rem;
+    background: white;
+  }
 
-.amenities-section,
-.location-section {
-  margin-bottom: 1rem;
-}
+  .amenities-section,
+  .location-section {
+    margin-bottom: 1rem;
+  }
 
-#map {
-  height: 330px;
-}
+  #map {
+    height: 330px;
+  }
 
-.similar-properties-lower {
-  padding: 1rem;
-  background: white;
-}
+  .similar-properties-lower {
+    padding: 1rem;
+    background: white;
+  }
 
-.map-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 500px;
-  top: 52px;
-}
+  .map-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 500px;
+    top: 52px;
+  }
 
-.map-outer {
-  position: relative;
-       margin-top: 10px; 
-}
+  .map-outer {
+    position: relative;
+    margin-top: 10px; 
+  }
 
-.distance-time-wrapper {
-  position: absolute;
-  top: 38px;
-  width: 50%;
-}
+  .distance-time-wrapper {
+    position: absolute;
+    top: 38px;
+    width: 50%;
+  }
 
-.map-content {
-  padding-left: 1rem;
-}
+  .map-content {
+    padding-left: 1rem;
+  }
 
-.nearby-wrapper {
-  position: relative;
-}
+  .nearby-wrapper {
+    position: relative;
+  }
 
-.nearby-wrapper a {
-  display: inline-block;
-  padding: 1rem 0.8rem;
-}
+  .nearby-wrapper a {
+    display: inline-block;
+    padding: 1rem 0.8rem;
+  }
 
-.nearby-wrapper a:hover {
-  color: #fc633f;
-}
+  .nearby-wrapper a:hover {
+    color: #fc633f;
+  }
 
-.field-card {
-  padding: 0.8rem 0.6rem;
-  margin: 0.8rem 0 0.6rem 0;
-  border: 1px solid #a5a5a5;
-  border-radius: 2px;
-}
+  .field-card {
+    padding: 0.8rem 0.6rem;
+    margin: 0.8rem 0 0.6rem 0;
+    border: 1px solid #a5a5a5;
+    border-radius: 2px;
+  }
 
-.bookmark-button,
-.interest-button {
-  border-radius: 2px;
-  background: #bbbbbb;
-  color: white;
-}
+  .bookmark-button,
+  .interest-button {
+    border-radius: 2px;
+    background: #bbbbbb;
+    color: white;
+  }
 
-.interest-button.interest-active {
-  background: #c81f32;
-  color: white;
-}
+  .interest-button.interest-active {
+    background: #c81f32;
+    color: white;
+  }
 
-.interest-button.interest-active:hover {
-  background: #c81f32;
-  color: white;
-}
+  .interest-button.interest-active:hover {
+    background: #c81f32;
+    color: white;
+  }
 
-.interest-button:hover {
-  border-radius: 2px;
-  background: #bbbbbb;
-  color: white;
-}
+  .interest-button:hover {
+    border-radius: 2px;
+    background: #bbbbbb;
+    color: white;
+  }
 
-.bookmark-button:hover {
-  border-radius: 2px;
-  background: #bbbbbb;
-  color: white;
-}
+  .bookmark-button:hover {
+    border-radius: 2px;
+    background: #bbbbbb;
+    color: white;
+  }
 
-.bookmark-button.bookmark-active {
-  border-radius: 2px;
-  background: #2f2d2d;
-  color: white;
-}
+  .bookmark-button.bookmark-active {
+    border-radius: 2px;
+    background: #2f2d2d;
+    color: white;
+  }
 
-.bookmark-button.bookmark-active:hover {
-  border-radius: 2px;
-  background: #2f2d2d;
-  color: white;
-}
+  .bookmark-button.bookmark-active:hover {
+    border-radius: 2px;
+    background: #2f2d2d;
+    color: white;
+  }
 
-.photo-counter {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1.5rem;
-  background: black;
-  opacity: 0.9;
-  color: #fff;
-  z-index: 3;
-  padding-left: 1rem;
+  .photo-counter {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5rem;
+    background: black;
+    opacity: 0.9;
+    color: #fff;
+    z-index: 3;
+    padding-left: 1rem;
 
-  line-height: 25px;
-}
+    line-height: 25px;
+  }
 
-.house-image-navigation {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: 0;
-  height: 100%;
-}
+  .house-image-navigation {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
 
-.house-image-navigation .icon {
-  height: 24px;
-  top: calc(50% - 12px);
-  position: relative;
-  z-index: 3;
-}
+  .house-image-navigation .icon {
+    height: 24px;
+    top: calc(50% - 12px);
+    position: relative;
+    z-index: 3;
+  }
 
-.house-image-navigation .icon.icon-arrow-left {
-  left: 10px;
-}
+  .house-image-navigation .icon.icon-arrow-left {
+    left: 10px;
+  }
 
-.house-image-navigation .icon.icon-arrow-right {
-  right: 10px;
-}
+  .house-image-navigation .icon.icon-arrow-right {
+    right: 10px;
+  }
 
-.arrow-wrapper {
-  position: absolute;
-  width: 15%;
-  height: 100%;
-  z-index: 2;
-  top: 0;
-  cursor: pointer;
-}
+  .arrow-wrapper {
+    position: absolute;
+    width: 15%;
+    height: 100%;
+    z-index: 2;
+    top: 0;
+    cursor: pointer;
+  }
 
 
 
-.arrow-wrapper.arrow-right {
+  .arrow-wrapper.arrow-right {
 
-  right: 0;
-}
-.view-all:hover{
-  text-decoration: underline;
-  cursor: pointer;
-}
-.view-all{
-  margin-left: 1rem
-}
+    right: 0;
+  }
+  .view-all:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .view-all{
+    margin-left: 1rem
+  }
+
+  .properties-controls-wrapper{
+    padding : 15px;
+    margin:  10px 15px;
+    background: white;
+  }
+
+  .btns-wrapper>div{
+    margin: 0px 20px;
+    display: inline-block;
+  }
+
+
+
+  .my-label{
+    padding: 0px 5px;
+    font-size : 90%;
+    position: relative;
+    top : -10px;
+  }
+
+  .switch-wrap{
+    position: relative;
+    top : 10px;
+  }
+
+  .delete-wrapper{
+    position: relative;
+  }
+
+  .delete-popup{
+    width: 400%;
+    left: -127%;
+    text-align: center;
+  }
+  .delete-popup-inner{
+    padding: 20px;
+  }
+  .delete-btns-wrapper>div{
+    margin: 10px;
+  }
+
+
+
+
+
+
 
 </style>
 <article class='details-container fh-s-bg medium-push-2 medium-10' ng-controller="detailsController" ng-init="fetch_house()">
+
+  <div class="properties-controls-wrapper row">
+    <div class="properties-controls-inner columns ">
+      <div class="btns-wrapper">
+        <div ng-if='controls.isAdminVerified'>
+          <div class="font-color-green fh-font-primary">
+            <i class="fa fa-check-square-o" aria-hidden="true"></i> Verified
+          </div>
+        </div>
+        <div>
+          <div class="switch-wrap">
+            <div class="switch inline" >
+              <input class="switch-input" id="exampleSwitch" type="checkbox" name="exampleSwitch" ng-model='controls.showInListing' ng-change='toggleShowInListing()'>
+              <label class="switch-paddle" for="exampleSwitch">
+                <span class="show-for-sr">Show in listing</span>
+              </label>
+            </div>
+            <div class="my-label inline">
+              Show in listing
+            </div>
+          </div>
+        </div>
+        <div>
+
+          <div class="ui-btn wide-btn lfw-smooth-border" ng-click="toggleAdminVerified()">
+            <i class="fa fa-check" aria-hidden="true"></i> {{controls.verifyBtnText}}
+          </div>
+          
+        </div>
+        <div>
+          <div class="delete-wrapper">
+            <div class="ui-btn alert lfw-smooth-border wide-btn" ng-click="controls.showDeletePopup=true">
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete
+            </div>
+            <div class="delete-popup ui-popup " ng-class="{'shown' : controls.showDeletePopup }">
+              <div class="delete-popup-inner ui-popup-inner">
+                <div class="fh-font-primary">
+                  Do you really want to delete property?
+                </div>
+                <div class="delete-btns-wrapper">
+                  <div class="ui-btn" ng-click="deleteProperty()">
+                    Confirm
+                  </div>
+                  <div class="ui-btn" ng-click="controls.showDeletePopup=false">
+                    Cancel
+                  </div>
+                </div>
+                <div class="popup-close-btn" ng-click="controls.showDeletePopup=false">
+                <div class="link-btn fh-font-primary">X</div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div>
+          <div class="ui-btn lfw-smooth-border wide-btn">
+            <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="main-upper">
     <div class="row">
       <div class="columns medium-12">
@@ -279,18 +390,12 @@
               </div>
             </div>
             <div class="columns medium-6">
-              <div class="row">
-                <div class="columns medium-6">
-                </div>
-                <div class="columns medium-6">
-                  <div class="button fh-font-primary interest-button  uppercase max-width" ng-click="toggle_interest()" ng-class="{'interest-active':house_list.is_interested}">Interested</div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
         <div class="lower-details-switcher">
-          <div class="row large-up-6 medium-up-6">
+          <div class="row large-up-5 medium-up-5">
             <div class="columns">
               <div class="content-changer">
                 <div class="fh-font-primary uppercase relative text-center">Overview
@@ -478,18 +583,18 @@
     </div>
   </div>
   <style>
-  .outer-wrapper {
-    padding: 10px;
-    border-radius: 2px;
-  }
+    .outer-wrapper {
+      padding: 10px;
+      border-radius: 2px;
+    }
 
-  .image-inner-similar {
-    height: 135px
-  }
+    .image-inner-similar {
+      height: 135px
+    }
 
-  .similar-title {
-    margin-bottom: 1rem;
-  }
+    .similar-title {
+      margin-bottom: 1rem;
+    }
 
   </style>
   <div class="similar-properties-section" id="#similar_properties">
@@ -528,132 +633,132 @@
     </div>
   </div>
   <style>
-  .photos-full-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-  }
+    .photos-full-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+    }
 
-  .left-navigation,
-  .right-navigation {
-    color: white;
-    font-size: 140px;
-  }
+    .left-navigation,
+    .right-navigation {
+      color: white;
+      font-size: 140px;
+    }
 
-  .photo-viewer li {
-    /*float: left;*/
-    padding: 1rem;
-    white-space: nowrap;
-    display: inline-block;
-  }
+    .photo-viewer li {
+      /*float: left;*/
+      padding: 1rem;
+      white-space: nowrap;
+      display: inline-block;
+    }
 
-  .photo-viewer {
-    width: 100%;
-    padding-top: 2%;
-  }
+    .photo-viewer {
+      width: 100%;
+      padding-top: 2%;
+    }
 
-  .left-navigation,
-  .right-navigation {
-    color: white;
-    font-size: 140px;
-    width: 20px;
-    vertical-align: top;
-    line-height: 500px;
-    opacity: 1;
-    transition: all ease-in 0.3s;
-    cursor: pointer;
-  }
+    .left-navigation,
+    .right-navigation {
+      color: white;
+      font-size: 140px;
+      width: 20px;
+      vertical-align: top;
+      line-height: 500px;
+      opacity: 1;
+      transition: all ease-in 0.3s;
+      cursor: pointer;
+    }
 
-  .left-navigation.hidden,
-  .right-navigation.hidden {
-    visibility: hidden;
-    opacity: 0
-  }
+    .left-navigation.hidden,
+    .right-navigation.hidden {
+      visibility: hidden;
+      opacity: 0
+    }
 
-  .photo-wrapper {
-    margin: auto;
-    text-align: center;
-  }
+    .photo-wrapper {
+      margin: auto;
+      text-align: center;
+    }
 
-  .image-gallery {
-    white-space: nowrap;
-    /*overflow: hidden;*/
-    position: relative;
-    left: 0;
-    transition: all linear 0.3s;
-  }
+    .image-gallery {
+      white-space: nowrap;
+      /*overflow: hidden;*/
+      position: relative;
+      left: 0;
+      transition: all linear 0.3s;
+    }
 
-  .image-gallery .single-photo {
-    width: 20%;
-    transition: all linear 0.3s;
-    line-height: 500px;
-    vertical-align: middle;
-    padding: 1%;
-    opacity: 0.6;
-  }
+    .image-gallery .single-photo {
+      width: 20%;
+      transition: all linear 0.3s;
+      line-height: 500px;
+      vertical-align: middle;
+      padding: 1%;
+      opacity: 0.6;
+    }
 
-  .image-gallery .single-photo.current {
-    width: 60%;
-    opacity: 1;
-  }
+    .image-gallery .single-photo.current {
+      width: 60%;
+      opacity: 1;
+    }
 
-  .single-photo img {
-    max-height: 500px;
-  }
+    .single-photo img {
+      max-height: 500px;
+    }
 
-  .image-wrapper {
-    overflow: hidden;
-  }
+    .image-wrapper {
+      overflow: hidden;
+    }
 
-  .photo-caption {
-    margin-bottom: 0.4rem;
-    margin-top: 1.2rem;
-  }
+    .photo-caption {
+      margin-bottom: 0.4rem;
+      margin-top: 1.2rem;
+    }
 
-  .current .photo-caption,
-  .current .photo-count {
-    opacity: 1;
-    visibility: visible;
-    transition: all ease 0.3s;
-  }
+    .current .photo-caption,
+    .current .photo-count {
+      opacity: 1;
+      visibility: visible;
+      transition: all ease 0.3s;
+    }
 
-  .photo-caption,
-  .photo-count {
-    opacity: 0;
-    visibility: hidden;
-    line-height: 1;
-  }
+    .photo-caption,
+    .photo-count {
+      opacity: 0;
+      visibility: hidden;
+      line-height: 1;
+    }
 
-  .close-full-screen img {
-    width: 60px;
-  }
+    .close-full-screen img {
+      width: 60px;
+    }
 
-  .show-small-1 {
-    width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
-  }
+    .show-small-1 {
+      width: 100%;
+      overflow-x: scroll;
+      overflow-y: hidden;
+    }
 
-  .show-small-2 {
-    width: 450px;
-  }
+    .show-small-2 {
+      width: 450px;
+    }
 
-  .photo-viewer-header {
-    color: white;
-    text-align: left;
-    /* border: 1px solid rgba(255, 255, 255, 0.15); */
-    padding: 2rem;
-  }
+    .photo-viewer-header {
+      color: white;
+      text-align: left;
+      /* border: 1px solid rgba(255, 255, 255, 0.15); */
+      padding: 2rem;
+    }
 
-  .close-full-screen {
-    color: white;
-    cursor: pointer;
-    padding: .5rem 3rem;
-  }
+    .close-full-screen {
+      color: white;
+      cursor: pointer;
+      padding: .5rem 3rem;
+    }
 
   </style>
   <div class="photos-full-screen" ng-show="photos_full_screen===true">
@@ -664,44 +769,44 @@
             <div style="position:relative;" class="text-center">
               <div class="left-navigation inline-block" ng-click="photo_prev()" ng-class="{hidden:current_index===1}">
                 <img src="/modules/core/client/img/icons/icon-arrow-left.svg"></div>
-            </div>
-          </div>
-          <div class="columns medium-10">
-            <div class="image-wrapper">
-              <div class="viewer-header-wraper">
-                <div class="row">
-                  <div class="columns small-12 medium-8">
-                    <div class="text-center photo-viewer-header uppercase">{{house.house_type | uppercase}} {{house.house_class}} in {{house.sub_locality}}, {{house.main_locality}}, {{house.city}} - {{::house.house_rent | currency : "&#8377;": 0 }}</div>
-                  </div>
-                  <div class="columns small-4">
-                    <div class="close-full-screen text-right" ng-click="close_photo_gallery()"><img src="/modules/core/client/img/icons/icon-close-white.svg"></div>
-                  </div>
-                </div>
               </div>
-              <div class="image-gallery" style="left:20%;">
-                <!-- <li class="blank_node"></li> -->
-                <div>
-                  <div class="single-photo inline-block" ng-class="{current:current_index==$index+1}" ng-repeat="url in house_list.photos track by $index">
-                    <!-- <div><img src="modules/core/client/img/icons/home3.png"></div> -->
-                    <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/f85b3ec5166a6d5edba635b8a3edc326.jpg"></div> -->
-                    <div class="photo-wrapper">
-                      <img src="/uploads/{{url.location}}">
+            </div>
+            <div class="columns medium-10">
+              <div class="image-wrapper">
+                <div class="viewer-header-wraper">
+                  <div class="row">
+                    <div class="columns small-12 medium-8">
+                      <div class="text-center photo-viewer-header uppercase">{{house.house_type | uppercase}} {{house.house_class}} in {{house.sub_locality}}, {{house.main_locality}}, {{house.city}} - {{::house.house_rent | currency : "&#8377;": 0 }}</div>
                     </div>
-                    <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/2d960cada6f117512c684292fc6dcbb0.jpg"></div> -->
-                    <div class="fh-font-title fh-white-c photo-caption text-center">{{url.heading}}</div>
-                    <div class="fh-font-subhead fh-p-c uppercase photo-count text-center">{{$index+1}} of {{photo_length}} photos</div>
+                    <div class="columns small-4">
+                      <div class="close-full-screen text-right" ng-click="close_photo_gallery()"><img src="/modules/core/client/img/icons/icon-close-white.svg"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="image-gallery" style="left:20%;">
+                  <!-- <li class="blank_node"></li> -->
+                  <div>
+                    <div class="single-photo inline-block" ng-class="{current:current_index==$index+1}" ng-repeat="url in house_list.photos track by $index">
+                      <!-- <div><img src="modules/core/client/img/icons/home3.png"></div> -->
+                      <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/f85b3ec5166a6d5edba635b8a3edc326.jpg"></div> -->
+                      <div class="photo-wrapper">
+                        <img src="/uploads/{{url.location}}">
+                      </div>
+                      <!-- <div class="photo-wrapper"><img src="http://flathood.com/uploads/FH284/2d960cada6f117512c684292fc6dcbb0.jpg"></div> -->
+                      <div class="fh-font-title fh-white-c photo-caption text-center">{{url.heading}}</div>
+                      <div class="fh-font-subhead fh-p-c uppercase photo-count text-center">{{$index+1}} of {{photo_length}} photos</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="columns medium-1">
-            <div style="position:relative;" class="text-center">
-              <div class="right-navigation inline-block" ng-click="photo_next()" ng-class="{hidden:current_index===photo_length}"><img src="/modules/core/client/img/icons/icon-arrow-right.svg"></div>
+            <div class="columns medium-1">
+              <div style="position:relative;" class="text-center">
+                <div class="right-navigation inline-block" ng-click="photo_next()" ng-class="{hidden:current_index===photo_length}"><img src="/modules/core/client/img/icons/icon-arrow-right.svg"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</article>
+  </article>

@@ -242,7 +242,7 @@
 
 
       $scope.searchBtnClick = function(){
-        initPageNumber();
+        //initPageNumber();
         fetchUsersList(true);
       }
 

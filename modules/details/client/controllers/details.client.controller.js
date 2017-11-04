@@ -1,5 +1,5 @@
-angular.module('details').controller('detailsController', ['$rootScope', '$scope', '$state', 'detailsService', 'commonService',
-  function($rootScope, $scope, $state, detailsService, commonService) {
+angular.module('details').controller('detailsController', ['$rootScope', '$scope', '$state', 'detailsService', 'commonService', 'propertiesCRUDService', 'Notification', '$timeout',
+  function($rootScope, $scope, $state, detailsService, commonService , propertiesCRUDService ,Notification  , $timeout){
 
     var map;
     $scope.fetch_house = function() {
@@ -14,65 +14,15 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
           $scope.house_list.current_image_index = 0;
           $rootScope.house_lat = data.property_params.location.loc[1];
           $rootScope.house_lng = data.property_params.location.loc[0];
-          fetch_interest_bookmarked();
+
+
+          //set control valus
+          updateControlData();
         }
       })
     }
 
-    function fetch_interest_bookmarked() {
-      if (user) {
-        commonService.fetch_list_interest_bookmarked({}, function(response) {
-          if (response.status) {
-            $rootScope.user_compare_list = response.data;
-
-
-          } else {
-            $rootScope.user_compare_list = null;
-
-          }
-
-          console.log("dddded", $rootScope.user_compare_list);
-          update_interest_house();
-
-
-
-
-        })
-
-      } else {
-        return;
-      }
-
-
-
-
-    }
-
-
-
-    $scope.toggle_interest = function() {
-
-
-      if (user) {
-
-
-        commonService.toggle_interest({ house_id: $scope.house._id }, function(response) {
-          // console.log("added", response);
-          $rootScope.user_compare_list = response;
-
-          update_interest_house();
-        });
-
-      } else {
-
-        $rootScope.displayLoginSignupPopup();
-
-      }
-
-    }
-
-
-
+    
 
     function update_interest_house() {
       // console.log("yes here");
@@ -131,7 +81,7 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
 
       } else
 
-        $scope.house_list.current_image_index = $scope.house_list.photos.length - 1;
+      $scope.house_list.current_image_index = $scope.house_list.photos.length - 1;
 
 
 
@@ -209,8 +159,95 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
 
 
 
+    /*admin control code*/
+    $scope.controls = {};
+    $scope.controls.showInListing = false;
+    $scope.controls.isAdminVerified = true ;
+    $scope.controls.verifyBtnText = 'Verify';
+    $scope.controls.showDeletePopup = false;
+
+    function apiFailureHandler(response) {
+      Notification.error({ 
+        message: 'api failure' , 
+        title: 'Request Failed!!', 
+        delay: 6000 }
+        );
+
+      updateControlData();
+    }
+
+
+    function updatePropertyData(response){
+      $scope.house = response.property;
+      updateControlData();
+    }
+
+    function updateControlData(){
+      $scope.controls.showInListing = $scope.house.showInListing;
+      $scope.controls.isAdminVerified = $scope.house.isAdminVerified ;
+      $scope.controls.verifyBtnText = $scope.house.isAdminVerified ? 'Unverify' : 'Verify' ;
+    }
+
+    
+
+    
+
+
+    $scope.toggleShowInListing = function(){
+      var propertyID = $scope.house._id;
+      var obj = {
+        showInListing : $scope.controls.showInListing
+      };
+
+      propertiesCRUDService.toggleShowInListing(propertyID , obj).then(function(response){
+        updatePropertyData(response);
+        Notification.success({ 
+          message: 'Show on listing is set as '+response.property.showInListing , 
+          title: 'Updated succesfully', 
+          delay: 6000 
+        });
+
+      }).catch(apiFailureHandler);
+
+    }
+
+    $scope.toggleAdminVerified = function(){
+
+      var propertyID = $scope.house._id;
+      var obj = {
+        isAdminVerified : !$scope.controls.isAdminVerified
+      };
+
+      propertiesCRUDService.toggleAdminVerified(propertyID , obj).then(function(response){
+        updatePropertyData(response);
+        Notification.success({ 
+          message: 'Property verification status is '+response.property.isAdminVerified, 
+          title: 'Updated succesfully', 
+          delay: 6000 
+        });
+
+
+      }).catch(apiFailureHandler);
+    }
+
+    $scope.deleteProperty = function(){
+      var propertyID = $scope.house._id;
+      propertiesCRUDService.deleteProperty(propertyID).then(function(response){
+
+        Notification.success({ 
+          message: 'Property is deleted succesfully', 
+          title: 'Delete succesfully', 
+          delay: 6000 
+        });
+
+        $timeout(function() {
+          $state.go('properties');
+        }, 1000);
+
+      }).catch(apiFailureHandler);
+    }
 
 
 
   }
-])
+  ]);

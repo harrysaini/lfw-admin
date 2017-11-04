@@ -246,10 +246,22 @@ var PropertySchema = new Schema({
   isVerified : {
     type : Boolean,
     default : false
+  },
+
+  isAdminVerified : {
+    type : Boolean,
+    default : false
+  },
+
+  showInListing : {
+    type : Boolean,
+    default : false
   }
 
 
 });
+
+
 var interest_bookmark_user_schema = new Schema({
 
 

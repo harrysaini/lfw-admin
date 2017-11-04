@@ -117,31 +117,11 @@
 	}
 
 
-	.ui-backgroud-img{
-		background-image: url("https://s3.ap-south-1.amazonaws.com/flathood.com/assets/img/home-cover-new.jpg");
-		min-height: 250px;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: bottom center;
-		position: relative;
-	}
-
-	.ui-backgroud-img-2{
-		background-image: url("https://s3.ap-south-1.amazonaws.com/flathood.com/assets/img/home-cover-new.jpg");
-		min-height: 250px;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: bottom center;
-		position: relative;
-	}
 
 	.index-login-main{
 		z-index: 1;
 		border-radius: 5px;
 		background: white;
-		position: absolute;
-		top: 50%;
-		left: 21%;
 		padding: 30px 40px;
 		border: 1px solid #e6e6e6;
 		box-shadow: 0 0 10px 0px rgba(167, 165, 164, 0.74);
@@ -153,45 +133,49 @@
 	}
 
 
+	.index-login-wrapper{
+		min-height: 100vh;
+		text-align: center;
+		padding-top: 12%;
+		background: rgb(184,225,252); /* Old browsers */
+		background: -moz-linear-gradient(-45deg, rgba(184,225,252,1) 0%, rgba(169,210,243,1) 10%, rgba(144,186,228,1) 25%, rgba(144,188,234,1) 37%, rgba(144,191,240,1) 50%, rgba(107,168,229,1) 51%, rgba(162,218,245,1) 83%, rgba(189,243,253,1) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, rgba(184,225,252,1) 0%,rgba(169,210,243,1) 10%,rgba(144,186,228,1) 25%,rgba(144,188,234,1) 37%,rgba(144,191,240,1) 50%,rgba(107,168,229,1) 51%,rgba(162,218,245,1) 83%,rgba(189,243,253,1) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, rgba(184,225,252,1) 0%,rgba(169,210,243,1) 10%,rgba(144,186,228,1) 25%,rgba(144,188,234,1) 37%,rgba(144,191,240,1) 50%,rgba(107,168,229,1) 51%,rgba(162,218,245,1) 83%,rgba(189,243,253,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8e1fc', endColorstr='#bdf3fd',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	}
+
 
 </style>
 <div ng-controller="IndexController">
 	<div class="medium-10 medium-push-2">
 		<div class="index-login-wrapper">
 
-			<div class="ui-backgroud-img">
-				<div class="index-login-main card medium-7 medium-centered" >
+			<div class="index-login-main card medium-7 medium-centered" >
 
-					<div class="login-box">
-
-
-						<div class="text-center padding-inner">
-							<div class="fh-font-title text-left" style="margin-top: 4px;">LFW Dashboard Login</div>
-							<br><br>
+				<div class="login-box">
 
 
-							<input type="email" placeholder="email address" ng-class="{'error-input-red' : !loginValidations.isEmailPresent}" ng-model="loginData.usernameOrEmail">
-							
-							<input type="password" placeholder="password"  ng-class="{'error-input-red' : !loginValidations.isPasswordPresent}" ng-model="loginData.password">
-							
+					<div class="text-center padding-inner">
+						<div class="fh-font-title text-left" style="margin-top: 4px;">LFW Dashboard Login</div>
+						<br><br>
 
-							<button class="button secondary mybtn" ng-click="loginClick()" ng-class="{'disabled': isLoading }">Login</button>
-							<br>
 
-						</div>
+						<input type="email" placeholder="email address" ng-class="{'error-input-red' : !loginValidations.isEmailPresent}" ng-model="loginData.usernameOrEmail">
+
+						<input type="password" placeholder="password"  ng-class="{'error-input-red' : !loginValidations.isPasswordPresent}" ng-model="loginData.password">
+
+
+						<button class="button secondary mybtn" ng-click="loginClick()" ng-class="{'disabled': isLoading }">Login</button>
+						<br>
+
 					</div>
 				</div>
-
-			</div>
-			<div class="ui-backgroud-img-2">
 			</div>
 
-			<div class="about">
-			<div class="fh-font-title">About LFW Dashboard</div>
-				<div class="fh-font-primary sec-2-sub-content">
-					esktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).eadable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like
-				</div>
-			</div>
+			
+			
+
+			
 		</div>
 		
 

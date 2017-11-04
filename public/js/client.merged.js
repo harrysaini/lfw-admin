@@ -716,6 +716,192 @@ angular.module('core').factory('addPropertyService', ['$resource',
 
   angular
   .module('admin')
+  .controller('AdminListController', AdminListController);
+
+  AdminListController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService' , '$timeout' , 'Notification'];
+
+
+  function AdminListController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService , $timeout ,Notification) {
+
+
+    var fetched = {
+      tenant : true,
+      broker : false,
+      landlord :  false
+    };
+    var perPageCount = 50 ;
+
+
+    $scope.showLoader = true;
+    $scope.displayFilters = false;
+    $scope.isLoading = false;
+    $scope.adminsData = {};
+    $scope.searchQuery = "";
+    $scope.searchType = "";
+    $scope.pageNumber = 1;
+
+
+
+
+    function initFilterVariable(){
+      $scope.filters = {
+        verified : false,
+        notVerified : false
+      }
+      $scope.displayFilters = false;
+
+    }
+
+    initFilterVariable();
+
+    $rootScope.setNavBarActive('users');
+
+    
+
+    function toggleLoader(show){
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.isLoading = show;
+        });
+      }, 100);
+    }
+
+
+    /*get tenants list*/
+    function getAdminsList(isSearch){
+      toggleLoader(true);
+
+      var query = isSearch ? $scope.searchQuery : "" ;
+      var searchObj = {};
+      searchObj.search = query ? query : '';
+      searchObj.searchType = $scope.searchType ;
+
+        //todo get filters for tenants only
+        searchObj.filters = $scope.filters;
+
+        searchObj.skip = 50 * ($scope.pageNumber -1);
+
+        usersListService.getAdminsList(searchObj).then(function(response){
+
+          toggleLoader(false);
+          $scope.adminsData.list = response.users ; 
+          $scope.adminsData.total = response.totalUsers;
+
+          $scope.setPaginationVariable({
+            count : response.totalUsers,
+            currentPage : $scope.pageNumber
+          });
+
+        }).catch(apiFailureHandler);
+      }
+
+      getAdminsList();
+
+
+      
+     
+      function apiFailureHandler(response) {
+        Notification.error({ 
+          message: 'api failure' , 
+          title: 'Request Failed!!', 
+          delay: 6000 }
+          );
+      }
+
+
+
+      $scope.showFilters = function(){
+        $scope.displayFilters = true;
+      }
+
+
+     
+
+
+      $scope.applyFilters = function(){
+        $scope.displayFilters = false;
+        fetchUsersList();
+
+      }
+
+
+      $scope.searchBtnClick = function(){
+        getAdminsList(true);
+      }
+
+     
+
+      /* update page */
+      function updatePage(page){
+        $scope.pageNumber = page;
+        fetchUsersList(false , true );
+      }
+
+
+
+      /* pagination */
+      $scope.currentPage = 1;
+      $scope.frontCount = [];
+      $scope.lastCount = [];
+      $scope.showEclipses = true;
+      $scope.lastPage = 0;
+
+
+      $scope.setPaginationVariable = function(options){
+        $scope.currentPage = options.currentPage;
+        $scope.lastPage = Math.ceil(options.count/perPageCount);
+        $scope.showPagination = options.showPagination;
+        $scope.renderPagination();
+      }
+
+      function getFrontCount(current , lastPage){
+        var frontCount = [];
+        for(var i = current-1 ; i<current+3;i++){
+          if(i>0 && i <= lastPage){
+            frontCount.push(i);
+          }
+        }
+        return frontCount;
+      }
+
+      function getLastCount(last , current){
+        var lastCount = [];
+        for(var i = last-2 ; i <= last ;i++){
+          if(i > 0 && i > current+2){
+            lastCount.push(i);
+          }
+        }
+
+        return lastCount;
+      }
+
+      $scope.renderPagination = function(){
+        if($scope.currentPage>$scope.lastPage){
+          $scope.currentPage = $scope.lastPage;
+        }
+        $scope.frontCount = getFrontCount($scope.currentPage , $scope.lastPage);
+        $scope.lastCount = getLastCount($scope.lastPage , $scope.currentPage);
+        $scope.showEclipses = ( ($scope.lastPage-3) > ($scope.currentPage+2)) ? true : false;
+      }
+
+      $scope.setPageAs = function(page){
+        $scope.currentPage = page;
+        updatePage(page);
+      }
+      /*pagination ends*/
+
+
+
+
+
+    }
+  }());
+
+(function() {
+  'use strict';
+
+  angular
+  .module('admin')
   .controller('PropertiesListController', PropertiesListController);
 
   PropertiesListController.$inject = ['$scope', '$state'  ,'propertiesListService' , '$timeout' , 'Notification' ,'$rootScope'];
@@ -1241,7 +1427,7 @@ angular.module('core').factory('addPropertyService', ['$resource',
 
 
       $scope.searchBtnClick = function(){
-        initPageNumber();
+        //initPageNumber();
         fetchUsersList(true);
       }
 
@@ -1519,7 +1705,7 @@ angular.module('core').factory('addPropertyService', ['$resource',
   function propertiesListService($resource) {
    
 
-    var propertyApi = $resource('/api/admin', {}, {
+    var propertyApi = $resource('/api/admin', {propertyId : '@id' }, {
       fetch_properties : {
         method : 'GET',
         url : '/api/admin/properties/list'
@@ -1528,14 +1714,78 @@ angular.module('core').factory('addPropertyService', ['$resource',
         method : 'GET',
         url : '/api/admin/properties/verify-list'
       }
+
+      
     });
 
     angular.extend(propertyApi, {
+     
       fetchProperties : function(data){
         return this.fetch_properties(data).$promise;
       },
       fetchUnverifiedProperties : function(data){
         return this.fetch_unverified(data).$promise;
+      }
+    });
+
+    return propertyApi;
+  }
+
+
+}());
+
+(function () {
+  'use strict';
+
+  // Users service used for communicating with the users REST endpoint
+  angular
+  .module('admin')
+  .factory('propertiesCRUDService', propertiesCRUDService);
+
+  propertiesCRUDService.$inject = ['$resource'];
+
+  function propertiesCRUDService($resource) {
+   
+
+    var propertyApi = $resource('/api/admin/property/:propertyId', {propertyId : '@propertyId' }, {
+      
+
+      toggle_show_in_listing : {
+        method : 'PUT',
+        url : '/api/admin/property/:propertyId/toggleShowInListing'
+      },
+
+      toggle_admin_verified : {
+        method : 'PUT',
+        url : '/api/admin/property/:propertyId/toggleAdminVerified'
+      },
+
+      delete_property : {
+        method : 'DELETE',
+        url : '/api/admin/property/:propertyId'
+      }
+
+    });
+
+    angular.extend(propertyApi, {
+     
+      
+      toggleShowInListing : function(id  , data){
+        return this.toggle_show_in_listing({
+          propertyId : id
+        },data).$promise;
+      },
+      toggleAdminVerified : function(id ,data){
+        return this.toggle_admin_verified({
+          propertyId : id
+        },data).$promise;
+      },
+      deleteProperty : function(id){
+        return this.delete_property({
+          propertyId : id
+        }).$promise;
+
+        
       }
     });
 
@@ -3191,8 +3441,8 @@ angular.module('core').factory('commonService', ['$resource',
 
 }());
 
-angular.module('details').controller('detailsController', ['$rootScope', '$scope', '$state', 'detailsService', 'commonService',
-  function($rootScope, $scope, $state, detailsService, commonService) {
+angular.module('details').controller('detailsController', ['$rootScope', '$scope', '$state', 'detailsService', 'commonService', 'propertiesCRUDService', 'Notification', '$timeout',
+  function($rootScope, $scope, $state, detailsService, commonService , propertiesCRUDService ,Notification  , $timeout){
 
     var map;
     $scope.fetch_house = function() {
@@ -3207,65 +3457,15 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
           $scope.house_list.current_image_index = 0;
           $rootScope.house_lat = data.property_params.location.loc[1];
           $rootScope.house_lng = data.property_params.location.loc[0];
-          fetch_interest_bookmarked();
+
+
+          //set control valus
+          updateControlData();
         }
       })
     }
 
-    function fetch_interest_bookmarked() {
-      if (user) {
-        commonService.fetch_list_interest_bookmarked({}, function(response) {
-          if (response.status) {
-            $rootScope.user_compare_list = response.data;
-
-
-          } else {
-            $rootScope.user_compare_list = null;
-
-          }
-
-          console.log("dddded", $rootScope.user_compare_list);
-          update_interest_house();
-
-
-
-
-        })
-
-      } else {
-        return;
-      }
-
-
-
-
-    }
-
-
-
-    $scope.toggle_interest = function() {
-
-
-      if (user) {
-
-
-        commonService.toggle_interest({ house_id: $scope.house._id }, function(response) {
-          // console.log("added", response);
-          $rootScope.user_compare_list = response;
-
-          update_interest_house();
-        });
-
-      } else {
-
-        $rootScope.displayLoginSignupPopup();
-
-      }
-
-    }
-
-
-
+    
 
     function update_interest_house() {
       // console.log("yes here");
@@ -3324,7 +3524,7 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
 
       } else
 
-        $scope.house_list.current_image_index = $scope.house_list.photos.length - 1;
+      $scope.house_list.current_image_index = $scope.house_list.photos.length - 1;
 
 
 
@@ -3402,11 +3602,98 @@ angular.module('details').controller('detailsController', ['$rootScope', '$scope
 
 
 
+    /*admin control code*/
+    $scope.controls = {};
+    $scope.controls.showInListing = false;
+    $scope.controls.isAdminVerified = true ;
+    $scope.controls.verifyBtnText = 'Verify';
+    $scope.controls.showDeletePopup = false;
+
+    function apiFailureHandler(response) {
+      Notification.error({ 
+        message: 'api failure' , 
+        title: 'Request Failed!!', 
+        delay: 6000 }
+        );
+
+      updateControlData();
+    }
+
+
+    function updatePropertyData(response){
+      $scope.house = response.property;
+      updateControlData();
+    }
+
+    function updateControlData(){
+      $scope.controls.showInListing = $scope.house.showInListing;
+      $scope.controls.isAdminVerified = $scope.house.isAdminVerified ;
+      $scope.controls.verifyBtnText = $scope.house.isAdminVerified ? 'Unverify' : 'Verify' ;
+    }
+
+    
+
+    
+
+
+    $scope.toggleShowInListing = function(){
+      var propertyID = $scope.house._id;
+      var obj = {
+        showInListing : $scope.controls.showInListing
+      };
+
+      propertiesCRUDService.toggleShowInListing(propertyID , obj).then(function(response){
+        updatePropertyData(response);
+        Notification.success({ 
+          message: 'Show on listing is set as '+response.property.showInListing , 
+          title: 'Updated succesfully', 
+          delay: 6000 
+        });
+
+      }).catch(apiFailureHandler);
+
+    }
+
+    $scope.toggleAdminVerified = function(){
+
+      var propertyID = $scope.house._id;
+      var obj = {
+        isAdminVerified : !$scope.controls.isAdminVerified
+      };
+
+      propertiesCRUDService.toggleAdminVerified(propertyID , obj).then(function(response){
+        updatePropertyData(response);
+        Notification.success({ 
+          message: 'Property verification status is '+response.property.isAdminVerified, 
+          title: 'Updated succesfully', 
+          delay: 6000 
+        });
+
+
+      }).catch(apiFailureHandler);
+    }
+
+    $scope.deleteProperty = function(){
+      var propertyID = $scope.house._id;
+      propertiesCRUDService.deleteProperty(propertyID).then(function(response){
+
+        Notification.success({ 
+          message: 'Property is deleted succesfully', 
+          title: 'Delete succesfully', 
+          delay: 6000 
+        });
+
+        $timeout(function() {
+          $state.go('properties');
+        }, 1000);
+
+      }).catch(apiFailureHandler);
+    }
 
 
 
   }
-])
+  ]);
 
 // (function() {
 'use strict';
