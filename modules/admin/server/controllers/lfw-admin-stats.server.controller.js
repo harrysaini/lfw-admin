@@ -73,19 +73,21 @@ function getPropertyIncrements(){
 
   return new Promise(function(resolve , reject){
 
-    getTotalPropertiesCount().then(function(totalCount){
+    getNewPropertiesThisWeek().then(function(thisWeekCount){
 
       var oneWeekDate = utils.getCurrentMinusDaysDate(7);
+      var twoWeekDate = utils.getCurrentMinusDaysDate(14);
       var query = {};
       query.created = {
-        $gte : oneWeekDate
+        $lte : oneWeekDate,
+        $gte : twoWeekDate
       }
 
-      Property.find(query).count().exec(function(err , count){
+      Property.find(query).count().exec(function(err , prevWeekCount){
         if(err){
           return reject(err);
         }else{
-          var increment = Math.ceil(((count/(totalCount-count))*100));
+          var increment = Math.ceil(((thisWeekCount-prevWeekCount)/(prevWeekCount+1))*100);
           return resolve(increment);
         }
       });
@@ -123,7 +125,9 @@ function getPropertyIncrements(){
   }).then(function(increment){
 
     propertyStats.increment = increment;
-    return res.json(propertyStats);
+    return res.json({
+      propertyStats : propertyStats
+    });
 
   }).catch(function(err){
 
@@ -200,19 +204,21 @@ function getUserIncrements(){
 
   return new Promise(function(resolve , reject){
 
-    getTotalUsersCount().then(function(totalCount){
+    getNewUsersThisWeek().then(function(thisWeekCount){
 
       var oneWeekDate = utils.getCurrentMinusDaysDate(7);
+      var twoWeekDate = utils.getCurrentMinusDaysDate(14);
       var query = {};
       query.created = {
-        $gte : oneWeekDate
+        $lte : oneWeekDate,
+        $gte : twoWeekDate
       }
 
-      User.find(query).count().exec(function(err , count){
+      User.find(query).count().exec(function(err , prevWeekCount){
         if(err){
           return reject(err);
         }else{
-          var increment = Math.ceil(((count/(totalCount-count))*100));
+          var increment = Math.ceil(((thisWeekCount-prevWeekCount)/(prevWeekCount+1))*100);
           return resolve(increment);
         }
       });
@@ -250,7 +256,9 @@ function getUserIncrements(){
   }).then(function(increment){
 
     userStats.increment = increment;
-    return res.json(userStats);
+    return res.json({
+      userStats : userStats
+    });
 
   }).catch(function(err){
 

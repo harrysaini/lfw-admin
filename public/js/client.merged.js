@@ -576,25 +576,46 @@ angular.module('core').factory('addPropertyService', ['$resource',
     $stateProvider
     .state('users',{
         url : '/users',
-        templateUrl : '/modules/admin/client/views/users-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/users-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('add-user',{
         url : '/users/addUser',
-        templateUrl : '/modules/admin/client/views/user-add.client.view.html'
+        templateUrl : '/modules/admin/client/views/user-add.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('properties',{
         url : '/properties',
-        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('verify_properties',{
         url : '/verify-properties',
-        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('verify_users',{
         url : '/verify-users',
-        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('add-admin',{
         url : '/add-admin',
-        templateUrl : '/modules/admin/client/views/add-admin.client.view.html'
+        templateUrl : '/modules/admin/client/views/add-admin.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('admins_list',{
         url : '/admins',
-        templateUrl : '/modules/admin/client/views/admins-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/admins-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       });
   }
 
@@ -1740,6 +1761,52 @@ angular.module('core').factory('addPropertyService', ['$resource',
   // Users service used for communicating with the users REST endpoint
   angular
   .module('admin')
+  .factory('lfwStatsService', lfwStatsService);
+
+  lfwStatsService.$inject = ['$resource'];
+
+  function lfwStatsService($resource) {
+   
+
+    var propertyApi = $resource('/api/admin/stats', {}, {
+      
+      fetch_properties_stats : {
+        method : 'GET',
+        url : '/api/admin/stats/propertyData'
+      },
+
+      fetch_users_stats : {
+        method : 'GET',
+        url : '/api/admin/stats/userData'
+      }
+      
+    });
+
+    angular.extend(propertyApi, {
+     
+      fetchPropertiesStats : function(data){
+        return this.fetch_properties_stats(data).$promise;
+      },
+
+      fetchUsersStats : function(data){
+        return this.fetch_users_stats(data).$promise;
+      } 
+
+      
+    });
+
+    return propertyApi;
+  }
+
+
+}());
+
+(function () {
+  'use strict';
+
+  // Users service used for communicating with the users REST endpoint
+  angular
+  .module('admin')
   .factory('propertiesCRUDService', propertiesCRUDService);
 
   propertiesCRUDService.$inject = ['$resource'];
@@ -1974,7 +2041,7 @@ angular.module('admin').factory('usersListService', ['$resource',
           if (Authentication.user !== null && typeof Authentication.user === 'object') {
             $state.transitionTo('forbidden');
           } else {
-            $state.go('overview');
+            $state.go('index');
             
           }
         }
@@ -2202,18 +2269,17 @@ angular.module('admin').factory('usersListService', ['$resource',
 
   function HeaderController($scope, $state, Authentication, $rootScope, $window, commonService) {
 
-    $scope.user = $window.user || null;
-    $scope.showUsersMenu = false;
-
 
     $rootScope.setNavBarActive = function(name){
       $scope.navBarHeading = name ;
     }
 
-    $scope.openLoginSignupPopup = function openLoginSignupPopup() {
+    $scope.isUserSignedIn = Authentication.user && Authentication.user.email ? true : false ;
 
-      $rootScope.displayLoginSignupPopup();
+    if($scope.isUserSignedIn){
+      $scope.userName = Authentication.user.displayName ;
     }
+    
 
     
     
@@ -2233,26 +2299,31 @@ angular.module('admin').factory('usersListService', ['$resource',
   .module('core')
   .controller('HomeController', HomeController);
 
-  HomeController.$inject = ['$rootScope', '$scope', '$state'];
+  HomeController.$inject = ['$rootScope', '$scope', '$state' , 'lfwStatsService' , 'Notification'];
 
 
-  function HomeController($rootScope, $scope , $state) {
+  function HomeController($rootScope, $scope , $state , lfwStatsService , Notification) {
 
     $rootScope.setNavBarActive('overview');
 
-    $scope.propertiesInfo = {
-      new : 14,
-      total : 220,
-      notReviewed : 15,
-      increment : 7
-    }  
+    $scope.isPropertyDataLoading = true;
+    $scope.isUserDataLoading = true;
+    $scope.propertiesInfo = {};
+    $scope.usersInfo = {};
 
-    $scope.usersInfo = {
-      new : 14,
-      total : 220,
-      notReviewed : 15,
-      increment : 7
-    }    
+    // $scope.propertiesInfo = {
+    //   new : 14,
+    //   total : 220,
+    //   notReviewed : 15,
+    //   increment : 7
+    // }  
+
+    // $scope.usersInfo = {
+    //   new : 14,
+    //   total : 220,
+    //   notReviewed : 15,
+    //   increment : 7
+    // }    
 
 
     $scope.interestInfo = {
@@ -2260,11 +2331,35 @@ angular.module('admin').factory('usersListService', ['$resource',
       increment : 2
     }
 
+    function apiFailureHandler(response) {
+      Notification.error({ 
+        message: 'api failure' , 
+        title: 'Request Failed!!', 
+        delay: 6000 }
+        );
+    }
+
+    function fetchPropertiesStats(){
+      lfwStatsService.fetchPropertiesStats().then(function(response){
+
+        $scope.propertiesInfo = response.propertyStats;   
+        
+
+        $scope.isPropertyDataLoading = false;
+      }).catch(apiFailureHandler);
+    }
+
+    function fetchUsersStats(){
+      lfwStatsService.fetchUsersStats().then(function(response){
+        $scope.usersInfo = response.userStats;
+        $scope.isUserDataLoading = false;
+      }).catch(apiFailureHandler);
+    }
+
+    fetchPropertiesStats();
+    fetchUsersStats();
+
   }
-
-    
-
-
 
   
 }());
@@ -2284,6 +2379,11 @@ angular.module('admin').factory('usersListService', ['$resource',
 	function IndexController($scope, $state, $rootScope, UsersService, MyUtilityService, Authentication, $timeout,$window , Notification) {
 
 		var utils = MyUtilityService;
+
+		if(Authentication.user && Authentication.user.email){
+			$state.go('overview');
+		}
+		
 		$scope.isLoading = false;
 
 		$scope.loginData = {
@@ -2335,7 +2435,7 @@ angular.module('admin').factory('usersListService', ['$resource',
 			toggleLoader(false);
 			Authentication.user = user;
 			$scope.displayPopup = false;
-			$state.go('overview');
+			$window.location.reload();
 		}
 
 		function loginInFailed(){

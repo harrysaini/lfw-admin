@@ -28,7 +28,7 @@
           if (Authentication.user !== null && typeof Authentication.user === 'object') {
             $state.transitionTo('forbidden');
           } else {
-            $state.go('overview');
+            $state.go('index');
             
           }
         }

@@ -44,7 +44,7 @@ module.exports.initLocalVariables = function (app) {
 
 
   //use merge files in production
-  if(process.env.NODE_ENV !== 'production'){
+  if(process.env.NODE_ENV === 'production'){
     app.locals.jsFiles = config.files.client.libJS.concat(config.files.client.compiledJS);
   }else{
     app.locals.jsFiles = config.files.client.jsLink;

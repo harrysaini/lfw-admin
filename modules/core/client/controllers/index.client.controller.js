@@ -10,6 +10,11 @@
 	function IndexController($scope, $state, $rootScope, UsersService, MyUtilityService, Authentication, $timeout,$window , Notification) {
 
 		var utils = MyUtilityService;
+
+		if(Authentication.user && Authentication.user.email){
+			$state.go('overview');
+		}
+		
 		$scope.isLoading = false;
 
 		$scope.loginData = {
@@ -61,7 +66,7 @@
 			toggleLoader(false);
 			Authentication.user = user;
 			$scope.displayPopup = false;
-			$state.go('overview');
+			$window.location.reload();
 		}
 
 		function loginInFailed(){

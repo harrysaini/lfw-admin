@@ -10,18 +10,17 @@
 
   function HeaderController($scope, $state, Authentication, $rootScope, $window, commonService) {
 
-    $scope.user = $window.user || null;
-    $scope.showUsersMenu = false;
-
 
     $rootScope.setNavBarActive = function(name){
       $scope.navBarHeading = name ;
     }
 
-    $scope.openLoginSignupPopup = function openLoginSignupPopup() {
+    $scope.isUserSignedIn = Authentication.user && Authentication.user.email ? true : false ;
 
-      $rootScope.displayLoginSignupPopup();
+    if($scope.isUserSignedIn){
+      $scope.userName = Authentication.user.displayName ;
     }
+    
 
     
     

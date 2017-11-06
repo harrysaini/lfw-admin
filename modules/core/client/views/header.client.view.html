@@ -3,7 +3,7 @@
     background: #d9fdfc;
     height: 75px;
     width: 100%;
-    box-shadow: 2px 2px #f1f1f1;
+    box-shadow: 0 2px 2px 0 rgb(241, 206, 206), 0 1px 5px 0 rgba(255, 252, 252, 0.12), 0 3px 1px -2px rgba(193, 180, 180, 0.2);
   }
   .sub-header {
     display: inline-block;
@@ -81,9 +81,9 @@
         <div class="fh-font-title header-heading">
           {{navBarHeading}}
         </div>
-        <div class="login float-right " ng-show="user==null">
-          <div class="sub-header fh-p-c fh-font-primary uppercase" ng-click="openLoginSignupPopup()">
-            Login/Signup
+        <div class="login float-right " ng-show="isUserSignedIn">
+          <div class="sub-header fh-p-c fh-font-primary-2 capitalize ">
+            <a href="/api/auth/signout" target="_self"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout {{userName}}</a>
           </div>
         </div>
       </div>

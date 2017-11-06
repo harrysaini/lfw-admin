@@ -32,25 +32,46 @@
     $stateProvider
     .state('users',{
         url : '/users',
-        templateUrl : '/modules/admin/client/views/users-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/users-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('add-user',{
         url : '/users/addUser',
-        templateUrl : '/modules/admin/client/views/user-add.client.view.html'
+        templateUrl : '/modules/admin/client/views/user-add.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('properties',{
         url : '/properties',
-        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('verify_properties',{
         url : '/verify-properties',
-        templateUrl : '/modules/admin/client/views/properties-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('verify_users',{
         url : '/verify-users',
-        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('add-admin',{
         url : '/add-admin',
-        templateUrl : '/modules/admin/client/views/add-admin.client.view.html'
+        templateUrl : '/modules/admin/client/views/add-admin.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       }).state('admins_list',{
         url : '/admins',
-        templateUrl : '/modules/admin/client/views/admins-list.client.view.html'
+        templateUrl : '/modules/admin/client/views/admins-list.client.view.html',
+        data : {
+          roles : ['admin']
+        }
       });
   }
 
