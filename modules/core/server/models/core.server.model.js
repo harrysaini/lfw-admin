@@ -262,6 +262,9 @@ var PropertySchema = new Schema({
 });
 
 
+
+
+
 var interest_bookmark_user_schema = new Schema({
 
 
@@ -290,7 +293,58 @@ var interest_bookmark_user_schema = new Schema({
 });
 
 
+var LocationSchema = new Schema({
+
+  city: {
+    type: String,
+    default: '',
+    lowercase : true,
+    trim : true
+  },
+  sub_locality: {
+    type: String,
+    lowercase : true,
+    trim : true
+  },
+  main_locality: {
+    type: String,
+    lowercase : true,
+    trim : true
+  },
+  count : {
+    type : Number,
+    default : 1
+  }
+
+});
+
+
+var AreaSchema = new Schema({
+
+  city: {
+    type: String,
+    default: '',
+    required : true,
+    lowercase : true,
+    trim : true
+  },
+  sub_localities: [{
+    type: String,
+    lowercase : true,
+    trim : true
+  }],
+  main_locality: {
+    type: String,
+    lowercase : true,
+    trim : true,
+    required : true
+  }
+
+});
+
 
 
 mongoose.model('Property', PropertySchema);
 mongoose.model('interested_bookmark_user', interest_bookmark_user_schema);
+mongoose.model('Location', LocationSchema);
+mongoose.model('Area' , AreaSchema);

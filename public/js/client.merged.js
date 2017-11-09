@@ -591,13 +591,15 @@ angular.module('core').factory('addPropertyService', ['$resource',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
         data : {
           roles : ['admin']
-        }
+        },
+        controller : 'PropertiesListController'
       }).state('verify_properties',{
         url : '/verify-properties',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
         data : {
           roles : ['admin']
-        }
+        },
+        controller : 'PropertiesListController'
       }).state('verify_users',{
         url : '/verify-users',
         templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html',

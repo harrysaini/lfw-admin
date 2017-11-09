@@ -3,18 +3,20 @@
 /**
  * Module dependencies
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  Property = mongoose.model('Property'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-var multer = require('multer');
-var filessystem = require('fs');
-var crypto = require('crypto');
-var mime = require('mime');
-var gm = require('gm');
+ var path = require('path'),
+ mongoose = require('mongoose'),
+ Property = mongoose.model('Property'),
+ Location = mongoose.model('Location'),
+ Area = mongoose.model('Area'),
+ errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+ var multer = require('multer');
+ var filessystem = require('fs');
+ var crypto = require('crypto');
+ var mime = require('mime');
+ var gm = require('gm');
 
 
-var _parsePOSTPropertyDataToDbJSON = function(req) {
+ var _parsePOSTPropertyDataToDbJSON = function(req) {
 
   var propertyData = req.body.post_details;
   req.body.post_details.photos = [];
@@ -143,18 +145,108 @@ var _parsePOSTPropertyDataToDbJSON = function(req) {
 }
 
 
+/*save location to location table for suggestion*/
+var saveLocation = function(property){
+
+  var locationObj = {
+    sub_locality : property.sub_locality.trim().toLowerCase() ,
+    main_locality : property.main_locality.trim().toLowerCase()  , 
+    city : property.city.trim().toLowerCase()
+  };
+
+  return new Promise(function(resolve , reject){
+
+    Location.findOne(locationObj).lean().exec(function(err , data){
+      if(err){
+        reject(err);
+      }else{
+        if(data!==null){
+          // location exists
+          Location.findOneAndUpdate(locationObj , {$inc : {"count" : 1}}).lean().exec(function(err , data){
+            if(err){
+              reject(err);
+            }else{
+              resolve(data)
+            }
+          });
+
+        }else{
+          //add location
+          var location = new Location(locationObj);
+          location.save(function(err , data){
+            if(err){
+              reject(err);
+            }else{
+              resolve(data);
+            }
+          });
+
+        }
+
+      };
+
+    });
+  });
+}
+
+/* save area and locality */
+var saveArea = function(property){
+  var query = {
+    main_locality :  property.main_locality.trim().toLowerCase() , 
+    city : property.city.trim().toLowerCase()
+  };
+  var saveObj;
+
+  return new Promise(function(resolve , reject){
+   
+    Area.findOne(query).exec(function(err , area){
+      if(err){
+        return reject(err);
+      }
+      if(!area){
+        saveObj = {
+          main_locality :  property.main_locality.trim().toLowerCase() , 
+          city : property.city.trim().toLowerCase(),
+          sub_localities :  [property.sub_locality.trim().toLowerCase()]
+        }
+
+        var area = new Area(saveObj);
+        area.save(function(err , data){
+          if(err){
+            return reject(err);
+          }
+          return resolve(data);
+        });
+      }
+      else{
+        if(area.sub_localities.indexOf(property.sub_locality.trim().toLowerCase())===-1){
+          area.sub_localities.push(property.sub_locality.trim().toLowerCase());
+          area.save(function(err , data){
+            if(err){
+              return reject(err);
+            }
+            return resolve(data);
+          });
+        }else{
+          resolve();
+        }
+        
+      }
+    });
+  });
+}
+
+
 /**
  * post property
  */
-exports.addProperty = function(req, res) {
+ exports.addProperty = function(req, res) {
 
   var propertyDbJSON = _parsePOSTPropertyDataToDbJSON(req);
   var property = new Property(propertyDbJSON);
-  console.log("ddd", property);
 
   property.save(function(err, data) {
     if (err) {
-      console.log("ddddwwwdd1", err);
 
       return res.status(422).send({
         status: 1,
@@ -163,16 +255,30 @@ exports.addProperty = function(req, res) {
 
 
     } else {
-      console.log("ddddww2dd", data);
 
-      return res.json({
-        status: 0,
-        message: "Added property successfully "
-      });
+      saveLocation(req.body.post_details).then(function(){
+
+        return saveArea(req.body.post_details);
+
+      }).then(function(){
+        return res.json({
+          status: 0,
+          message: "Added property successfully "
+        });
+      }).catch(function(err){
+        return res.status(422).send({
+          status: 1,
+          message: errorHandler.getErrorMessage(err)
+        });
+      })
+
+      
     }
   });
 
 };
+
+
 exports.uploadPhotos = function(req, res) {
 
 
@@ -230,14 +336,14 @@ exports.watermarker = function(file_name, house_images) {
   for (i = 0; i < house_images.length; i++) {
 
     gm(path.resolve('./public/uploads/' + file_name))
-      .resize(640, 640)
-      .write(path.resolve('./public/uploads/' + file_name), function(err) {
-        if (!err) {
-          console.log('resizing done');
+    .resize(640, 640)
+    .write(path.resolve('./public/uploads/' + file_name), function(err) {
+      if (!err) {
+        console.log('resizing done');
 
-        } else
-          console.log(err);
-      });
+      } else
+      console.log(err);
+    });
 
 
 
