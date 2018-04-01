@@ -50,6 +50,9 @@ _site/
 logs/
 build/
 
+
+app.log
+
 # Sublime editor
 # ==============
 .sublime-project
