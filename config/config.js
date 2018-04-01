@@ -187,6 +187,8 @@ var initGlobalConfigFiles = function (config, assets) {
   // Setting Globbed js files
   config.files.client.js = getGlobbedPaths(assets.client.lib.js, 'public/').concat(getGlobbedPaths(assets.client.js, ['public/']));
 
+
+  config.files.client.libJSLink = setLinkCorrectly(config.files.client.libJS);
   //direct likns
   config.files.client.jsLink = setLinkCorrectly(config.files.client.js);
   
@@ -216,6 +218,7 @@ var initGlobalConfig = function () {
 
   // Merge assets
   var assets = _.merge(defaultAssets, environmentAssets);
+  //console.log(require('util').inspect(assets,{ showHidden: true, depth: null }));
 
   // Get the default config
   var defaultConfig = require(path.join(process.cwd(), 'config/env/default'));

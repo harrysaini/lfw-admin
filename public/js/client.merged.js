@@ -578,45 +578,45 @@ angular.module('core').factory('addPropertyService', ['$resource',
         url : '/users',
         templateUrl : '/modules/admin/client/views/users-list.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         }
       }).state('add-user',{
         url : '/users/addUser',
         templateUrl : '/modules/admin/client/views/user-add.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         }
       }).state('properties',{
         url : '/properties',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         },
         controller : 'PropertiesListController'
       }).state('verify_properties',{
         url : '/verify-properties',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         },
         controller : 'PropertiesListController'
       }).state('verify_users',{
         url : '/verify-users',
         templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         }
       }).state('add-admin',{
         url : '/add-admin',
         templateUrl : '/modules/admin/client/views/add-admin.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         }
       }).state('admins_list',{
         url : '/admins',
         templateUrl : '/modules/admin/client/views/admins-list.client.view.html',
         data : {
-          roles : ['admin']
+          roles : []
         }
       });
   }
@@ -1675,6 +1675,27 @@ angular.module('core').factory('addPropertyService', ['$resource',
 
     }
   }());
+
+// (function () {
+//   'use strict';
+
+//   angular
+//     .module('admin')
+//     .directive('propertiesList', propertiesList);
+
+//   propertiesList.$inject = [''];
+
+//   function propertiesList() {
+    
+//     var directive = {
+//       templateUrl : 'sfs'
+//     };
+
+//     return directive;
+
+    
+//   }
+// }());
 
 (function () {
   'use strict';
