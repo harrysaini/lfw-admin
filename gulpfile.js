@@ -468,6 +468,6 @@ gulp.task('default', function (done) {
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache' , 'mergingJS'], 'build', 'env:prod', 'lint', ['nodemon-nodebug', 'watch'], done);
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache' , 'mergingJS'], 'build', 'env:prod', 'lint', done);
 });
 
