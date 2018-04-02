@@ -53,6 +53,54 @@
 
  }
 
+
+ /*parse sort query*/
+ function _parseSortQuery(sortQuery){
+ 	switch (sortQuery) {
+ 		case 'joinedDate_asc':{
+ 			return {
+ 				created : 1
+ 			}
+ 			break;
+ 		}
+
+ 		case 'joinedDate_desc':{
+ 			return {
+ 				created : -1
+ 			}
+ 			break;
+ 		}
+
+ 		case 'name' : {
+ 			return {
+ 				firstName : 1
+ 			}
+ 		}
+
+ 		default:{
+ 			return {};
+ 		}
+
+ 	}
+ }
+
+
+
+ /*add verification status string*/
+ function addVerificationStatusForUsers(users){
+
+ 	_.each(users , function(user){
+ 		if( !(user.isAdminVerified===true || user.isAdminVerified===false)){
+ 			user.isAdminVerified = 'pending';
+ 		}else if(user.isAdminVerified===true){
+ 			user.isAdminVerified = 'verified';
+ 		}else if(user.isAdminVerified===false){
+ 			user.isAdminVerified = 'rejected';
+ 		}
+ 		user.displayDate = user.created.toDateString();
+ 	});
+ }
+
  /*get users count*/
  function  getUserListCount(query){
  	return new Promise(function( resolve , reject ){
@@ -78,11 +126,14 @@
  	var searchStr = req.query.search ? req.query.search : '' ;
  	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
  	var filters = req.query.filters ? req.query.filters : {} ;
+ 	var sortBy = req.query.sortBy ? req.query.sortBy : '';
 
  	var query = {
  		userRole : 'tenant',
  		roles : 'user'
  	}
+
+ 	var sortQuery = _parseSortQuery(sortBy);
 
  	_addSearchAndFilterQuery(searchStr , filters , query , searchType );
 
@@ -90,7 +141,7 @@
  	
  	
 
- 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+ 	User.find(query).sort(sortQuery).limit(limit).skip(skip).lean().exec(function(error, data) {
 
  		if (error) {
  			return res.status(422).send({
@@ -104,9 +155,12 @@
  				res.json({
  					status: 0,
  					message: 'No users',
+ 					totalUsers : 0,
  					users: []
  				})
  			}
+
+ 			addVerificationStatusForUsers(data);
 
 			//get user count
 			getUserListCount(query).then(function(count){
@@ -138,6 +192,9 @@
  	var searchStr = req.query.search ? req.query.search : '' ;
  	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
  	var filters = req.query.filters ? req.query.filters : {} ;
+ 	var sortBy = req.query.sortBy ? req.query.sortBy : '';
+
+ 	var sortQuery = _parseSortQuery(sortBy);
 
  	var query = {
  		userRole : 'broker',
@@ -149,7 +206,7 @@
  	
  	
 
- 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+ 	User.find(query).sort(sortQuery).limit(limit).skip(skip).lean().exec(function(error, data) {
 
  		if (error) {
  			return res.status(422).send({
@@ -167,6 +224,8 @@
  					totalUsers : 0
  				})
  			}
+
+ 			addVerificationStatusForUsers(data);
 
  			//get user count
  			getUserListCount(query).then(function(count){
@@ -201,7 +260,9 @@
  	var searchStr = req.query.search ? req.query.search : '' ;
  	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
  	var filters = req.query.filters ? req.query.filters : {} ;
+ 	var sortBy = req.query.sortBy ? req.query.sortBy : '';
 
+ 	var sortQuery = _parseSortQuery(sortBy);
  	var query = {
  		userRole : 'landlord',
  		roles : 'user'
@@ -209,7 +270,7 @@
 
  	_addSearchAndFilterQuery(searchStr , filters , query , searchType );
 
- 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+ 	User.find(query).sort(sortQuery).limit(limit).skip(skip).lean().exec(function(error, data) {
 
  		if (error) {
  			return res.status(422).send({
@@ -223,9 +284,12 @@
  				res.json({
  					status: 0,
  					message: 'No users',
+ 					totalUsers : 0,
  					users: []
  				})
  			}
+
+ 			addVerificationStatusForUsers(data);
 
 			//get user count
 			getUserListCount(query).then(function(count){
@@ -301,10 +365,10 @@
 
 
 
-/*get unverified users list*/
-exports.getUnverifiedUsersList = function(req , res){
+ /*get unverified users list*/
+ exports.getUnverifiedUsersList = function(req , res){
 
-	var limit  = req.query.limit ? parseInt(req.query.limit) : 50 ;
+ 	var limit  = req.query.limit ? parseInt(req.query.limit) : 50 ;
  	var skip = req.query.skip ? parseInt(req.query.skip) : 0 ;
 
 
@@ -312,9 +376,13 @@ exports.getUnverifiedUsersList = function(req , res){
  		isVerified : false
  	}
 
+ 	var sortQuery = {
+ 		created : 1
+ 	}
 
 
- 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+
+ 	User.find(query).sort(sortQuery).limit(limit).skip(skip).lean().exec(function(error, data) {
 
  		if (error) {
  			return res.status(422).send({
@@ -328,9 +396,12 @@ exports.getUnverifiedUsersList = function(req , res){
  				res.json({
  					status: 0,
  					message: 'No users',
+ 					totalUsers : 0,
  					users: []
  				})
  			}
+
+ 			addVerificationStatusForUsers(data);
 
 			//get user count
 			getUserListCount(query).then(function(count){
@@ -351,7 +422,7 @@ exports.getUnverifiedUsersList = function(req , res){
 
  	});
 
-}
+ }
 
 /**
 * gwt admins list 
@@ -359,35 +430,35 @@ exports.getUnverifiedUsersList = function(req , res){
 exports.getAdminsList = function (req , res) {
 	
 	var limit  = req.query.limit ? parseInt(req.query.limit) : 50 ;
- 	var skip = req.query.skip ? parseInt(req.query.skip) : 0 ;
- 	var searchStr = req.query.search ? req.query.search : '' ;
- 	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
- 	var filters = req.query.filters ? req.query.filters : {} ;
+	var skip = req.query.skip ? parseInt(req.query.skip) : 0 ;
+	var searchStr = req.query.search ? req.query.search : '' ;
+	var searchType = req.query.searchType ? req.query.searchType : 'displayName';
+	var filters = req.query.filters ? req.query.filters : {} ;
 
- 	var query = {
- 		userRole : 'admin',
- 		roles : 'admin'
- 	}
+	var query = {
+		userRole : 'admin',
+		roles : 'admin'
+	}
 
- 	_addSearchAndFilterQuery(searchStr , filters , query , searchType );
+	_addSearchAndFilterQuery(searchStr , filters , query , searchType );
 
- 	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
+	User.find(query).limit(limit).skip(skip).lean().exec(function(error, data) {
 
- 		if (error) {
- 			return res.status(422).send({
- 				status: 1,
- 				message: errorHandler.getErrorMessage(error)
- 			});
+		if (error) {
+			return res.status(422).send({
+				status: 1,
+				message: errorHandler.getErrorMessage(error)
+			});
 
- 		} else {
+		} else {
 
- 			if (!data || data.length == 0) {
- 				res.json({
- 					status: 0,
- 					message: 'No users',
- 					users: []
- 				})
- 			}
+			if (!data || data.length == 0) {
+				res.json({
+					status: 0,
+					message: 'No users',
+					users: []
+				})
+			}
 
 			//get user count
 			getUserListCount(query).then(function(count){

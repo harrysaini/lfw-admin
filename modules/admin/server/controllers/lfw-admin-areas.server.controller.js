@@ -99,6 +99,14 @@
 
  	return new Promise(function(resolve , reject){
 
+ 		if(!location.main_locality){
+ 			reject(new Error('missing field main_locality'));
+ 		}
+
+ 		if(!location.city){
+ 			reject(new Error('missing field city'));
+ 		}
+
  		Area.findOne(query).exec(function(err , area){
  			if(err){
  				return reject(err);

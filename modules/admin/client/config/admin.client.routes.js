@@ -36,12 +36,14 @@
         data : {
           roles : []
         }
+        
       }).state('add-user',{
         url : '/users/addUser',
         templateUrl : '/modules/admin/client/views/user-add.client.view.html',
         data : {
           roles : []
         }
+
       }).state('properties',{
         url : '/properties',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
@@ -49,6 +51,7 @@
           roles : []
         },
         controller : 'PropertiesListController'
+
       }).state('verify_properties',{
         url : '/verify-properties',
         templateUrl : '/modules/admin/client/views/properties-list.client.view.html',
@@ -56,6 +59,7 @@
           roles : []
         },
         controller : 'PropertiesListController'
+
       }).state('verify_users',{
         url : '/verify-users',
         templateUrl : '/modules/admin/client/views/verify-users-list.client.view.html',
@@ -72,8 +76,12 @@
         url : '/admins',
         templateUrl : '/modules/admin/client/views/admins-list.client.view.html',
         data : {
-          roles : []
+          roles : ['admin']
         }
+      }).state('areas',{
+        url : '/areas',
+        templateUrl : '/modules/admin/client/views/area-list.client.view.html',
+        controller : 'AreaListController'
       });
   }
 

@@ -7,6 +7,7 @@ module.exports = function(app){
 
 	app.route('/api/admin/properties/list').get(propertiesListController.getPropertiesList);
 	app.route('/api/admin/properties/verify-list').get(propertiesListController.getUnverifiedPropertiesList);
+	app.route('/api/admin/properties/list-in-area').get(propertiesListController.getPropertiesListInArea);
 
 	app.route('/api/admin/property/:propertyId').get(propertiesCRUDController.getProperty);
 	app.route('/api/admin/property/:propertyId').delete(propertiesCRUDController.deleteProperty);

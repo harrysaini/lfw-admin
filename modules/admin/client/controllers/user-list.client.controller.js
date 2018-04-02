@@ -5,10 +5,10 @@
   .module('admin')
   .controller('UserListController', UserListController);
 
-  UserListController.$inject = ['$scope', '$state', 'Authentication', '$rootScope', '$window', 'commonService' ,'usersListService' , '$timeout' , 'Notification'];
+  UserListController.$inject = ['$scope', '$state', '$rootScope', '$window', 'commonService' ,'usersListService' , '$timeout' , 'Notification' ,'userCRUDService'];
 
 
-  function UserListController($scope, $state, Authentication, $rootScope, $window, commonService , usersListService , $timeout ,Notification) {
+  function UserListController($scope, $state, $rootScope, $window, commonService , usersListService , $timeout ,Notification , userCRUDService) {
 
 
     var fetched = {
@@ -30,6 +30,10 @@
     $scope.displayExportPopup = false;
     $scope.searchType = "";
     $scope.pageNumber = 1;
+
+    $scope.tenantSortBy = 'name';
+    $scope.landlordSortBy = 'name';
+    $scope.brokerSortBy = 'name';
 
 
 
@@ -83,36 +87,37 @@
       var searchObj = {};
       searchObj.search = query ? query : '';
       searchObj.searchType = $scope.searchType ;
+      searchObj.sortBy = $scope.tenantSortBy;
 
-        //todo get filters for tenants only
-        searchObj.filters = $scope.filters;
+      searchObj.filters = $scope.filters;
 
-        searchObj.skip = 50 * ($scope.pageNumber -1);
+      searchObj.skip = 50 * ($scope.pageNumber -1);
 
-        usersListService.getTenantsList(searchObj).then(function(response){
+      usersListService.getTenantsList(searchObj).then(function(response){
 
-          toggleLoader(false);
-          $scope.tenantsData.list = response.users ; 
-          $scope.tenantsData.total = response.totalUsers;
+        toggleLoader(false);
+        $scope.tenantsData.list = response.users ; 
+        $scope.tenantsData.total = response.totalUsers;
 
-          $scope.setPaginationVariable({
-            count : response.totalUsers,
-            currentPage : $scope.pageNumber
-          });
+        $scope.setPaginationVariable({
+          count : response.totalUsers,
+          currentPage : $scope.pageNumber
+        });
 
-        }).catch(apiFailureHandler);
-      }
-
+      }).catch(apiFailureHandler);
+    }
 
 
-      /*get brokers list*/
-      function getBrokersList(isSearch){
-        toggleLoader(true);
 
-        var query = isSearch ? $scope.searchQuery : "";
-        var searchObj = {};
-        searchObj.search = query ? query : '';
-        searchObj.searchType = $scope.searchType ;
+    /*get brokers list*/
+    function getBrokersList(isSearch){
+      toggleLoader(true);
+
+      var query = isSearch ? $scope.searchQuery : "";
+      var searchObj = {};
+      searchObj.search = query ? query : '';
+      searchObj.searchType = $scope.searchType ;
+      searchObj.sortBy = $scope.brokerSortBy;
 
         //todo get filters for tenants only
         searchObj.filters = $scope.filters;
@@ -142,6 +147,7 @@
         var searchObj = {};
         searchObj.search = query ? query : '';
         searchObj.searchType = $scope.searchType ;
+        searchObj.sortBy = $scope.landlordSortBy;
 
         //todo get filters for tenants only
         searchObj.filters = $scope.filters;
@@ -168,7 +174,7 @@
 
       /*reset pagination variabllels*/
       function setPaginationInformationOnTabSwitch(){
-       
+
         var displayedTable = $scope.displayedTable;
 
         $scope.pageNumber = 1;
@@ -213,6 +219,8 @@
         }
       }
 
+      $scope.fetchUsersList = fetchUsersList;
+
 
       function apiFailureHandler(response) {
         Notification.error({ 
@@ -253,7 +261,31 @@
         usersListService.getUsersCSV(getObj).then(function(data){
           console.log(data);
         }).catch(apiFailureHandler);
-      }     
+      }    
+
+
+
+      $scope.toggleAdminVerified = function(id , value){
+
+        if(value=='pending'){
+          return;
+        }
+        
+        var userID = id;
+        var obj = {
+          isAdminVerified : (value==='rejected' ? false :  true )
+        };
+
+        userCRUDService.toggleAdminVerified(userID , obj).then(function(response){
+          Notification.success({ 
+            message: 'User verification status is '+response.user.isAdminVerified, 
+            title: 'Updated succesfully', 
+            delay: 6000 
+          });
+
+
+        }).catch(apiFailureHandler);
+      } 
       
 
       /* update page */

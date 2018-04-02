@@ -3,6 +3,7 @@ module.exports = function(app){
 
 	var lfwAdminUsers = require('../controllers/lfw-admin-users.server.controller');
 	var lfwAdminAddUsers = require('../controllers/lfw-admin-addUser.server.controller');
+	var lfwAdminUserCRUD = require('../controllers/lfw-admin-user-crud.server.controller');
 
 
 	//get users list
@@ -20,4 +21,9 @@ module.exports = function(app){
 
 	//get csv file
 	app.route('/api/admin/getCSV').get(lfwAdminUsers.getUsersCSV);
+
+
+	//user crud services
+	app.route('/api/admin/user/:userId/toggleAdminVerified').put(lfwAdminUserCRUD.toggleAdminVerified);
+	app.route('/api/admin/user/:userId').delete(lfwAdminUserCRUD.deleteUser);
 }

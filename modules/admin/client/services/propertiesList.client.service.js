@@ -19,6 +19,10 @@
       fetch_unverified : {
         method : 'GET',
         url : '/api/admin/properties/verify-list'
+      },
+      fetch_properties_in_area : {
+        method : 'GET',
+        url : '/api/admin/properties/list-in-area'
       }
 
       
@@ -31,6 +35,9 @@
       },
       fetchUnverifiedProperties : function(data){
         return this.fetch_unverified(data).$promise;
+      },
+      fetchPropertiesInArea : function(data){
+        return this.fetch_properties_in_area(data).$promise;
       }
     });
 

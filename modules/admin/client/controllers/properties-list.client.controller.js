@@ -5,13 +5,14 @@
   .module('admin')
   .controller('PropertiesListController', PropertiesListController);
 
-  PropertiesListController.$inject = ['$scope', '$state'  ,'propertiesListService' , '$timeout' , 'Notification' ,'$rootScope'];
+  PropertiesListController.$inject = ['$scope', '$state'  ,'propertiesListService' , '$timeout' , 'Notification' ,'$rootScope' , 'propertiesCRUDService' , 'MyUtilityService'];
 
 
-  function PropertiesListController($scope, $state , propertiesListService , $timeout ,Notification , $rootScope) {
+  function PropertiesListController($scope, $state , propertiesListService , $timeout ,Notification , $rootScope ,propertiesCRUDService ,MyUtilityService) {
 
     $rootScope.setNavBarActive('properties');
 
+    var utils = MyUtilityService;
     var perPageCount = 20;
     var isVerifiedPage = $state.current.name==="verify_properties" ? true : false;
 
@@ -22,7 +23,22 @@
     $scope.isLoading = false;
     $scope.noResultsFound = true;
 
+
+     /* if area is passed in uri*/
+    function checkIfAreaWiseList(){
+      var main_locality = utils.getURIParameter('main_locality');
+      var city = utils.getURIParameter('city');;
+
+      if(main_locality){
+        $scope.isAreaWiseList = true;
+        $scope.main_locality = main_locality;
+        $scope.city = city;
+      }
+    }
+    checkIfAreaWiseList();
+
     
+    /*all fetch*/
     function fetchPropertiesList(){
       toggleLoader(true);
       var obj={
@@ -30,27 +46,35 @@
         skip : (perPageCount*($scope.pageNumber-1))
       }
 
+      if($scope.isAreaWiseList){
+        obj.main_locality = $scope.main_locality;
+        obj.city = $scope.city
+      }
+
       propertiesListService.fetchProperties(obj)
       .then(function(response){
-        toggleLoader(false);
-        $scope.house_list = response.properties;
-        $scope.propertiesData.total = response.count;
-
-        if(response.properties.length>0){
-          $scope.noResultsFound = false;
-        }else{
-          $scope.noResultsFound = true;
-        }
-
-        $scope.setPaginationVariable({
-         count : response.count,
-         currentPage : $scope.pageNumber
-       })
+        fetchApiSuccessHandler(response);
 
       }).catch(apiFailureHandler);
     }
 
+    /*fetch proprties for area*/
+    function fetchPropertiesListInArea(){
+      toggleLoader(true);
+      var obj={
+        limit : perPageCount,
+        skip : (perPageCount*($scope.pageNumber-1)),
+        main_locality : $scope.main_locality,
+        city : $scope.city
+      }
 
+      propertiesListService.fetchPropertiesInArea(obj)
+      .then(function(response){
+        fetchApiSuccessHandler(response);
+      }).catch(apiFailureHandler);
+    }
+
+    /*unverified prop fetch*/
     function fetchUnverifiedProperties(){
       toggleLoader(true);
       var obj={
@@ -60,10 +84,17 @@
 
       propertiesListService.fetchUnverifiedProperties(obj)
       .then(function(response){
-        toggleLoader(false);
+        fetchApiSuccessHandler(response);
+
+      }).catch(apiFailureHandler);
+    }
+
+    /*api succes handler*/
+    function fetchApiSuccessHandler(response){
+      toggleLoader(false);
         $scope.house_list = response.properties;
         $scope.propertiesData.total = response.count;
-        
+
         if(response.properties.length>0){
           $scope.noResultsFound = false;
         }else{
@@ -74,14 +105,16 @@
          count : response.count,
          currentPage : $scope.pageNumber
        })
-
-      }).catch(apiFailureHandler);
     }
 
+    /*handle all api and cjoose correct api*/
     function fetchProperties(){
       if(isVerifiedPage){
         fetchUnverifiedProperties();
-      }else{
+      }else if($scope.isAreaWiseList){
+        fetchPropertiesListInArea();
+      }
+      else{
         fetchPropertiesList();
       }
     }
@@ -113,7 +146,29 @@
       fetchProperties();
     }
 
+    $scope.toggleAdminVerified = function(id , value){
 
+      if(value=='pending'){
+        return;
+      }
+      
+      var propertyID = id;
+      var obj = {
+        isAdminVerified : (value==='rejected' ? false :  true )
+      };
+
+      propertiesCRUDService.toggleAdminVerified(propertyID , obj).then(function(response){
+        Notification.success({ 
+          message: 'Property verification status is '+response.property.isAdminVerified, 
+          title: 'Updated succesfully', 
+          delay: 6000 
+        });
+
+
+      }).catch(apiFailureHandler);
+    }
+
+   
 
     /* pagination */
     $scope.currentPage = 1;

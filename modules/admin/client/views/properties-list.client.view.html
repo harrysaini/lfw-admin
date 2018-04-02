@@ -24,7 +24,7 @@
 	}
 
 	.image-inner-wrapper {
-		height: 162px;
+		height: 188px;
 	}
 
 	.profile-photo {
@@ -67,6 +67,41 @@
 	.side-details-3 {
 		padding: 10px;
 		padding-left: 20px;
+		border-bottom: 1px solid #d2cece;
+	}
+	
+	.side-details-4{
+		padding: 0px;
+		padding-left: 20px;
+	}
+
+	.side-details-4 select{
+		margin : 0;
+		height: 100%;
+		text-align: center;
+	}
+
+	
+
+	.selected{
+		background: #2fd22f;
+		color : white;
+	}
+
+	.rejected{
+		background: #ff212a;
+		color : white;
+	}
+	.side-details-4 select>option{
+		padding : 5px;
+		background: white;
+		color: black;
+	}
+
+
+	.side-details-4 .link-btn{
+		padding: 10px 0px;
+		width: 100%;
 	}
 
 	.properties-list-container{
@@ -94,11 +129,14 @@
 <section class="section-1">
 	<div class="container">
 		<div class="properties-list-wrapper medium-10 medium-push-2">
-			<div class="fh-font-title-2" ng-show="!isVerifiedPage">
+			<div class="fh-font-title-2" ng-show="!isVerifiedPage && !isAreaWiseList">
 				Properties
 			</div>
 			<div class="fh-font-title-2" ng-show="isVerifiedPage">
 				Verify Properties
+			</div>
+			<div class="fh-font-title-2" ng-show="isAreaWiseList">
+				Properties in {{main_locality}}, {{city}}
 			</div>
 			<div class="prop-btn-wrappers" style=" display: flow-root ">
 				<div class="button primary add-btn lfw-smooth-border" ui-sref="add_property">
@@ -125,98 +163,147 @@
 					<div class="properties-list-table">
 
 						<div class="listing-wrapper-details " ng-repeat="house in house_list " >
-							<a ui-sref="details-property({slug:house.property_params.house_slug})">
+							
 
-								<div class="row collapse ">
-									<div class="columns medium-3 ">
-										<div class="image-outer">
-											<div class="image-inner">
-												<div class="image-inner-wrapper">
+							<div class="row collapse ">
+								
+								<div class="columns medium-3 ">
+									<div class="image-outer">
+										<div class="image-inner">
+
+											<div class="image-inner-wrapper">
+												<a ui-sref="details-property({slug:house.property_params.house_slug})">
 													<div>
 														<img class="profile-photo" src='https://s3.ap-south-1.amazonaws.com/flathood.com/grams/homes/58a183638e602e463c6fd5ed/7766190dae642d833452a005d7ce9d921486979816308.jpeg'>
 													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="columns medium-9">
-										<div class="side-details-1">
-											<div class="row collapse">
-												<div class="columns medium-3">
-													<div class="fh-font-primary font-bold fh-t-c"> &#8377; 1.5 crore</div>
-												</div>
-												<div class="columns medium-9">
-													<div class="fh-font-primary capitalize fh-p-c ">{{house.property_params.propertyFeatures.bedrooms}} BHK {{house.property_params.propertySubType}} in {{house.property_params.location.main_locality}} ,
-														{{house.property_params.location.city}}
-													</div>
-												</div>
-											</div>
-											
-										</div>
-										<div class="side-details-2">
-											<div class="row collapse">
-												<div class="columns medium-10">
-													<div class="fh-font-subhead-2 fh-t-c">Built up Area : <span class="fh-font-primary"> {{house.property_params.propertyFeatures.area.coveredArea}} sq ft</span></div>
-												</div>
-											</div>
-											<div class="row collapse">
-												<div class="columns medium-10">
-													<div class="fh-font-subhead-2 fh-t-c">Society :<span class="fh-font-primary" style="color:black"> {{house.property_params.location.nameOfComplex}}</span></div>
-												</div>
-											</div>
-											<div class="row collapse">
-												<div class="columns medium-10">
-													<div class="fh-font-subhead-2 fh-t-c">Locality :<span class="fh-font-primary" style="color:black"> {{house.property_params.location.sub_locality}}</span></div>
-												</div>
-											</div>
-										</div>
-										<div class="side-details-3">
-											<div class="row collapse">
-												<div class="columns medium-12">
-													<div class="fh-font-subhead-2 fh-t-c">Highlights : {{house.property_params.propertyFeatures.transactionType}} / {{house.property_params.propertyFeatures.possesionType}} / {{house.property_params.location.age}} yrs old / floor {{house.property_params.propertyFeatures.floorNumber}} of {{house.property_params.propertyFeatures.floors}} 
-													</div>
-												</div>
+												</a>
 											</div>
 										</div>
 									</div>
 								</div>
-							</a>
+								
+								<div class="columns medium-9">
+									
+									<div class="side-details-1">
+										<div class="row collapse">
+											<div class="columns medium-3">
+												<div class="fh-font-primary font-bold fh-t-c"> &#8377; 1.5 crore</div>
+											</div>
+											<div class="columns medium-9">
+												<div class="fh-font-primary capitalize fh-p-c ">{{house.property_params.propertyFeatures.bedrooms}} BHK {{house.property_params.propertySubType}} in {{house.property_params.location.main_locality}} ,
+													{{house.property_params.location.city}}
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="side-details-2">
+										<div class="row">
+											<div class="columns medium-8">
+												<div class="row collapse">
+													<div class="columns medium-10">
+														<div class="fh-font-subhead-2 fh-t-c fh-bold">Society :<span class="fh-font-primary fh-no-bold" > {{house.property_params.location.nameOfComplex}}</span></div>
+													</div>
+												</div>
+												<div class="row collapse">
+													<div class="columns medium-10">
+														<div class="fh-font-subhead-2 fh-t-c fh-bold">Locality :<span class="fh-font-primary fh-no-bold" > {{house.property_params.location.sub_locality}}</span></div>
+													</div>
+												</div>
+												<div class="row collapse">
+													<div class="columns medium-10">
+													<div class="fh-font-subhead-2 fh-t-c fh-bold">Posted on : <span class="fh-font-primary fh-no-bold"> {{house.displayDate}}</span></div>
+													</div>
+												</div>
+												<div class="row collapse">
+													<div class="columns medium-12">
+														<div class="fh-font-subhead-2 fh-t-c fh-bold">Highlights :
+															<span class="fh-font-primary fh-no-bold"> {{house.property_params.propertyFeatures.transactionType}} / {{house.property_params.propertyFeatures.possesionType}} / {{house.property_params.location.age}} yrs old / floor {{house.property_params.propertyFeatures.floorNumber}} of {{house.property_params.propertyFeatures.floors}} 
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="columns medium-4 fh-t-c">
+												<div class="fh-font-primary fh-bold">
+													Uploaded By
+												</div>
+												<div class="fh-font-primary">
+													{{house.userDetails.displayName}}
+												</div>
+												<div class="fh-font-primary">
+													{{house.userDetails.phone}}
+												</div>
+												<div class="fh-font-primary">
+													{{house.userDetails.email}}
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="side-details-4">
+										<div class="row collapse">
+											<div class="columns medium-8">
+												<a ui-sref="details-property({slug:house.property_params.house_slug})">
+													<div class="fh-font-primary link-btn" style="top: 1px;position: relative;"">
+														View full property details 
+														&nbsp;&nbsp;&nbsp;<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+													</div>
+												</a>
+
+											</div>
+											<div class="columns medium-4">
+												<select 
+												ng-model='house.isAdminVerified' 
+												ng-class="{'selected' : house.isAdminVerified=='verified' , 'rejected' : house.isAdminVerified=='rejected'}"
+												ng-change='toggleAdminVerified(house._id, house.isAdminVerified)'
+												>
+												<option value='verified' >Verified</option>
+												<option value='rejected' >Rejected</option>
+												<option value='pending'>Verification Pending</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						
+
 					</div>
-
-
-
-					<br>
-					<ul class="pagination text-center" role="navigation" aria-label="Pagination" >
-						<li class="pagination-previous" ng-if="currentPage!=1">
-							<a ng-click="setPageAs(currentPage-1)">
-								Previous
-							</a>
-						</li>
-						<li class="pagination-previous disabled" ng-if="currentPage==1">Previous</li>
-						<li ng-repeat = "page in frontCount" ng-class="{'active-page' : currentPage==page}">
-							<a ng-click="setPageAs(page)">
-								{{page}}
-							</a>
-						</li>
-						<li class="ellipsis" aria-hidden="true" ng-show="showEclipses"></li>
-						<li ng-repeat = "page in lastCount" ng-class="{'active-page' : currentPage==page}" >
-							<a ng-click="setPageAs(page)">
-								{{page}}
-							</a>
-						</li>
-						<li class="pagination-next" ng-if="currentPage!=lastPage">
-							<a ng-click="setPageAs(currentPage+1)" aria-label="Next page">Next </a>
-						</li>
-						<li class="pagination-next disabled" ng-if="currentPage==lastPage">Next</li>
-
-					</ul>
 
 				</div>
 
+
+
+				<br>
+				<ul class="pagination text-center" role="navigation" aria-label="Pagination" >
+					<li class="pagination-previous" ng-if="currentPage!=1">
+						<a ng-click="setPageAs(currentPage-1)">
+							Previous
+						</a>
+					</li>
+					<li class="pagination-previous disabled" ng-if="currentPage==1">Previous</li>
+					<li ng-repeat = "page in frontCount" ng-class="{'active-page' : currentPage==page}">
+						<a ng-click="setPageAs(page)">
+							{{page}}
+						</a>
+					</li>
+					<li class="ellipsis" aria-hidden="true" ng-show="showEclipses"></li>
+					<li ng-repeat = "page in lastCount" ng-class="{'active-page' : currentPage==page}" >
+						<a ng-click="setPageAs(page)">
+							{{page}}
+						</a>
+					</li>
+					<li class="pagination-next" ng-if="currentPage!=lastPage">
+						<a ng-click="setPageAs(currentPage+1)" aria-label="Next page">Next </a>
+					</li>
+					<li class="pagination-next disabled" ng-if="currentPage==lastPage">Next</li>
+
+				</ul>
+
 			</div>
+
 		</div>
 	</div>
+</div>
 </div>
 </section>

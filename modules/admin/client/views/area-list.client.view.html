@@ -1,0 +1,337 @@
+<style type="text/css">
+	.area-list-wrapper{
+		padding : 25px ;
+	}
+
+	.area-list-div-inner{
+		padding: 10px;
+	}
+
+	.inline{
+		display: inline-block;
+	}
+
+	.area-list-item{
+		border-top: solid 1px #eae0e0;
+		padding: 10px;
+	}
+	.area-list-item.active{
+		background: #f7f7f7;
+	}
+
+	.area-list{
+		margin-top: 35px;
+		border: solid 1px #eae0e0;
+		border-top: none;
+	}
+	
+	.area-list-link {
+		color: #c12929;
+		padding: 0px;
+	}
+	.area-list-link:hover{
+		color: #3e2223;
+	}
+
+	.localities-list-item{
+		padding: 5px;
+		color: #262929;
+		padding-left: 0px;
+	}
+
+	.localities-list{
+		overflow: hidden;
+		transition: max-height 0.3s ease-in-out;
+	}
+
+	.localities-list.close{
+		max-height: 0px !important; 
+	}
+
+	.localities-list.open{
+		max-height: 500px !important;
+	}
+
+	.down-icon{
+		transition: transform 0.3s ease-in-out;
+	}
+	.down-icon.revert{
+		transform: rotate(180deg);
+	}
+</style>
+
+<section class="section-1" >
+	<div class="container">
+		<div class="area-list-wrapper medium-10 medium-push-2">
+
+			<div class="fh-font-title">
+				Areas/Localities
+			</div>
+			<br>
+			<br>
+
+			<div class="area-list-div medium-7">
+				<div class="area-list-div-inner">
+					<div class="area-list-header">
+						<div class="row collapse">
+							<div class="columns medium-5">
+								<input type="text" name="" placeholder="Search" ng-model='searchKeyWord'>
+							</div>
+
+							<div class="columns medium-4" style="padding-left: 5px;">
+								<span class="fh-font-primary-light inline">Sort By</span>
+								<div class="inline" style="width: 60%; margin-left: 5px">
+									<select ng-model='sortBy'>
+										<option value="main_locality">Area A-Z</option>
+										<option value="city">City A-Z</option>
+										<option value="count">Properties Count</option>
+									</select>
+								</div>
+							</div>
+							<div class="columns medium-3">
+								<div class="simple-btn text-center" ng-click='addAreaPopupShown=true'>
+									<i class="fa fa-plus" aria-hidden="true"></i> Add Area
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="area-list">
+						<div class="area-list-item-wrapper" ng-repeat='area in areaList | filter: searchKeyWord | orderBy : sortBy' >
+							<div class="area-list-item"  ng-class="{'active': selectedAreaMap[area._id]}">
+								<div class="row">
+									<div class="columns medium-4">
+										<div class="fh-font-primary">
+											{{area.main_locality}}, {{area.city}}
+										</div>
+									</div>
+									<div class="columns medium-3">
+										<div 
+										class="fh-font-primary area-list-link link-btn " 
+										ng-click="selectedArea = ( selectedAreaMap[area._id] ? selectedAreaMap[area._id]= false : selectedAreaMap[area._id] = true)"
+										>
+										{{area.sub_localities.length}} localities &nbsp;&nbsp;
+										<i class="fa fa-chevron-down down-icon" aria-hidden="true" 
+										ng-class = "{'revert' : selectedAreaMap[area._id]}"
+										>	
+									</i>
+								</div>
+								<div class="localities-list" 
+								ng-class = "{'open' : selectedAreaMap[area._id] , 'close' : !selectedAreaMap[area._id] }">
+								<div class="localities-list-item" ng-repeat='sub_locality in area.sub_localities'>
+									<div class="fh-font-primary">
+										{{sub_locality}} 
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="columns medium-3 " >
+							<a class="area-list-link link-btn text-center" ng-href='/properties?main_locality={{area.main_locality}}&city={{area.city}}'>
+								<div class="fh-font-primary">
+									{{area.count}} properties
+								</div>
+							</a>
+						</div>
+						<div class="columns medium-2">
+							<div style="float: right ; padding: 5px" 
+							class="link-btn area-list-link" 
+							ng-show='selectedAreaMap[area._id]'
+							ng-click='openEditPopup(area._id)'
+							>
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+
+<style type="text/css">
+	.add-area-popup{
+		position: fixed;
+		width: 50%;
+		left: 25%;
+		background: white;
+		padding: 1.2rem;
+		top: 6.2rem;
+		z-index: 101;
+		border-radius: px;
+		box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.3);
+
+	}
+
+	.inline{
+		display: inline-table;
+	}
+
+
+
+	.cross-box-div .link-btn{
+		padding: 0px;
+	}
+
+	.locality-input-container>input{
+		margin-bottom: 0px;
+		height: 100%;
+		
+	}
+
+	.locality-input-container{
+		width: 85%;
+	}
+
+	.locality-input-wrapper{
+		border: solid 1px #a3d3ea;
+		margin-bottom: 12px;
+	}
+
+	.cross-box-div{
+		width: 14%;
+		height: 100%;
+		text-align: center;
+		align-items: center;
+	}
+
+	.right-side {
+		float: right;
+		width: 50%;
+		text-align : right;
+	}
+
+	.left-side {
+		float: left;
+		width: 50%;
+	}
+
+	.btns-div{
+		padding: 10px 15px;
+		overflow: auto;
+	}
+
+	.btns-div .simple-btn{
+		min-width: 100px;
+		max-width: 110px;
+	}
+
+	.save-btn{
+		background: #ff212a;
+		color: white;
+	}
+
+
+	.area-details{
+		padding: 18px 0px;
+	}
+
+	.simple-btn{
+		margin-left: 10px;
+	}
+</style>
+
+<div class="add-area-popup" ng-show='editPopupShown'>
+	<div class="add-area-popup-content">
+		<div class="fh-font-title">EDIT</div>
+		<div class="area-details">
+			<div class="row">
+				<div class="columns medium-6">
+					<div class="fh-font-primary">Area</div>
+					<div class="input-container fh-font-primary">
+						<input type="text" name="" ng-model="areaTOEdit.main_locality">
+					</div>
+				</div>
+				<div class="columns medium-6">
+					<div class='fh-font-primary'>Localitiies</div>
+					<div class="locality-input-wrapper fh-font-primary" ng-repeat='sub_locality in areaTOEdit.sub_localities'>
+						<div class="locality-input-container inline">
+							<input type="text" name="" ng-model="sub_locality.name">
+						</div>
+						<div class="cross-box-div inline"
+						ng-click="removeLocality(sub_locality)"
+						>
+						<div class="link-btn"><i class="fa fa-times" aria-hidden="true"></i></div>
+					</div>
+				</div>
+				<div class="ui-btn"
+				ng-click='addNewLocality()'>
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="btns-div fh-font-primary-light">
+	<div class="left-side">
+		<div class="simple-btn text-center lfw-smooth-border" ng-click='deleteArea()'>
+			Delete Area
+		</div>
+	</div>
+	<div class="right-side">
+		<div class="simple-btn text-center inline lfw-smooth-border" ng-click='editPopupShown = false'>
+			Cancel
+		</div>
+		<div class="simple-btn text-center inline lfw-smooth-border save-btn" ng-click='saveArea()'>
+			Save
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="add-area-popup" ng-show='addAreaPopupShown'>
+	<div class="add-area-popup-content">
+		<div class="fh-font-title">Add New Area</div>
+		<div class="area-details">
+			<div class="row">
+				<div class="columns medium-6">
+					<div class="fh-font-primary">Area</div>
+					<div class="input-container fh-font-primary">
+						<input type="text" name="" ng-model="areaToAdd.main_locality">
+					</div>
+					<br>
+					<div class="fh-font-primary">City</div>
+					<div class="input-container fh-font-primary">
+						<input type="text" name="" ng-model="areaToAdd.city">
+					</div>
+				</div>
+				<div class="columns medium-6">
+					<div class='fh-font-primary'>Localitiies</div>
+					<div class="locality-input-wrapper fh-font-primary" ng-repeat='sub_locality in areaToAdd.sub_localities'>
+						<div class="locality-input-container inline">
+							<input type="text" name="" ng-model="sub_locality.name">
+						</div>
+						<div class="cross-box-div inline"
+						ng-click="removeLocalityInNewArea(sub_locality)"
+						>
+						<div class="link-btn"><i class="fa fa-times" aria-hidden="true"></i></div>
+					</div>
+				</div>
+				<div class="ui-btn"
+				ng-click='addNewLocalityInNewArea()'>
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="btns-div fh-font-primary-light">
+	<div class="right-side">
+		<div class="simple-btn text-center inline lfw-smooth-border" ng-click='addAreaPopupShown = false'>
+			Cancel
+		</div>
+		<div class="simple-btn text-center inline lfw-smooth-border save-btn" ng-click='saveNewArea()'>
+			Save
+		</div>
+	</div>
+</div>
+</div>
+</div>
