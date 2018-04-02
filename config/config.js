@@ -187,8 +187,9 @@ var initGlobalConfigFiles = function (config, assets) {
   // Setting Globbed js files
   config.files.client.js = getGlobbedPaths(assets.client.lib.js, 'public/').concat(getGlobbedPaths(assets.client.js, ['public/']));
 
-
+  console.log(config.files.client.libJS);
   config.files.client.libJSLink = setLinkCorrectly(config.files.client.libJS);
+  console.log(config.files.client.libJSLink);
   //direct likns
   config.files.client.jsLink = setLinkCorrectly(config.files.client.js);
   
