@@ -41,9 +41,6 @@ gulp.task('mergingJS', function(){
   
   return gulp.src(config.files.client.myJS)
           .pipe(concat('client.merged.js'))
-          .pipe(gulp.dest('./public/js'))
-          .pipe(gp_rename('client.merged.js'))
-          .pipe(uglify())
           .pipe(gulp.dest('./public/js')); 
 
 });
@@ -82,8 +79,8 @@ gulp.task('nodemon', function () {
 gulp.task('nodemon-nodebug', function () {
   return plugins.nodemon({
     script: 'server.js',
-    ext: 'js,html',
-    watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+    ext: 'js,html'
+    //watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
   });
 });
 
@@ -468,6 +465,6 @@ gulp.task('default', function (done) {
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache' , 'mergingJS'], 'build', 'env:prod', 'lint', done);
+  runSequence(['copyLocalEnvConfig', 'makeUploadsDir', 'templatecache' , 'mergingJS'], 'build', 'env:prod', 'lint', ['nodemon-nodebug'], done);
 });
 
