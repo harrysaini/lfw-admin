@@ -12,6 +12,8 @@ var _ = require('lodash'),
   glob = require('glob'),
   gulp = require('gulp'),
   concat = require('gulp-concat'),
+  uglify = require('gulp-uglify'),
+  gp_rename = require('gulp-rename'),
   gulpLoadPlugins = require('gulp-load-plugins'),
   runSequence = require('run-sequence'),
   plugins = gulpLoadPlugins({
@@ -39,6 +41,9 @@ gulp.task('mergingJS', function(){
   
   return gulp.src(config.files.client.myJS)
           .pipe(concat('client.merged.js'))
+          .pipe(gulp.dest('./public/js'))
+          .pipe(gp_rename('client.merged.js'))
+          .pipe(uglify())
           .pipe(gulp.dest('./public/js')); 
 
 });
@@ -427,7 +432,7 @@ gulp.task('lint', function (done) {
 
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-  runSequence('env:dev', 'wiredep:prod', 'lint', ['uglify', 'cssmin'], done);
+  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
